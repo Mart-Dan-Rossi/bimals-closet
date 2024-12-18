@@ -5,15 +5,16 @@ import { useState } from "react";
 
 interface Props {
 	isLoadingParticulaProductData: boolean;
-	particularProductData: {
-		_id: string;
-		name: string;
-		slug: string;
-		image: string;
-		price: number;
-		isFavorite: boolean;
-  	}
-	| undefined;
+	particularProductData:
+		| {
+				_id: string;
+				name: string;
+				slug: string;
+				image: string;
+				price: number;
+				isFavorite: boolean;
+		  }
+		| undefined;
 }
 
 export const ProductDetailImages = ({
@@ -41,8 +42,8 @@ export const ProductDetailImages = ({
 						<Image
 							src={
 								// ? particularProductData?.image[0]
-								!selectedImage && particularProductData ? 
-									particularProductData.image
+								!selectedImage && particularProductData
+									? particularProductData.image
 									: selectedImage
 							}
 							height={500}
