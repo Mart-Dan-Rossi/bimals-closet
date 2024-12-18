@@ -56,7 +56,9 @@ export const ExtraInfo = ({
 				</Flex>
 			</Box>
 
-			{openModal && token !== undefined ? <MobileNavbar {...{ handleLogout, token }} /> : null}
+			{openModal && token !== undefined ? (
+				<MobileNavbar {...{ handleLogout, token }} />
+			) : null}
 			{openCatgories && subHeaderName === "Categories" ? (
 				<CategoriesModal />
 			) : null}
