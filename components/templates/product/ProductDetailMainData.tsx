@@ -38,27 +38,28 @@ export const ProductDetailMainData = ({
 		const price = product?.price;
 		const image = product?.image;
 
-		if (id && name && price && image){
+		if (id && name && price && image) {
 			if (!selectedSize) {
 				return toast({
 					status: "error",
 					title: "Selecciona un talle antes de agregarlo al carrito",
 				});
 			}
-		const payload: CartItem = {
-			id,
-			name,
-			size: selectedSize,
-			price,
-			quantity: 1,
-			// image: image?.[0],
-			image: image,
-		};
-		addToCart(payload);
-		toast({
-			status: "success",
-			title: "Agregado al carrito",
-		});}
+			const payload: CartItem = {
+				id,
+				name,
+				size: selectedSize,
+				price,
+				quantity: 1,
+				// image: image?.[0],
+				image: image,
+			};
+			addToCart(payload);
+			toast({
+				status: "success",
+				title: "Agregado al carrito",
+			});
+		}
 	};
 
 	const handleBuyNow = () => {

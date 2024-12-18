@@ -62,15 +62,15 @@ export const Header = ({
 						openDropDown={openDropDown}
 					/>
 				</Stack>
-				{openDropDown && <AuthModal {...{ handleLogout, token }} />}
+				{openDropDown && token && <AuthModal {...{ handleLogout, token }} />}
 			</Box>
 
-			<ExtraInfo
+			{<ExtraInfo
 				subHeaderName={subHeaderName}
 				openModal={openModal}
 				handleLogout={handleLogout}
 				token={token}
-			/>
+			/>}
 		</Box>
 	);
 };

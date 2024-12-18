@@ -7,7 +7,7 @@ interface Props {
 	subHeaderName: string | undefined;
 	openModal: boolean;
 	handleLogout: () => void;
-	token: string | null;
+	token: string | null | undefined;
 }
 
 export const ExtraInfo = ({
@@ -56,7 +56,7 @@ export const ExtraInfo = ({
 				</Flex>
 			</Box>
 
-			{openModal ? <MobileNavbar {...{ handleLogout, token }} /> : null}
+			{openModal && token !== undefined ? <MobileNavbar {...{ handleLogout, token }} /> : null}
 			{openCatgories && subHeaderName === "Categories" ? (
 				<CategoriesModal />
 			) : null}
