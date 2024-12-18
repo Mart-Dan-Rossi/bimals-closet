@@ -13,7 +13,7 @@ const MainLayout = ({ children, subHeaderName }: childrenProps) => {
 	return (
 		<Box>
 			<Header {...{ subHeaderName }} />
-			{children}
+			<Box minH={"92vh"}>{children}</Box>
 			<Footer />
 		</Box>
 	);

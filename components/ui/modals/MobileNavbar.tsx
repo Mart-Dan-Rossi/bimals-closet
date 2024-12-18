@@ -3,7 +3,7 @@ import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { Fragment } from "react";
 
-const MobileNavbar = ({
+export const MobileNavbar = ({
 	handleLogout,
 	token,
 }: {
@@ -49,13 +49,13 @@ const MobileNavbar = ({
 												cursor="pointer"
 												p=".9rem 1.5rem"
 												_hover={{
-													bg: "brand.green100",
+													bg: "brand.color1",
 													color: "brand.white100",
 													borderRadius: ".4rem",
 												}}
 											>
 												<Icon
-													color="brand.green100"
+													color="brand.color1"
 													_groupHover={{
 														color: "brand.white100",
 													}}
@@ -68,8 +68,8 @@ const MobileNavbar = ({
 													display="flex"
 													alignItems="center"
 												>
-													{item.text === "Logout" && token === null
-														? "Login"
+													{item.text === "Desconectar" && token === null
+														? "Conectar"
 														: item.text}
 												</Text>
 											</Flex>
@@ -84,7 +84,7 @@ const MobileNavbar = ({
 											onClick={handleLogout}
 										>
 											<Icon
-												color="brand.green100"
+												color="brand.color1"
 												_groupHover={{
 													color: "brand.white100",
 												}}
@@ -97,8 +97,8 @@ const MobileNavbar = ({
 												display="flex"
 												alignItems="center"
 											>
-												{item.text === "Logout" && token === null
-													? "Login"
+												{item.text === "Desconectar" && token === null
+													? "Conectar"
 													: item.text}
 											</Text>
 										</Flex>
@@ -112,5 +112,3 @@ const MobileNavbar = ({
 		</Box>
 	);
 };
-
-export { MobileNavbar };

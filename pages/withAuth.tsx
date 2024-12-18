@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { JSX, useEffect, useState } from "react";
 
 const withAuth = (WrappedComponent: JSX.ElementType) => {
-	const AuthenticatedComponent = (props: any) => {
+	const AuthenticatedComponent = (props: unknown[]) => {
 		const router = useRouter();
 		const token = useHydratedStoreState("token");
 		const [authChecked, setAuthChecked] = useState(false);

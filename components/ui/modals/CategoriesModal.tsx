@@ -1,7 +1,7 @@
 import { Box, Flex, Icon, Stack, Text } from "@chakra-ui/react";
 import { CategoriesModalData } from "@/utils/modal";
 
-const CategoriesModal = () => {
+export const CategoriesModal = () => {
 	return (
 		<Box>
 			<Stack
@@ -23,13 +23,13 @@ const CategoriesModal = () => {
 						cursor="pointer"
 						p=".9rem 1.5rem"
 						_hover={{
-							bg: "brand.green100",
+							bg: "brand.color1",
 							color: "brand.white100",
 							borderRadius: ".4rem",
 						}}
 					>
 						<Icon
-							color="brand.green100"
+							color="brand.color1"
 							_groupHover={{
 								color: "brand.white100",
 							}}
@@ -50,5 +50,3 @@ const CategoriesModal = () => {
 		</Box>
 	);
 };
-
-export { CategoriesModal };

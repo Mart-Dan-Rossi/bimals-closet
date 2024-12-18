@@ -1,7 +1,7 @@
 import { CustomInputProps } from "@/types/form";
 import { Box, Input, Text } from "@chakra-ui/react";
 
-const CustomInput = ({
+export const CustomInput = ({
 	id,
 	defaultValue,
 	placeholder,
@@ -28,10 +28,10 @@ const CustomInput = ({
 					_placeholder={{
 						fontWeight: 500,
 						fontSize: "1.3rem",
-						color: "brand.grey300",
+						color: "brand.secondaryColor1",
 					}}
 					_focus={{
-						borderColor: "brand.green100",
+						borderColor: "brand.color1",
 						boxShadow: "none",
 					}}
 					_hover={{
@@ -58,5 +58,3 @@ const CustomInput = ({
 		</Box>
 	);
 };
-
-export { CustomInput };

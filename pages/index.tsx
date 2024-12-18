@@ -1,22 +1,21 @@
 import Head from "next/head";
 import { Box } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
-import { Hero, Products, Why } from "@/components/templates/main";
+import { Hero, Products } from "@/components/templates/main";
 
 const Home = () => {
 	return (
 		<>
 			<Head>
-				<title>Bimals Closet</title>
+				<title>Mateo Shoes</title>
 				<meta name="description" content="Best clothing store" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<link rel="icon" href="/favicon.ico" />
+				<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 			</Head>
 			<Box>
 				<MainLayout>
 					<Hero />
 					<Products />
-					<Why />
 				</MainLayout>
 			</Box>
 		</>

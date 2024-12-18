@@ -5,7 +5,7 @@ import { Box } from "@chakra-ui/react";
 const WishlistPage = () => {
 	return (
 		<Box>
-			<MainLayout {...{ subHeaderName: "My Wishlist" }}>
+			<MainLayout {...{ subHeaderName: "Lista de deseados" }}>
 				<Wishlist />
 			</MainLayout>
 		</Box>

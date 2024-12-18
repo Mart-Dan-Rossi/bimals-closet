@@ -3,7 +3,7 @@ import { AuthModalData } from "@/utils/modal";
 import { Fragment } from "react";
 import Link from "next/link";
 
-const AuthModal = ({
+export const AuthModal = ({
 	handleLogout,
 	token,
 }: {
@@ -36,13 +36,13 @@ const AuthModal = ({
 											cursor="pointer"
 											p=".9rem 1.5rem"
 											_hover={{
-												bg: "brand.green100",
+												bg: "brand.color1",
 												color: "brand.white100",
 												borderRadius: ".4rem",
 											}}
 										>
 											<Icon
-												color="brand.green100"
+												color="brand.color1"
 												_groupHover={{
 													color: "brand.white100",
 												}}
@@ -55,8 +55,8 @@ const AuthModal = ({
 												display="flex"
 												alignItems="center"
 											>
-												{item.text === "Logout" && token === null
-													? "Login"
+												{item.text === "Desconectar" && token === null
+													? "Conectar"
 													: item.text}
 											</Text>
 										</Flex>
@@ -71,7 +71,7 @@ const AuthModal = ({
 										onClick={handleLogout}
 									>
 										<Icon
-											color="brand.green100"
+											color="brand.color1"
 											_groupHover={{
 												color: "brand.white100",
 											}}
@@ -84,8 +84,8 @@ const AuthModal = ({
 											display="flex"
 											alignItems="center"
 										>
-											{item.text === "Logout" && token === null
-												? "Login"
+											{item.text === "Desconectar" && token === null
+												? "Conectar"
 												: item.text}
 										</Text>
 									</Flex>
@@ -98,5 +98,3 @@ const AuthModal = ({
 		</Box>
 	);
 };
-
-export { AuthModal };

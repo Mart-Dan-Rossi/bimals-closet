@@ -61,7 +61,7 @@ const Login = () => {
 					h="100vh"
 					w={["100%", "100%", "50%"]}
 					p="2rem"
-					bg="brand.green100"
+					bg="brand.color1"
 					pos="relative"
 					display={["none", "none", "flex"]}
 				>
@@ -71,7 +71,7 @@ const Login = () => {
 						right="-14px"
 						top="102px"
 						src="/assets/images/login-bg-one.png"
-						alt="Login Background"
+						alt="Fondo del Login"
 					/>
 					<Image
 						w="300px"
@@ -79,7 +79,7 @@ const Login = () => {
 						left="0"
 						bottom="0"
 						src="/assets/images/login-bg-two.png"
-						alt="Login Background"
+						alt="Fondo del Login"
 					/>
 				</Box>
 
@@ -94,14 +94,14 @@ const Login = () => {
 					ms="0rem"
 				>
 					<Text
-						color="brand.grey300"
+						color="brand.secondaryColor1"
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 					>
 						Let’s sign you in
 					</Text>
 					<Text
-						color="brand.grey300"
+						color="brand.secondaryColor1"
 						fontWeight="500"
 						fontSize={["1.4rem", "1.15rem", "1.15rem", "1.4rem"]}
 						letterSpacing="0.05rem"
@@ -163,7 +163,7 @@ const Login = () => {
 							<Text
 								textDecoration="underline"
 								mt=".5rem"
-								color="brand.grey400"
+								color="brand.secondaryColor2"
 								fontWeight="500"
 								fontSize="1.2rem"
 								float="right"
@@ -178,7 +178,7 @@ const Login = () => {
 							<Link href="/auth/register">
 								<Text
 									mt=".7rem"
-									color="brand.grey400"
+									color="brand.secondaryColor2"
 									fontWeight="500"
 									fontSize="1.3rem"
 								>

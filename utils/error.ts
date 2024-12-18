@@ -9,7 +9,7 @@ export const handleAxiosError = async (error: AxiosError): Promise<void> => {
 	if (response?.status === 500) {
 		Toast({
 			status: "error",
-			title: (response?.data as any)?.message || "Session expired",
+			title: (response?.data as AxiosError)?.message || "Session expired",
 		});
 	}
 
@@ -28,7 +28,7 @@ export const handleAxiosError = async (error: AxiosError): Promise<void> => {
 		} else {
 			Toast({
 				status: "error",
-				title: (response?.data as any)?.message || "Session expired",
+				title: (response?.data as AxiosError)?.message || "Session expired",
 			});
 			await Router.push("/");
 		}

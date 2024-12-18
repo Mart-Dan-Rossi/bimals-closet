@@ -1,32 +1,18 @@
-import { useHydratedStoreState } from "@/hooks/state/hydrated";
-import { Box, Button, Flex, Img, Text } from "@chakra-ui/react";
-import Link from "next/link";
+import { Box, Flex, Img, Text } from "@chakra-ui/react";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useEffect, useState } from "react";
+import "slick-carousel/slick/slick.css";
 
 export const Hero = () => {
-	const token = useHydratedStoreState("token");
-	const [name, setName] = useState<string>("");
-
-	const settings = {
-		dots: true,
+	const sliderSettings = {
+		dots: false,
 		infinite: true,
 		speed: 1000,
 		slidesToShow: 1,
 		slidesToScroll: 1,
 		autoplay: true,
-		autoplaySpeed: 3000,
+		autoplaySpeed: 7000,
 	};
-
-	useEffect(() => {
-		const storedUser = sessionStorage.getItem("user");
-		const user = storedUser ? JSON.parse(storedUser) : null;
-		const fullName = user ? user.name : null;
-
-		setName(fullName);
-	}, [name]);
 
 	const heroData = [
 		{
@@ -52,11 +38,8 @@ export const Hero = () => {
 	return (
 		<Box bg="brand.white200">
 			<Box px="3rem" maxW="1280px" mx="auto" textAlign="left" pt="16rem">
-				<Text my="1rem" fontSize="2rem" fontWeight="600">
-					{name ? `Welcome, ${name} 😄` : "Hey there!"}
-				</Text>
 				<Box pb="8rem">
-					<Slider {...settings}>
+					<Slider {...sliderSettings}>
 						{heroData.map((item, idx) => (
 							<Box key={idx} pos="relative" overflow="hidden" role="group">
 								<Box borderRadius="1rem" overflow="hidden">
@@ -100,26 +83,6 @@ export const Hero = () => {
 									>
 										{item.desc}
 									</Text>
-									<Box w="max-content">
-										<Link href={token ? "" : "/auth/login"}>
-											<Button
-												bg="brand.green100"
-												color="brand.white100"
-												fontSize="1.5rem"
-												px="5rem"
-												py="2.2rem"
-												_hover={{
-													bg: "brand.green200",
-												}}
-												_focus={{
-													borderColor: "none",
-													boxShadow: "none",
-												}}
-											>
-												{token ? "Explore" : "Join us now"}
-											</Button>
-										</Link>
-									</Box>
 								</Flex>
 							</Box>
 						))}

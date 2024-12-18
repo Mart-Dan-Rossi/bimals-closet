@@ -61,7 +61,7 @@ const Register = () => {
 				<Box
 					// h="100vh"
 					w={["100%", "100%", "50%"]}
-					bg="brand.green100"
+					bg="brand.color1"
 					p="2rem"
 					// display="flex"
 					display={["none", "none", "flex"]}
@@ -72,7 +72,7 @@ const Register = () => {
 						<Image
 							w="100%"
 							src="/assets/images/register-bg.png"
-							alt="Register Background"
+							alt="Fondo de 'regístrate'"
 						/>
 					</Box>
 					<Box>
@@ -98,7 +98,7 @@ const Register = () => {
 					flexDir="column"
 				>
 					<Text
-						color="brand.grey300"
+						color="brand.secondaryColor1"
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 					>
@@ -152,7 +152,7 @@ const Register = () => {
 											autoFormat={true}
 											onChange={(e) => {
 												setPhoneInput(e);
-												field.onChange(e as any);
+												field.onChange(Number(e));
 											}}
 											inputClass="phone-input"
 											inputProps={{
@@ -222,7 +222,7 @@ const Register = () => {
 							<Link href="/auth/login">
 								<Text
 									mt=".7rem"
-									color="brand.grey400"
+									color="brand.secondaryColor2"
 									fontWeight="500"
 									fontSize="1.3rem"
 								>
@@ -239,7 +239,7 @@ const Register = () => {
 							display={["block", "none"]}
 						>
 							<Text
-								color="brand.green100"
+								color="brand.color1"
 								fontWeight="600"
 								textAlign="left"
 								fontSize="1.5rem"

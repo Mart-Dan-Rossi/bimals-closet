@@ -14,7 +14,7 @@ export type AuthModalDataProps = {
 export const AuthModalData: AuthModalDataProps[] = [
 	{
 		icon: TiShoppingCart,
-		text: "Cart",
+		text: "Carrito",
 		link: "/cart",
 	},
 	// {
@@ -23,27 +23,27 @@ export const AuthModalData: AuthModalDataProps[] = [
 	// },
 	{
 		icon: GoHeart,
-		text: "Wishlist",
+		text: "Deseados",
 		link: "/wishlist",
 	},
 	{
 		icon: IoMdLogOut,
-		text: "Logout",
+		text: "Desconectar",
 	},
 ];
 
 export const CategoriesModalData: AuthModalDataProps[] = [
 	{
 		icon: SiGooglemybusiness,
-		text: "All Products",
+		text: "Todos los productos",
 	},
 	{
 		icon: GiLoincloth,
-		text: "Women",
+		text: "Femeninos",
 	},
 	{
 		icon: GiTrousers,
-		text: "Men",
+		text: "Masculinos",
 	},
 	// {
 	// 	icon: GiRunningShoe,

@@ -1,6 +1,6 @@
 import { Box, Center, Skeleton, SkeletonText } from "@chakra-ui/react";
 
-const CustomLoader = () => {
+export const CustomLoader = () => {
 	return (
 		<Center bg="brand.gold300" h="100vh">
 			<Box
@@ -14,8 +14,6 @@ const CustomLoader = () => {
 		</Center>
 	);
 };
-
-export { CustomLoader };
 
 export const BoxCardLoader = ({
 	rounded = "2.4rem",

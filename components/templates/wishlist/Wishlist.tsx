@@ -22,7 +22,7 @@ import { FaGhost } from "react-icons/fa";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { MdOutlineDisabledByDefault } from "react-icons/md";
 
-const Wishlist = () => {
+export const Wishlist = () => {
 	const router = useRouter();
 	const token = useHydratedStoreState("token");
 	const { data: wishlistData, isLoading: isLoadingWishlistData } =
@@ -51,11 +51,11 @@ const Wishlist = () => {
 								<Icon
 									as={FaGhost}
 									fontSize="10rem"
-									color="brand.green100"
+									color="brand.color1"
 									opacity="0.4"
 								/>
 								<Text mt="1rem" fontWeight="300" textAlign="center">
-									Empty wishlist? Start adding items now!
+									Lista de deseos vacía? Comienza a agregar produtos ahora!
 								</Text>
 							</Center>
 						)}
@@ -65,19 +65,19 @@ const Wishlist = () => {
 						<Icon
 							as={MdOutlineDisabledByDefault}
 							fontSize="10rem"
-							color="brand.green100"
+							color="brand.color1"
 							opacity="0.4"
 						/>
 						<Text mt="1rem" fontWeight="300" textAlign="center">
-							This functionality is exclusively available to our logged-in
-							users. Sign in to your account to unlock the full potential of our
-							platform and enjoy a seamless shopping experience.
+							Esta función es exclusiva para usuarios logueados. Conéctacte para
+							usar nuestra plataforma plenamente y disfrutar la experiencia de
+							compra aún más.
 						</Text>
 						<Link href="/auth/login">
 							<Box w="100%">
 								<CustomButton
 									{...{
-										text: "Login",
+										text: "Conectar",
 										py: ["2rem", "2rem"],
 										px: "4rem",
 										border: ".2rem solid",
@@ -109,7 +109,7 @@ const Wishlist = () => {
 								{wishlistData?.map((product: Product) => (
 									<Flex
 										key={product?._id}
-										bg="brand.grey700"
+										bg="brand.secondaryColor5"
 										borderRadius="1rem"
 										p="1rem"
 										justify="space-between"
@@ -121,8 +121,9 @@ const Wishlist = () => {
 													<Img
 														width="140px"
 														height="140px"
-														src={product?.image[0]}
-														alt="Product Image"
+														// src={product?.image[0]}
+														src={product?.image}
+														alt="Imágen del producto"
 													/>
 												</Box>
 											</Link>
@@ -138,7 +139,7 @@ const Wishlist = () => {
 														<Text
 															fontSize="1.8rem"
 															fontWeight="300"
-															color="brand.grey300"
+															color="brand.secondaryColor1"
 														>
 															{product?.name}
 														</Text>
@@ -148,9 +149,9 @@ const Wishlist = () => {
 														<Text
 															fontSize="1.7rem"
 															fontWeight="600"
-															color="brand.grey300"
+															color="brand.secondaryColor1"
 														>
-															₦{product?.price?.toFixed(2)}{" "}
+															ARS {product?.price?.toFixed(2)}{" "}
 														</Text>
 													</Flex>
 
@@ -160,13 +161,13 @@ const Wishlist = () => {
 													>
 														<CustomButton
 															{...{
-																text: "Remove from wishlist",
+																text: "Quitar de lista de deseados",
 																py: ["2rem", "2rem"],
 																bg: "transparent",
-																color: "brand.green300",
+																color: "brand.color3",
 																boxShadow: "0",
 																border: ".2rem solid",
-																borderColor: "brand.green300",
+																borderColor: "brand.color3",
 																fontSize: ["1.3rem", "1.5rem"],
 																bgHover: "brand.white300",
 															}}
@@ -185,7 +186,7 @@ const Wishlist = () => {
 														color={`${
 															product?.isFavorite
 																? "brand.red100"
-																: "brand.grey400"
+																: "brand.secondaryColor2"
 														}`}
 														fontSize="1.5rem"
 														as={product?.isFavorite ? GoHeartFill : GoHeart}
@@ -203,5 +204,3 @@ const Wishlist = () => {
 		</Box>
 	);
 };
-
-export { Wishlist };

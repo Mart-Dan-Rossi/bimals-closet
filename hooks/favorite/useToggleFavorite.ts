@@ -5,12 +5,12 @@ import { ErrorResponse } from "@/types/error";
 import { useAddFavorite, useRemoveFavorite } from "./useFavorite";
 import { useEffect, useState } from "react";
 
-type MapProduct = {
+export type MapProduct = {
 	_id: string;
 	isFavorite: boolean;
 };
 
-const useToggleFavorite = (mapProducts: MapProduct[]) => {
+export const useToggleFavorite = (mapProducts: MapProduct[]) => {
 	const token = useHydratedStoreState("token");
 	const router = useRouter();
 	const toast = useShowToast();
@@ -70,5 +70,3 @@ const useToggleFavorite = (mapProducts: MapProduct[]) => {
 		isProductChecked,
 	};
 };
-
-export { useToggleFavorite };

@@ -41,7 +41,7 @@ const VerifyEmail = () => {
 			>
 				<Box>
 					<Box
-						bg="brand.green100"
+						bg="brand.color1"
 						borderRadius="50%"
 						pos="absolute"
 						h={["150px", "150px", "200px", "250px", "300px"]}
@@ -51,7 +51,7 @@ const VerifyEmail = () => {
 					/>
 					<Heading
 						py="4rem"
-						color="brand.grey300"
+						color="brand.secondaryColor1"
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 						textAlign="center"
@@ -66,7 +66,7 @@ const VerifyEmail = () => {
 								h={["200px", "200px", "300px", "400px"]}
 								m="0 auto"
 								src="/assets/images/verify-email-img.png"
-								alt="Verify Email Background"
+								alt="Fondo de verificar mail"
 							/>
 						</Box>
 
@@ -85,7 +85,7 @@ const VerifyEmail = () => {
 							<Box>
 								<Center fontSize="4rem" maxW="330px" mx="auto" mt="2rem">
 									<Icon
-										color="brand.green100"
+										color="brand.color1"
 										fontSize="3rem"
 										as={IoMdCheckmarkCircle}
 									/>
@@ -113,7 +113,7 @@ const VerifyEmail = () => {
 				<Box>
 					<Text
 						textAlign="left"
-						color="brand.green100"
+						color="brand.color1"
 						fontWeight="600"
 						fontSize="1.5rem"
 					>

@@ -13,7 +13,7 @@ const VerifyPhone = () => {
 	};
 
 	return (
-		<Box bg="brand.green100">
+		<Box bg="brand.color1">
 			<Flex
 				maxW="1280px"
 				mx="auto"
@@ -49,7 +49,7 @@ const VerifyPhone = () => {
 								h={["200px", "200px", "300px", "400px"]}
 								m="0 auto"
 								src="/assets/images/verify-phone-img.png"
-								alt="Verify Phone Background"
+								alt="Fondo de verificar teléfono"
 							/>
 						</Box>
 
@@ -97,7 +97,7 @@ const VerifyPhone = () => {
 									w: "auto",
 									px: "5rem",
 									bg: "brand.white100",
-									color: "brand.green100",
+									color: "brand.color1",
 									text: "Verify Phone",
 								}}
 							/>

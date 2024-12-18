@@ -1,6 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
-const BimalsClosetDocument = () => {
+const MateoShoes = () => {
 	return (
 		<Html lang="en">
 			<Head />
@@ -11,4 +11,4 @@ const BimalsClosetDocument = () => {
 		</Html>
 	);
 };
-export default BimalsClosetDocument;
+export default MateoShoes;

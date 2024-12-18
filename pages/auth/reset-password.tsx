@@ -69,7 +69,7 @@ const ResetPassword = () => {
 					h="100vh"
 					w={["100%", "100%", "50%"]}
 					p="2rem"
-					bg="brand.green100"
+					bg="brand.color1"
 					pos="relative"
 					display={["none", "none", "flex"]}
 				>
@@ -79,7 +79,7 @@ const ResetPassword = () => {
 						right="-14px"
 						top="102px"
 						src="/assets/images/login-bg-one.png"
-						alt="Login Background"
+						alt="Fondo de Login"
 					/>
 					<Image
 						w="300px"
@@ -87,7 +87,7 @@ const ResetPassword = () => {
 						left="0"
 						bottom="0"
 						src="/assets/images/login-bg-two.png"
-						alt="Login Background"
+						alt="Fondo de Login"
 					/>
 				</Box>
 
@@ -104,13 +104,13 @@ const ResetPassword = () => {
 					{status && (
 						<Icon
 							fontSize="4rem"
-							color="brand.green100"
+							color="brand.color1"
 							as={IoMdCheckmarkCircle}
 							mb="1rem"
 						/>
 					)}
 					<Text
-						color="brand.grey300"
+						color="brand.secondaryColor1"
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 						textAlign="center"
@@ -119,7 +119,7 @@ const ResetPassword = () => {
 						{!status ? "Reset Password" : "Password Reset Successful"}
 					</Text>
 					<Text
-						color="brand.grey300"
+						color="brand.secondaryColor1"
 						fontWeight="500"
 						fontSize={["1.4rem", "1.15rem", "1.15rem", "1.4rem"]}
 						letterSpacing="0.05rem"

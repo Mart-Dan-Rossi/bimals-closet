@@ -1,4 +1,4 @@
-const globalStyles = {
+export const globalStyles = {
 	global: {
 		html: {
 			fontSize: "62.5%",
@@ -10,5 +10,3 @@ const globalStyles = {
 		},
 	},
 };
-
-export { globalStyles };

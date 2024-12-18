@@ -5,6 +5,7 @@ export type Product = {
 	image: string;
 	price: number;
 	isFavorite: boolean;
+	desc?: string;
 };
 
 export type ProductListProps = {

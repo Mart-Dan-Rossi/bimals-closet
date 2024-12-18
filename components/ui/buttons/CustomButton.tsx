@@ -1,7 +1,7 @@
 import { CustomButtonProps } from "@/types/button";
 import { Box, Button, Icon } from "@chakra-ui/react";
 
-const CustomButton = ({
+export const CustomButton = ({
 	w,
 	mt,
 	py,
@@ -27,7 +27,7 @@ const CustomButton = ({
 				py={py || "2rem"}
 				px={px}
 				color={color || "#fff"}
-				bg={bg || "brand.green100"}
+				bg={bg || "brand.color1"}
 				borderRadius="10px"
 				boxShadow={boxShadow || "0px 4px 20px rgba(0, 175, 84, 0.25)"}
 				border={border}
@@ -38,7 +38,7 @@ const CustomButton = ({
 				isLoading={isLoading}
 				isDisabled={isDisabled}
 				_hover={{
-					bg: bgHover || "brand.green200",
+					bg: bgHover || "brand.color2",
 				}}
 				_focus={{
 					borderColor: "none",
@@ -48,7 +48,7 @@ const CustomButton = ({
 				{isBtnIcon && (
 					<Icon
 						cursor="pointer"
-						color="brand.green100"
+						color="brand.color1"
 						fontSize="2.5rem"
 						mr={["1rem", "3rem", "1rem", "3rem"]}
 						as={btnIcon}
@@ -59,5 +59,3 @@ const CustomButton = ({
 		</Box>
 	);
 };
-
-export { CustomButton };

@@ -18,13 +18,22 @@ export const useStoreState = create<TStoreState>()(
 	)
 );
 
+export type CartItem = {
+	id: string;
+	name: string;
+	price: number;
+	quantity: number;
+	image?: string;
+	size?: number | string;
+};
+
 export const useCartState = create<TCartState>()(
 	devtools(
 		persist(
 			subscribeWithSelector((set, get) => ({
 				cart: [],
 				cartCount: 0,
-				addToCart: (payload: Record<string, any>) => {
+				addToCart: (payload: CartItem) => {
 					const cartClone = [...get().cart];
 					const isInCartIdx = cartClone.findIndex(
 						(item) => item.id === payload.id

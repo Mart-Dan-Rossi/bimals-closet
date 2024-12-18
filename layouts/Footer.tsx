@@ -1,91 +1,76 @@
-import { CustomInput } from "@/components/ui/forms/CustomInput";
-import { IFormRegisterInput } from "@/types/auth";
-import { Box, Flex, Icon, Text } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { useShowToast } from "@/hooks/toast/useShowToast";
+// import { IFormRegisterInput } from "@/types/auth";
+import { Box, Flex, Icon, Link } from "@chakra-ui/react";
+// import { useForm } from "react-hook-form";
+import {
+	FaFacebookF,
+	FaInstagram,
+	FaTelegram,
+	FaWhatsapp,
+} from "react-icons/fa";
 
 export const Footer = () => {
-	const getYear = new Date().getFullYear();
+	// const {
+	// 	// register,
+	// 	// handleSubmit,
+	// 	// control,
+	// 	// formState: { errors },
+	// } = useForm<IFormRegisterInput>();
 
-	const {
-		register,
-		// handleSubmit,
-		// control,
-		formState: { errors },
-	} = useForm<IFormRegisterInput>();
+	const toast = useShowToast();
+
+	const phoneNumber = "+54 11 64551800";
+
+	function handleCopyPhoneNumber() {
+		navigator.clipboard
+			.writeText(phoneNumber)
+			.then(() => {
+				toast({
+					status: "success",
+					title: `Copiado: ${phoneNumber}`,
+				});
+			})
+			.catch((err) => {
+				toast({
+					status: "error",
+					title: "Error al copiar:",
+					description: err,
+				});
+			});
+	}
 
 	return (
 		<Box bg="brand.dark200">
 			<Box maxW="1280px" mx="auto" p="1.5rem 3rem">
 				<Flex
-					flexDir={["column", "row"]}
-					justify="space-between"
+					mt="1rem"
 					w="100%"
-					py="3rem"
+					color="brand.white400"
+					fontSize="2.5rem"
+					justifyContent="center"
+					gap="2rem"
 				>
-					<Box w={["30%", "15%"]}>
-						<Text color="brand.white100" fontSize="1.6rem" fontWeight="700">
-							Follow Us
-						</Text>
-						<Flex
-							mt="1rem"
-							w="100%"
-							color="brand.white400"
-							fontSize="2.5rem"
-							justifyContent="space-between"
-						>
-							<Icon cursor="pointer" as={FaFacebookF} />
-							<Icon cursor="pointer" as={FaInstagram} />
-							<Icon cursor="pointer" as={FaWhatsapp} />
-						</Flex>
-					</Box>
-
-					<Box mt={["4rem", 0]}>
-						<Text color="brand.white100" fontSize="1.6rem" fontWeight="700">
-							About
-						</Text>
-						<Box
-							color="brand.white400"
-							fontSize="1.4rem"
-							mt="1rem"
-							lineHeight="3rem"
-						>
-							<Text>About Us</Text>
-							<Text>FAQs</Text>
-						</Box>
-					</Box>
-
-					<Box mt={["4rem", 0]}>
-						<Text color="brand.white100" fontSize="1.6rem" fontWeight="700">
-							Subscribe for Updates
-						</Text>
-						<Box color="brand.white400" fontSize="1.4rem" mt="1rem">
-							<Box>
-								<CustomInput
-									{...{
-										id: "email",
-										placeholder: "Email",
-										type: "text",
-										formHook: register("email", {
-											required: "Please enter your email",
-										}),
-										errorMessage: errors.email?.message as string,
-									}}
-								/>
-							</Box>
-						</Box>
-					</Box>
+					<Link href="https://www.google.com" target="_blank">
+						<Icon cursor="pointer" as={FaFacebookF} />
+					</Link>
+					<Link href="http://www.instagram.com" target="_blank">
+						<Icon cursor="pointer" as={FaInstagram} />
+					</Link>
+					<Link>
+						<Icon
+							cursor="pointer"
+							as={FaWhatsapp}
+							onClick={handleCopyPhoneNumber}
+						/>
+					</Link>
+					<Link>
+						<Icon
+							cursor="pointer"
+							as={FaTelegram}
+							onClick={handleCopyPhoneNumber}
+						/>
+					</Link>
 				</Flex>
-
-				<Text
-					fontWeight="600"
-					fontSize="1.5rem"
-					color="brand.white100"
-					textAlign="center"
-					mt="5rem"
-				>
-					Copyright {getYear} | Bimal&apos;s Closet
-				</Text>
 			</Box>
 		</Box>
 	);
