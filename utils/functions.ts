@@ -13,7 +13,7 @@ export function getSizeName(
 			const option = sizeOption as keyof ValidSizeOptions;
 			if (
 				product.sizeOptions[option] &&
-				product.sizeOptions[option]?.length > 0
+				product.sizeOptions[option].length > 0
 			) {
 				displayableSizeName = option;
 			}
