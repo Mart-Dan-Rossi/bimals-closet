@@ -17,7 +17,7 @@ export const SizeOptions = ({ product, select, selectedSize }: Props) => {
 		const sizeTypesCopy = [...sizeTypes];
 		sizeTypesCopy.shift();
 
-		let firstSizeTypeDataFound: number[] = [];
+		let firstSizeTypeDataFound: number[] = [0];
 
 		sizeTypesCopy.forEach((sizeType) => {
 			if (
