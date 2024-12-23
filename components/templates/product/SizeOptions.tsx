@@ -22,10 +22,11 @@ export const SizeOptions = ({ product, select, selectedSize }: Props) => {
 		sizeTypesCopy.forEach((sizeType) => {
 			if (
 				sizeType !== "any" &&
-				Object.keys(product.sizeOptions).includes(sizeType) &&
-				product.sizeOptions[sizeType]
+				Object.keys(product.sizeOptions).includes(sizeType)
 			) {
-				firstSizeTypeDataFound = product.sizeOptions[sizeType];
+				if (product.sizeOptions[sizeType]) {
+					firstSizeTypeDataFound = product.sizeOptions[sizeType];
+				}
 			}
 		});
 
