@@ -18,6 +18,7 @@
 	},
 	"plugins": ["react", "prettier", "@typescript-eslint"],
 	"rules": {
+		"no-mixed-spaces-and-tabs": "off",
 		"prettier/prettier": [
 			"error",
 			{

@@ -8,7 +8,7 @@ export const AuthModal = ({
 	token,
 }: {
 	handleLogout: () => void;
-	token: string | null;
+	token: string | null | undefined;
 }) => {
 	return (
 		<Box>
@@ -19,7 +19,7 @@ export const AuthModal = ({
 				borderRadius="1rem"
 				position="absolute"
 				top="8rem"
-				right="10.5rem"
+				right="8rem"
 				zIndex="2"
 				overflow="hidden"
 				display={["none", "block"]}
@@ -35,6 +35,7 @@ export const AuthModal = ({
 											role="group"
 											cursor="pointer"
 											p=".9rem 1.5rem"
+											color="black"
 											_hover={{
 												bg: "brand.color1",
 												color: "brand.white100",
@@ -83,8 +84,10 @@ export const AuthModal = ({
 											fontSize="1.4rem"
 											display="flex"
 											alignItems="center"
+											color="black"
 										>
-											{item.text === "Desconectar" && token === null
+											{item.text === "Desconectar" &&
+											(token === null || token === undefined)
 												? "Conectar"
 												: item.text}
 										</Text>

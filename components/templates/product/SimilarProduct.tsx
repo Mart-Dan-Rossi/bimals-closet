@@ -1,13 +1,16 @@
 import { BoxCardLoader } from "@/components/animations/CustomLoader";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { useGetAllProducts } from "@/hooks/products/useProduct";
 import { Product } from "@/types/product";
 import { Box, SimpleGrid, Text } from "@chakra-ui/react";
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ProductCard } from "./ProductCard";
 
 export const SimilarProduct = () => {
 	// const { data: productData, isLoading: isLoadingProductData } =
 	// 	useGetAllProducts();
+
+	const { currentSizeType } = useGlobalContext();
 
 	const productsData = useGetAllProducts();
 
@@ -42,11 +45,18 @@ export const SimilarProduct = () => {
 
 	useEffect(() => {
 		if (productsData) {
-			const shuffled = shuffleArray(productsData);
+			const shuffled = shuffleArray(productsData).filter((product) => {
+				if (currentSizeType === "any") {
+					return true;
+				}
+				return Object.keys(product.sizeOptions).includes(currentSizeType);
+			});
 			setShuffledProducts(shuffled);
 		}
 		// }, [productsData]);
-	}, []);
+	}, [currentSizeType]);
+
+	console.log("productsData: ", productsData);
 
 	return (
 		<Box maxW="1280px" mx="auto" px="3rem" pb="8rem" pt="3rem">

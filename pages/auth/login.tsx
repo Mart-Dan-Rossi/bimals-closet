@@ -65,6 +65,13 @@ const Login = () => {
 					pos="relative"
 					display={["none", "none", "flex"]}
 				>
+					<Box color="brand.white100">
+						<Link href="/">
+							<Text fontWeight="700" fontSize={["1.8rem", "2.5rem"]}>
+								Mateo Shoes
+							</Text>
+						</Link>
+					</Box>
 					<Image
 						w="460px"
 						pos="absolute"
@@ -98,7 +105,7 @@ const Login = () => {
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 					>
-						Let’s sign you in
+						Logueate
 					</Text>
 					<Text
 						color="brand.secondaryColor1"
@@ -106,7 +113,7 @@ const Login = () => {
 						fontSize={["1.4rem", "1.15rem", "1.15rem", "1.4rem"]}
 						letterSpacing="0.05rem"
 					>
-						Welcome back. We’ve missed you!
+						Te damos la bienvenida nuevamente. Te extrañamos!
 					</Text>
 
 					<Box
@@ -133,14 +140,14 @@ const Login = () => {
 							<CustomInput
 								{...{
 									id: "password",
-									placeholder: "Password",
+									placeholder: "Contraseña",
 									type: showPassword ? "text" : "password",
 									formHook: register("password", {
-										required: "Please enter your password",
+										required: "Introduce la contraseña",
 										pattern: {
 											value: /^(?=.*[A-Z])(?=.*\d)[^\s]{8,}$/,
 											message:
-												"'Password' should have a minimum of eight characters, at least one capital letter, and one number. Spaces are not allowed.",
+												"La contraseña debe tener un mínimo de ocho caracteres, al menos una mayúscula, un número y una minúscula. Los espacios no están permitidos.",
 										},
 									}),
 									handlePasswordClick: () => setShowPassword(!showPassword),
@@ -168,11 +175,11 @@ const Login = () => {
 								fontSize="1.2rem"
 								float="right"
 							>
-								Forgot password?
+								Olvidate la contraseña?
 							</Text>
 						</Link>
 
-						<CustomButton {...{ text: "Login", isLoading }} />
+						<CustomButton {...{ text: "Loguear", isLoading }} />
 
 						<Box>
 							<Link href="/auth/register">
@@ -182,8 +189,8 @@ const Login = () => {
 									fontWeight="500"
 									fontSize="1.3rem"
 								>
-									Don’t have an account?
-									<span style={{ color: "#00AF54" }}> Register</span>
+									No tienes cuenta?
+									<span style={{ color: "#00AF54" }}> Registrate</span>
 								</Text>
 							</Link>
 						</Box>

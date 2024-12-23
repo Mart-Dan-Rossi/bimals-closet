@@ -1,27 +1,35 @@
 import { useHydratedCartState } from "@/hooks/state/hydrated";
-import { Box, Circle, Flex, Icon, Stack, Text } from "@chakra-ui/react";
+import {
+	Box,
+	Circle,
+	Flex,
+	Icon,
+	Stack,
+	Text,
+	useBoolean,
+} from "@chakra-ui/react";
 import Link from "next/link";
 
 import { BiUserCircle } from "react-icons/bi";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { TiShoppingCart } from "react-icons/ti";
+import { AuthModal } from "../ui/modals";
 
 interface Props {
-	setOpenDropDown: {
-		on: () => void;
-		off: () => void;
-		toggle: () => void;
-	};
 	name: string;
-	openDropDown: boolean;
+	token: string | null | undefined;
+	handleLogout: () => void;
 }
 
 export const DesktopUserInteraction = ({
-	setOpenDropDown,
 	name,
-	openDropDown,
+	token,
+	handleLogout,
 }: Props) => {
 	const cart = useHydratedCartState("cart");
+	const [openDropDown, setOpenDropDown] = useBoolean();
+
+	console.log("openDropDown: ", openDropDown);
 
 	return (
 		<Box display={["none", "flex"]}>
@@ -64,7 +72,7 @@ export const DesktopUserInteraction = ({
 									{name}
 								</Text>
 							) : (
-								<Text ml=".2rem" fontSize="1.5rem">
+								<Text ml=".2rem" fontSize="1.5rem" userSelect={"none"}>
 									Invitado
 								</Text>
 							)}
@@ -76,6 +84,7 @@ export const DesktopUserInteraction = ({
 					</Flex>
 				</Flex>
 			</Stack>
+			{openDropDown && <AuthModal {...{ handleLogout, token }} />}
 		</Box>
 	);
 };

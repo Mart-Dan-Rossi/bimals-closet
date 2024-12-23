@@ -1,12 +1,13 @@
-import { Box, Circle, Flex, Icon, Text } from "@chakra-ui/react";
-import Link from "next/link";
-import Image from "next/image";
-import { Product } from "@/types/product";
-import { GoHeart, GoHeartFill } from "react-icons/go";
 import {
 	MapProduct,
 	useToggleFavorite,
 } from "@/hooks/favorite/useToggleFavorite";
+import { Product } from "@/types/product";
+import { Box, Circle, Flex, Icon, Text } from "@chakra-ui/react";
+import Image from "next/image";
+import Link from "next/link";
+import { GoHeart, GoHeartFill } from "react-icons/go";
+import { SizeOptions } from "./SizeOptions";
 
 interface Props {
 	product: Product;
@@ -63,7 +64,7 @@ export const ProductCard = ({ product, productsData }: Props) => {
 
 					<Box p={["1rem", "2rem", "2rem", "2rem"]}>
 						<Flex
-							align={["left", "center"]}
+							align={"end"}
 							justify="space-between"
 							flexDir={["column", "row"]}
 						>
@@ -77,6 +78,7 @@ export const ProductCard = ({ product, productsData }: Props) => {
 							>
 								{product?.name}
 							</Text>
+							<SizeOptions product={product} />
 							<Box>
 								<Text
 									fontSize={["1.2rem", "1.3rem"]}

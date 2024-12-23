@@ -3,14 +3,18 @@ import {
 	TextLoader,
 } from "@/components/animations/CustomLoader";
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { CartItem, useCartState } from "@/hooks/state/storage";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 import { Product } from "@/types/product";
-import { Box, Flex, HStack, Icon, Tag, Text } from "@chakra-ui/react";
+import { getSizeName } from "@/utils/functions";
+import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { GoHeart, GoHeartFill } from "react-icons/go";
+import { ConfigSizeFormatButton } from "../main/ConfigSizeFormatButton";
+import { SizeOptions } from "./SizeOptions";
 
 interface Props {
 	isLoadingParticulaProductData: boolean;
@@ -24,6 +28,8 @@ export const ProductDetailMainData = ({
 	const toast = useShowToast();
 
 	const router = useRouter();
+
+	const { currentSizeType } = useGlobalContext();
 
 	const { addToCart } = useCartState((state) => state);
 
@@ -128,39 +134,22 @@ export const ProductDetailMainData = ({
 								</Text>
 
 								<Box mt="2rem">
-									<Text
-										fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
-										fontWeight="600"
-										color="brand.secondaryColor1"
-									>
-										Talle
-									</Text>
-									<HStack spacing={4} mt="1rem">
-										{["sm", "md", "lg", "xl", "2xl", "3xl"].map((size) => (
-											<Tag
-												onClick={() => setSelectedSize(size)}
-												cursor="pointer"
-												size="lg"
-												key={size}
-												p={[".8rem", ".8rem 1.5rem"]}
-												fontSize={["1.5rem", "1.5rem", "1.2rem", "1.5rem"]}
-												fontWeight="500"
-												bg="transparent"
-												border="1px solid"
-												borderColor={
-													selectedSize === size
-														? "brand.secondaryColor1"
-														: "brand.white500"
-												}
-												borderRadius=".5rem"
-												_hover={{
-													borderColor: "brand.secondaryColor1",
-												}}
-											>
-												{size}
-											</Tag>
-										))}
-									</HStack>
+									<Flex justify={"flex-start"} gap={"1rem"}>
+										<Text
+											fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
+											fontWeight="600"
+											color="brand.secondaryColor1"
+										>
+											Talles (
+											{getSizeName(particularProductData, currentSizeType)})
+										</Text>
+										<ConfigSizeFormatButton />
+									</Flex>
+									<SizeOptions
+										product={particularProductData}
+										selectedSize={selectedSize}
+										select={setSelectedSize}
+									/>
 								</Box>
 
 								<Box mt="2rem">

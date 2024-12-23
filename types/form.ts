@@ -11,4 +11,5 @@ export type CustomInputProps = {
 	errorMessage?: string | undefined;
 	onChange?: React.ChangeEventHandler<HTMLInputElement>;
 	formHook?: UseFormRegisterReturn;
+	repeatInput?: boolean;
 };

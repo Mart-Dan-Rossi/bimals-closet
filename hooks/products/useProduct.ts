@@ -11,6 +11,7 @@ export const useGetAllProducts = () => {
 			image: "/assets/images/Barny.jpg",
 			price: 100,
 			isFavorite: false,
+			sizeOptions: { us: [9, 10, 10.5], eu: [41, 42, 43] },
 		},
 		{
 			_id: "2",
@@ -19,6 +20,7 @@ export const useGetAllProducts = () => {
 			image: "/assets/images/Barny.jpg",
 			price: 200,
 			isFavorite: false,
+			sizeOptions: { eu: [41, 42, 43] },
 		},
 		{
 			_id: "3",
@@ -27,6 +29,7 @@ export const useGetAllProducts = () => {
 			image: "/assets/images/Barny.jpg",
 			price: 300,
 			isFavorite: false,
+			sizeOptions: { us: [9, 10, 10.5] },
 		},
 		{
 			_id: "4",
@@ -35,6 +38,7 @@ export const useGetAllProducts = () => {
 			image: "/assets/images/Barny.jpg",
 			price: 400,
 			isFavorite: false,
+			sizeOptions: { us: [9, 10, 10.5] },
 		},
 		{
 			_id: "5",
@@ -43,6 +47,7 @@ export const useGetAllProducts = () => {
 			image: "/assets/images/Barny.jpg",
 			price: 500,
 			isFavorite: false,
+			sizeOptions: { us: [9, 10, 10.5] },
 		},
 		{
 			_id: "6",
@@ -51,6 +56,7 @@ export const useGetAllProducts = () => {
 			image: "/assets/images/Barny.jpg",
 			price: 600,
 			isFavorite: false,
+			sizeOptions: { us: [9, 10, 10.5] },
 		},
 		{
 			_id: "7",
@@ -59,6 +65,7 @@ export const useGetAllProducts = () => {
 			image: "/assets/images/Barny.jpg",
 			price: 700,
 			isFavorite: true,
+			sizeOptions: { us: [9, 10, 10.5] },
 		},
 	];
 	// return useQuery({

@@ -1,7 +1,6 @@
 import { BurguerIcon } from "@/components/Header/BurguerIcon";
 import { DesktopUserInteraction } from "@/components/Header/DesktopUserInteraction";
 import { ExtraInfo } from "@/components/Header/ExtraInfo";
-import { AuthModal } from "@/components/ui/modals";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { useStoreState } from "@/hooks/state/storage";
 import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
@@ -14,7 +13,6 @@ export const Header = ({
 }: {
 	subHeaderName: string | undefined;
 }) => {
-	const [openDropDown, setOpenDropDown] = useBoolean();
 	const [openModal, setOpenModal] = useBoolean();
 	const [name, setName] = useState<string>("");
 	const token = useHydratedStoreState("token");
@@ -57,12 +55,11 @@ export const Header = ({
 					<BurguerIcon setOpenModal={setOpenModal} />
 
 					<DesktopUserInteraction
-						setOpenDropDown={setOpenDropDown}
 						name={name}
-						openDropDown={openDropDown}
+						token={token}
+						handleLogout={handleLogout}
 					/>
 				</Stack>
-				{openDropDown && token && <AuthModal {...{ handleLogout, token }} />}
 			</Box>
 
 			{

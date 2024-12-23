@@ -3,6 +3,8 @@ import { Box } from "@chakra-ui/react";
 
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { GlobalContextProvider } from "@/context/GlobalContext";
+import { SizeTypesDrawer } from "@/components/SizeTypesDrawer";
 
 type childrenProps = {
 	children: React.ReactNode;
@@ -11,11 +13,14 @@ type childrenProps = {
 
 const MainLayout = ({ children, subHeaderName }: childrenProps) => {
 	return (
-		<Box>
-			<Header {...{ subHeaderName }} />
-			<Box minH={"92vh"}>{children}</Box>
-			<Footer />
-		</Box>
+		<GlobalContextProvider>
+			<Box>
+				<Header {...{ subHeaderName }} />
+				<Box minH={"92vh"}>{children}</Box>
+				<Footer />
+			</Box>
+			<SizeTypesDrawer />
+		</GlobalContextProvider>
 	);
 };
 

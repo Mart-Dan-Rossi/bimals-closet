@@ -5,10 +5,14 @@ import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { ProductCard } from "../product/ProductCard";
+import { ConfigSizeFormatButton } from "./ConfigSizeFormatButton";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 export const Products = () => {
 	// const { data: productData, isLoading: isLoadingProductData } =
 	// 	useGetAllProducts();
+
+	const { currentSizeType } = useGlobalContext();
 
 	const productsData: Product[] = useGetAllProducts();
 	const [isLoadingProductData, setIsLoadingProductData] = useState(true);
@@ -18,6 +22,13 @@ export const Products = () => {
 			setIsLoadingProductData(false);
 		}, 1000);
 	}, []);
+
+	const finalProductsData =
+		currentSizeType === "any"
+			? productsData
+			: productsData.filter((product) =>
+					Object.keys(product.sizeOptions).includes(currentSizeType)
+			  );
 
 	return (
 		<Box
@@ -39,16 +50,19 @@ export const Products = () => {
 				</Box>
 
 				<Box p="3rem" pos="relative" zIndex="">
-					<Flex align="center">
-						<Image
-							src="/assets/images/new-seal.svg"
-							height={30}
-							width={30}
-							alt="Indicativo de nuevo"
-						/>
-						<Text fontWeight="600" ml="1rem">
-							Últimos productos!
-						</Text>
+					<Flex justify={"space-between"}>
+						<Flex align="center">
+							<Image
+								src="/assets/images/new-seal.svg"
+								height={30}
+								width={30}
+								alt="Indicativo de nuevo"
+							/>
+							<Text fontWeight="600" ml="1rem" userSelect={"none"}>
+								Nuevos productos!
+							</Text>
+						</Flex>
+						<ConfigSizeFormatButton />
 					</Flex>
 
 					<SimpleGrid columns={[2, 3, 3, 4]} gap="2rem" mt="1rem">
@@ -67,7 +81,7 @@ export const Products = () => {
 						) : (
 							<Fragment>
 								{/* {productsData?.data?.products?.map((product: Product) => ( */}
-								{productsData.map((product: Product) => (
+								{finalProductsData.map((product: Product) => (
 									<ProductCard
 										key={`products-general-view-${product._id}-${product.slug}`}
 										product={product}

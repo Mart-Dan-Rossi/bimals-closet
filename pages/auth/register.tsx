@@ -49,7 +49,7 @@ const Register = () => {
 					status: "error",
 					title:
 						error?.response?.data?.message ||
-						"Erorr occurred! Please try again later",
+						"Ha ocurrido un error! Intenta nuevamente más tarde",
 				});
 			}
 		}
@@ -83,7 +83,7 @@ const Register = () => {
 							textAlign="left"
 							fontSize="1.5rem"
 						>
-							Step 1 of 3
+							Paso 1 de 3
 						</Text>
 					</Box>
 				</Box>
@@ -102,7 +102,7 @@ const Register = () => {
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 					>
-						Create account
+						Crear cuenta
 					</Text>
 
 					<Box
@@ -115,10 +115,10 @@ const Register = () => {
 							<CustomInput
 								{...{
 									id: "fullName",
-									placeholder: "Full Name",
+									placeholder: "Nombre completo",
 									type: "text",
 									formHook: register("fullName", {
-										required: "Please enter your full name",
+										required: "Por favor introduce tu nombre completo",
 									}),
 									errorMessage: errors.fullName?.message as string,
 								}}
@@ -129,10 +129,10 @@ const Register = () => {
 							<CustomInput
 								{...{
 									id: "email",
-									placeholder: "Email",
+									placeholder: "Mail",
 									type: "text",
 									formHook: register("email", {
-										required: "Please enter your email",
+										required: "Por favor introduce tu mail",
 									}),
 									errorMessage: errors.email?.message as string,
 								}}
@@ -143,11 +143,13 @@ const Register = () => {
 							<Controller
 								name="phoneNumber"
 								control={control}
-								rules={{ required: "Please enter your phone number" }}
+								rules={{
+									required: "Por favor introduce tu número de teléfono",
+								}}
 								render={({ field }) => {
 									return (
 										<PhoneInput
-											country="ng"
+											country="ar"
 											value={phoneInput}
 											autoFormat={true}
 											onChange={(e) => {
@@ -157,7 +159,7 @@ const Register = () => {
 											inputClass="phone-input"
 											inputProps={{
 												id: "phoneNumber",
-												placeholder: "Phone Number",
+												placeholder: "Número de teléfono",
 												required: true,
 											}}
 											inputStyle={{
@@ -190,14 +192,15 @@ const Register = () => {
 							<CustomInput
 								{...{
 									id: "password",
-									placeholder: "Password",
+									repeatInput: true,
+									placeholder: "Contraseña",
 									type: showPassword ? "text" : "password",
 									formHook: register("password", {
-										required: "Please enter your password",
+										required: "Por favor introduce la contraseña",
 										pattern: {
 											value: /^(?=.*[A-Z])(?=.*\d)[^\s]{8,}$/,
 											message:
-												"'Password' should have a minimum of eight characters, at least one capital letter, and one number. Spaces are not allowed.",
+												"La contraseña debe tener un mínimo de ocho caracteres, al menos una mayúscula, un número y una minúscula. Los espacios no están permitidos.",
 										},
 									}),
 									handlePasswordClick: () => setShowPassword(!showPassword),
@@ -216,7 +219,7 @@ const Register = () => {
 							/>
 						</Box>
 
-						<CustomButton {...{ text: "Create Account", isLoading }} />
+						<CustomButton {...{ text: "Crear cuenta", isLoading }} />
 
 						<Box>
 							<Link href="/auth/login">
@@ -226,8 +229,8 @@ const Register = () => {
 									fontWeight="500"
 									fontSize="1.3rem"
 								>
-									Already have an account?
-									<span style={{ color: "#00AF54" }}> Login</span>
+									Ya tienes una contraseña?
+									<span style={{ color: "#00AF54" }}> Logueate</span>
 								</Text>
 							</Link>
 						</Box>
@@ -244,7 +247,7 @@ const Register = () => {
 								textAlign="left"
 								fontSize="1.5rem"
 							>
-								Step 1 of 3
+								Paseo 1 de 3
 							</Text>
 						</Box>
 					</Box>

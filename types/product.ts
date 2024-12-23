@@ -6,6 +6,7 @@ export type Product = {
 	price: number;
 	isFavorite: boolean;
 	desc?: string;
+	sizeOptions: { us?: number[]; eu?: number[] };
 };
 
 export type ProductListProps = {
