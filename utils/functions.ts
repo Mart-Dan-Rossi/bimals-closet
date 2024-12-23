@@ -12,6 +12,8 @@ export function getSizeName(
 		Object.keys(product.sizeOptions).forEach((sizeOption) => {
 			const option = sizeOption as keyof ValidSizeOptions;
 			if (
+				product &&
+				product.sizeOptions &&
 				product.sizeOptions[option] &&
 				(product.sizeOptions[option].length ?? 0) > 0
 			) {
