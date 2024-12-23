@@ -9,7 +9,7 @@ export const handleAxiosError = async (error: AxiosError): Promise<void> => {
 	if (response?.status === 500) {
 		Toast({
 			status: "error",
-			title: (response?.data as AxiosError)?.message || "Session expired",
+			title: (response?.data as AxiosError)?.message || "La sesión expiró",
 		});
 	}
 
@@ -21,14 +21,14 @@ export const handleAxiosError = async (error: AxiosError): Promise<void> => {
 			await Router.push(
 				{
 					pathname: "/",
-					query: { error: "Session expired, Log in" },
+					query: { error: "La sesión expiró, logueate" },
 				},
 				"/"
 			);
 		} else {
 			Toast({
 				status: "error",
-				title: (response?.data as AxiosError)?.message || "Session expired",
+				title: (response?.data as AxiosError)?.message || "La sesión expiró",
 			});
 			await Router.push("/");
 		}

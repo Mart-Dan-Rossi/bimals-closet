@@ -1,14 +1,14 @@
-import { Box, Stack, Image, Text, useBoolean, Icon } from "@chakra-ui/react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
-import { useShowToast } from "@/hooks/toast/useShowToast";
-import { useForgotPassword } from "@/hooks/auth/useAuth";
-import Link from "next/link";
-import { CustomInput } from "@/components/ui/forms/CustomInput";
-import { IFormLoginInput } from "@/types/auth";
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
-import withAuth from "../withAuth";
+import { CustomInput } from "@/components/ui/forms/CustomInput";
+import { useForgotPassword } from "@/hooks/auth/useAuth";
+import { useShowToast } from "@/hooks/toast/useShowToast";
+import { IFormLoginInput } from "@/types/auth";
+import { Box, Icon, Image, Stack, Text, useBoolean } from "@chakra-ui/react";
+import axios from "axios";
+import Link from "next/link";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { IoMdCheckmarkCircle } from "react-icons/io";
+import withAuth from "../withAuth";
 
 const ForgotPassword = () => {
 	const [status, setStatus] = useBoolean();
@@ -33,7 +33,7 @@ const ForgotPassword = () => {
 					status: "error",
 					title:
 						error?.response?.data?.message ||
-						"Erorr occurred! Please try again later",
+						"Ocurrió un error. Intente nuevamente luego.",
 				});
 			}
 		}
@@ -93,7 +93,9 @@ const ForgotPassword = () => {
 						textAlign="center"
 						px="4rem"
 					>
-						{!status ? "Reset Password" : "	Reset Password Link Sent"}
+						{!status
+							? "Cambiar contraseña"
+							: "	Link para cambiar contraseña enviado"}
 					</Text>
 					<Text
 						color="brand.secondaryColor1"
@@ -104,8 +106,8 @@ const ForgotPassword = () => {
 						px="4rem"
 					>
 						{!status
-							? "To reset your password, please provide your email address."
-							: "A link has been sent to your email to reset your password. Click the link to reset your password."}
+							? "Para cambiar la contraseña, por favor dinos tu mail."
+							: "Un link ha sido mandado a tu mail para cambiar tu contraseña. Clickea el link para cambiar la contraseña."}
 					</Text>
 
 					{!status && (
@@ -122,14 +124,14 @@ const ForgotPassword = () => {
 										placeholder: "Email",
 										type: "text",
 										formHook: register("email", {
-											required: "Please enter your email",
+											required: "Por favor introduce tu mail",
 										}),
 										errorMessage: errors.email?.message as string,
 									}}
 								/>
 							</Box>
 
-							<CustomButton {...{ text: "Reset Password", isLoading }} />
+							<CustomButton {...{ text: "Cambiar contraseña", isLoading }} />
 
 							<Link href="/auth/login">
 								<Text
@@ -138,8 +140,8 @@ const ForgotPassword = () => {
 									fontWeight="500"
 									fontSize="1.3rem"
 								>
-									Already have an account?
-									<span style={{ color: "#00AF54" }}> Login</span>
+									Ya tienes una cuenta?
+									<span style={{ color: "#00AF54" }}> Logueate</span>
 								</Text>
 							</Link>
 						</Box>

@@ -39,7 +39,7 @@ const VerifyPhone = () => {
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 						textAlign="center"
 					>
-						Verify Phone
+						Verificar teléfono
 					</Heading>
 
 					<Box textAlign="center">
@@ -61,8 +61,8 @@ const VerifyPhone = () => {
 							letterSpacing="0.02rem"
 							color="brand.white100"
 						>
-							Please enter the 4-digit code sent to <b>you</b> to verify your
-							phone number.
+							Por favor introduce el código de 4 caracteres que te enviamos a tu
+							teléfono.
 						</Text>
 
 						<OtpInput
@@ -110,7 +110,7 @@ const VerifyPhone = () => {
 								fontWeight="600"
 								fontSize="1.5rem"
 							>
-								Skip for now
+								Omitir por ahora
 							</Text>
 						</Link>
 					</Box>
@@ -123,7 +123,7 @@ const VerifyPhone = () => {
 						fontWeight="600"
 						fontSize="1.5rem"
 					>
-						Step 3 of 3
+						Paso 3 de 3
 					</Text>
 				</Box>
 			</Flex>

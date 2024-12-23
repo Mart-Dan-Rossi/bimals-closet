@@ -48,7 +48,7 @@ const Login = () => {
 					status: "error",
 					title:
 						error?.response?.data?.message ||
-						"Erorr occurred! Please try again later",
+						"Ocurrió un error, intenta de nuevo luego",
 				});
 			}
 		}
@@ -129,7 +129,7 @@ const Login = () => {
 									placeholder: "Email",
 									type: "text",
 									formHook: register("email", {
-										required: "Please enter your email",
+										required: "Por favor introduce tu mail",
 									}),
 									errorMessage: errors.email?.message as string,
 								}}

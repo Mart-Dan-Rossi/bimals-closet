@@ -1,17 +1,17 @@
-import { Box, Stack, Image, Text, useBoolean, Icon } from "@chakra-ui/react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
-import { useShowToast } from "@/hooks/toast/useShowToast";
-import { useResetPassword } from "@/hooks/auth/useAuth";
-import { CustomInput } from "@/components/ui/forms/CustomInput";
-import { IFormLoginInput } from "@/types/auth";
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
-import withAuth from "../withAuth";
-import { Fragment, useState } from "react";
-import { IoMdCheckmarkCircle } from "react-icons/io";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { useRouter } from "next/router";
+import { CustomInput } from "@/components/ui/forms/CustomInput";
+import { useResetPassword } from "@/hooks/auth/useAuth";
+import { useShowToast } from "@/hooks/toast/useShowToast";
+import { IFormLoginInput } from "@/types/auth";
+import { Box, Icon, Image, Stack, Text, useBoolean } from "@chakra-ui/react";
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { Fragment, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { IoMdCheckmarkCircle } from "react-icons/io";
+import withAuth from "../withAuth";
 
 const ResetPassword = () => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -34,7 +34,8 @@ const ResetPassword = () => {
 		if (newPassword !== confirmPassword) {
 			return toast({
 				status: "error",
-				title: "Passwords do not match. Please double-check and try again.",
+				title:
+					"Las contraseñas no coinciden. Por favor checkealo y vuelve a intentarlo.",
 			});
 		}
 
@@ -56,7 +57,7 @@ const ResetPassword = () => {
 					status: "error",
 					title:
 						error?.response?.data?.message ||
-						"Erorr occurred! Please try again later",
+						"Ocurrió un error. Intenta nuevamente luego",
 				});
 			}
 		}
@@ -127,8 +128,8 @@ const ResetPassword = () => {
 						px="4rem"
 					>
 						{!status
-							? "Good job, you clicked the link to reset your password. Enter the new password you would like to use."
-							: "Congratulations! Your password has been successfully reset. You now have a new password. Click the button below to log in to your account"}
+							? "Buen trabajo, clickeaste el link para cambiar tu contraseña. introduce la contraseña nueva."
+							: "Felicitaciones! Tu contraseña se cambió correctamente. Tienes una nueva contraseña. Clickea el botón de debajo para conectarte"}
 					</Text>
 
 					<Box
@@ -143,14 +144,14 @@ const ResetPassword = () => {
 									<CustomInput
 										{...{
 											id: "newPassword",
-											placeholder: "New Password",
+											placeholder: "Nueva contraseña",
 											type: showPassword ? "text" : "password",
 											formHook: register("newPassword", {
-												required: "Please enter your new password",
+												required: "Por favor introduce tu nueva contraseña",
 												pattern: {
 													value: /^(?=.*[A-Z])(?=.*\d)[^\s]{8,}$/,
 													message:
-														"'Password' should have a minimum of eight characters, at least one capital letter, and one number. Spaces are not allowed.",
+														"La contraseña debe tener al menos ocho caracteres, una mayúscula y un número. Los espacios no están permitidos.",
 												},
 											}),
 											handlePasswordClick: () => setShowPassword(!showPassword),
@@ -173,14 +174,14 @@ const ResetPassword = () => {
 									<CustomInput
 										{...{
 											id: "confirmPassword",
-											placeholder: "Confirm New Password",
+											placeholder: "Confirmar contraseña",
 											type: showConfirmPassword ? "text" : "password",
 											formHook: register("confirmPassword", {
-												required: "Please confirm your password",
+												required: "Por favor confirma tu contraseña",
 												pattern: {
 													value: /^(?=.*[A-Z])(?=.*\d)[^\s]{8,}$/,
 													message:
-														"'Password' should have a minimum of eight characters, at least one capital letter, and one number. Spaces are not allowed.",
+														"La contraseña debe tener al menos ocho caracteres, una mayúscula y un número. Los espacios no están permitidos.",
 												},
 											}),
 											handlePasswordClick: () =>
@@ -207,11 +208,11 @@ const ResetPassword = () => {
 						)}
 
 						{!status ? (
-							<CustomButton {...{ text: "Reset Password", isLoading }} />
+							<CustomButton {...{ text: "Cambiar contraseña", isLoading }} />
 						) : (
 							<Box>
 								<Link href="/auth/login">
-									<CustomButton {...{ text: "Login" }} />
+									<CustomButton {...{ text: "Conectate" }} />
 								</Link>
 							</Box>
 						)}

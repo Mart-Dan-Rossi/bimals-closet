@@ -11,19 +11,17 @@ export const AuthModal = ({
 	token: string | null | undefined;
 }) => {
 	return (
-		<Box>
-			<Stack
-				bg="brand.white100"
-				w="13rem"
-				justifyContent="center"
-				borderRadius="1rem"
-				position="absolute"
-				top="8rem"
-				right="8rem"
-				zIndex="2"
-				overflow="hidden"
-				display={["none", "block"]}
-			>
+		<Box
+			position="absolute"
+			top="3rem"
+			border={"1px solid grey"}
+			borderRadius="1rem"
+			bg="brand.white100"
+			zIndex="2"
+			display={["none", "block"]}
+			boxShadow="0px 12px 15px black"
+		>
+			<Stack w="13rem" justifyContent="center" overflow="hidden">
 				{AuthModalData.map((item, idx) => {
 					return (
 						<Fragment key={idx}>

@@ -29,10 +29,8 @@ export const DesktopUserInteraction = ({
 	const cart = useHydratedCartState("cart");
 	const [openDropDown, setOpenDropDown] = useBoolean();
 
-	console.log("openDropDown: ", openDropDown);
-
 	return (
-		<Box display={["none", "flex"]}>
+		<Box position={"relative"} display={["none", "flex"]}>
 			<Stack
 				spacing="2rem"
 				direction={["row"]}

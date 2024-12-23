@@ -56,7 +56,7 @@ const VerifyEmail = () => {
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 						textAlign="center"
 					>
-						Verify Email
+						Verificar mail
 					</Heading>
 
 					<Box textAlign="center">
@@ -78,8 +78,8 @@ const VerifyEmail = () => {
 								fontWeight="400"
 								letterSpacing="0.02rem"
 							>
-								We’ve sent an email to <b>{email}</b>. Please check your inbox
-								to verify your email.
+								Te hemos mandado un mail a <b>{email}</b>. Por favor verifica tu
+								bandeja de entrada.
 							</Text>
 						) : (
 							<Box>
@@ -96,7 +96,7 @@ const VerifyEmail = () => {
 										fontWeight="300"
 										letterSpacing="0.02rem"
 									>
-										Email Verification Successful
+										Verificación de mail exitosa
 									</Text>
 								</Center>
 
@@ -117,7 +117,7 @@ const VerifyEmail = () => {
 						fontWeight="600"
 						fontSize="1.5rem"
 					>
-						Step 2 of 3
+						Paso 2 de 3
 					</Text>
 				</Box>
 			</Flex>
