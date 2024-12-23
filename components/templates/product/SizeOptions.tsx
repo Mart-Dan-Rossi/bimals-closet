@@ -25,7 +25,7 @@ export const SizeOptions = ({ product, select, selectedSize }: Props) => {
 				Object.keys(product.sizeOptions).includes(sizeType)
 			) {
 				if (product.sizeOptions[sizeType]) {
-					firstSizeTypeDataFound = product.sizeOptions[sizeType];
+					firstSizeTypeDataFound = product.sizeOptions[sizeType] ?? [0];
 				}
 			}
 		});
