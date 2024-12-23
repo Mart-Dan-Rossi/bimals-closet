@@ -4,14 +4,12 @@ import { AiFillPlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 import { RiDeleteBinLine } from "react-icons/ri";
 
 interface Props {
-	index: number;
 	item: CartItem;
 	quantityCount: (id: string, type: "increament" | "decreament") => void;
 	removeFromCart: (id: string | string[], isMultiple?: boolean) => void;
 }
 
 export const CartProductCard = ({
-	index,
 	item,
 	quantityCount,
 	removeFromCart,

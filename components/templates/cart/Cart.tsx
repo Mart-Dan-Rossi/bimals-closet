@@ -98,7 +98,6 @@ export const CartItems = () => {
 					return (
 						<CartProductCard
 							key={`cart-item-${index}-key`}
-							index={index}
 							item={item}
 							quantityCount={quantityCount}
 							removeFromCart={removeFromCart}
