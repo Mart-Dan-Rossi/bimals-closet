@@ -12,7 +12,10 @@ import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { GoHeart, GoHeartFill } from "react-icons/go";
+import {
+	// GoHeart,
+	GoHeartFill,
+} from "react-icons/go";
 import { ConfigSizeFormatButton } from "../main/ConfigSizeFormatButton";
 import { SizeOptions } from "./SizeOptions";
 
@@ -111,14 +114,18 @@ export const ProductDetailMainData = ({
 									cursor="pointer"
 									color={
 										// particularProductData?.data?.product?.isFavorite
-										particularProductData.isFavorite
-											? "brand.red100"
-											: "brand.secondaryColor2"
+										// particularProductData.isFavorite
+										// false ?
+										"brand.red100"
+										//  : "brand.secondaryColor2"
 									}
 									fontSize="2rem"
 									as={
 										// particularProductData?.data?.product?.isFavorite
-										particularProductData.isFavorite ? GoHeartFill : GoHeart
+										// particularProductData.isFavorite
+										// false ?
+										GoHeartFill
+										// : GoHeart
 									}
 								/>
 							</Flex>

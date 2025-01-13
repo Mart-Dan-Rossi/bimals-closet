@@ -4,7 +4,6 @@ export type Product = {
 	slug: string;
 	image: string;
 	price: number;
-	isFavorite: boolean;
 	desc?: string;
 	sizeOptions: { us?: number[]; eu?: number[] };
 };

@@ -11,7 +11,10 @@ import {
 	Stack,
 	Text,
 } from "@chakra-ui/react";
-import { GoHeart, GoHeartFill } from "react-icons/go";
+import {
+	// GoHeart,
+	GoHeartFill,
+} from "react-icons/go";
 
 interface Props {
 	product: Product;
@@ -101,10 +104,18 @@ export const WishlistProductCard = ({ product, wishlistData }: Props) => {
 					>
 						<Icon
 							color={`${
-								product?.isFavorite ? "brand.red100" : "brand.secondaryColor2"
+								// product?.isFavorite
+								// false ?
+								"brand.red100"
+								//  : "brand.secondaryColor2"
 							}`}
 							fontSize="1.5rem"
-							as={product?.isFavorite ? GoHeartFill : GoHeart}
+							as={
+								// product?.isFavorite
+								// false ?
+								GoHeartFill
+								//   : GoHeart
+							}
 						/>
 					</Circle>
 				</Flex>

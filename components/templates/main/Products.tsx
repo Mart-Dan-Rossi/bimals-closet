@@ -14,7 +14,7 @@ export const Products = () => {
 
 	const { currentSizeType } = useGlobalContext();
 
-	const productsData: Product[] = useGetAllProducts();
+	const { data: productsData } = useGetAllProducts();
 	const [isLoadingProductData, setIsLoadingProductData] = useState(true);
 
 	useEffect(() => {
@@ -26,7 +26,8 @@ export const Products = () => {
 	const finalProductsData =
 		currentSizeType === "any"
 			? productsData
-			: productsData.filter((product) =>
+			: productsData &&
+			  productsData.filter((product) =>
 					Object.keys(product.sizeOptions).includes(currentSizeType)
 			  );
 
@@ -81,13 +82,15 @@ export const Products = () => {
 						) : (
 							<Fragment>
 								{/* {productsData?.data?.products?.map((product: Product) => ( */}
-								{finalProductsData.map((product: Product) => (
-									<ProductCard
-										key={`products-general-view-${product._id}-${product.slug}`}
-										product={product}
-										productsData={productsData}
-									/>
-								))}
+								{finalProductsData &&
+									productsData &&
+									finalProductsData.map((product: Product) => (
+										<ProductCard
+											key={`products-general-view-${product._id}-${product.slug}`}
+											product={product}
+											productsData={productsData}
+										/>
+									))}
 							</Fragment>
 						)}
 					</SimpleGrid>

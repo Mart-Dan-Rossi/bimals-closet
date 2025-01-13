@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 export type MapProduct = {
 	_id: string;
-	isFavorite: boolean;
+	// isFavorite: boolean;
 };
 
 export const useToggleFavorite = (mapProducts: MapProduct[]) => {
@@ -28,7 +28,8 @@ export const useToggleFavorite = (mapProducts: MapProduct[]) => {
 
 	const isProductChecked = (productId: string) => {
 		const isChecked = mapProducts?.some(
-			(item) => item?._id === productId && item.isFavorite
+			(item) => item?._id === productId && false
+			//  item.isFavorite
 		);
 		return isChecked;
 	};
