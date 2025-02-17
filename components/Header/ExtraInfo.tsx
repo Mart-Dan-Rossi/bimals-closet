@@ -1,3 +1,4 @@
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Box, Flex, Icon, Text, useBoolean } from "@chakra-ui/react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { CategoriesModal } from "../ui/modals";
@@ -6,16 +7,10 @@ import { MobileNavbar } from "../ui/modals/MobileNavbar";
 interface Props {
 	subHeaderName: string | undefined;
 	openModal: boolean;
-	handleLogout: () => void;
-	token: string | null | undefined;
 }
 
-export const ExtraInfo = ({
-	subHeaderName,
-	openModal,
-	handleLogout,
-	token,
-}: Props) => {
+export const ExtraInfo = ({ subHeaderName, openModal }: Props) => {
+	const token = useHydratedStoreState("token");
 	const [openCatgories, setOpenCatgories] = useBoolean();
 
 	return (
@@ -56,9 +51,7 @@ export const ExtraInfo = ({
 				</Flex>
 			</Box>
 
-			{openModal && token !== undefined ? (
-				<MobileNavbar {...{ handleLogout, token }} />
-			) : null}
+			{openModal && token !== undefined ? <MobileNavbar /> : null}
 			{openCatgories && subHeaderName === "Categories" ? (
 				<CategoriesModal />
 			) : null}

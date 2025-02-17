@@ -14,18 +14,11 @@ import { BiUserCircle } from "react-icons/bi";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { TiShoppingCart } from "react-icons/ti";
 import { AuthModal } from "../ui/modals";
-
 interface Props {
 	name: string;
-	token: string | null | undefined;
-	handleLogout: () => void;
 }
 
-export const DesktopUserInteraction = ({
-	name,
-	token,
-	handleLogout,
-}: Props) => {
+export const DesktopUserInteraction = ({ name }: Props) => {
 	const cart = useHydratedCartState("cart");
 	const [openDropDown, setOpenDropDown] = useBoolean();
 
@@ -82,7 +75,7 @@ export const DesktopUserInteraction = ({
 					</Flex>
 				</Flex>
 			</Stack>
-			{openDropDown && <AuthModal {...{ handleLogout, token }} />}
+			{openDropDown && <AuthModal />}
 		</Box>
 	);
 };

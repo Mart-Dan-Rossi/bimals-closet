@@ -4,13 +4,9 @@ import { useHydratedStoreState } from "../state/hydrated";
 import { ErrorResponse } from "@/types/error";
 import { useAddFavorite, useRemoveFavorite } from "./useFavorite";
 import { useEffect, useState } from "react";
+import { Product } from "@/types/product";
 
-export type MapProduct = {
-	_id: string;
-	// isFavorite: boolean;
-};
-
-export const useToggleFavorite = (mapProducts: MapProduct[]) => {
+export const useToggleFavorite = (mapProducts: Product[] | Product) => {
 	const token = useHydratedStoreState("token");
 	const router = useRouter();
 	const toast = useShowToast();
@@ -19,17 +15,19 @@ export const useToggleFavorite = (mapProducts: MapProduct[]) => {
 	const [userId, setUserId] = useState("");
 
 	useEffect(() => {
-		const storedUser = sessionStorage.getItem("user");
-		const user = storedUser ? JSON.parse(storedUser) : null;
+		const storedUser = localStorage.getItem("MateoShoesUser");
+		const user = storedUser && token ? JSON.parse(storedUser) : null;
 		const id = user ? user.id : null;
 
 		setUserId(id);
-	}, [userId]);
+	}, [userId, token]);
 
 	const isProductChecked = (productId: string) => {
-		const isChecked = mapProducts?.some(
-			(item) => item?._id === productId && false
-			//  item.isFavorite
+		const productsArray = Array.isArray(mapProducts)
+			? mapProducts
+			: [mapProducts];
+		const isChecked = productsArray?.some(
+			(item) => item?._id === productId && item.isFavorite
 		);
 		return isChecked;
 	};
@@ -38,7 +36,7 @@ export const useToggleFavorite = (mapProducts: MapProduct[]) => {
 		if (!token) {
 			toast({
 				status: "error",
-				title: "You must be logged in to use this feature.",
+				title: "Debes estar logueado para usar esta función.",
 			});
 			setTimeout(() => {
 				router.push("/auth/login");

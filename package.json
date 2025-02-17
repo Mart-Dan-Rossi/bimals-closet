@@ -23,6 +23,7 @@
 		"eslint": "^8.0.1",
 		"eslint-config-next": "^15.1.1",
 		"framer-motion": "^10.12.18",
+		"mercadopago": "^2.3.0",
 		"next": "13.4.9",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",

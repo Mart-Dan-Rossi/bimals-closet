@@ -14,7 +14,7 @@ import {
 export const SizeTypesDrawer = () => {
 	const {
 		currentSizeType,
-		setCurrentSizeType,
+		useSetCurrentSizeType,
 		sizeTypes,
 		isSizeTypesDrawerOpen,
 		onCloseSizeTypesDrawer,
@@ -35,6 +35,9 @@ export const SizeTypesDrawer = () => {
 					*Algunos productos podrían verse filtrados al elegir un formato de
 					talle que el producto no tenga definido*
 				</Text>
+				<Text padding={"0.5rem 2rem"} fontSize={"smaller"} as="i">
+					*Algunos filtros podrían verse afectados*
+				</Text>
 
 				<DrawerBody>
 					<Flex>
@@ -47,7 +50,7 @@ export const SizeTypesDrawer = () => {
 										sizeTypeOption === currentSizeType ? "outline" : "solid"
 									}
 									onClick={() =>
-										setCurrentSizeType(sizeTypeOption as "any" | "us" | "eu")
+										useSetCurrentSizeType(sizeTypeOption as "any" | "us" | "eu")
 									}
 								>
 									{sizeTypeOption === "any" ? "Todos" : sizeTypeOption}

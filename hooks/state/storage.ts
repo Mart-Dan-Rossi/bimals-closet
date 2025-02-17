@@ -12,7 +12,7 @@ export const useStoreState = create<TStoreState>()(
 				removeToken: () => set({ token: null }),
 			}),
 			{
-				name: "__bimals_closet_store_data__",
+				name: "__mateo_shoes_store_data__",
 			}
 		)
 	)
@@ -25,6 +25,7 @@ export type CartItem = {
 	quantity: number;
 	image?: string;
 	size?: number | string;
+	sizeType: string;
 };
 
 export const useCartState = create<TCartState>()(
@@ -83,7 +84,7 @@ export const useCartState = create<TCartState>()(
 				emptyCart: () => set({ cart: [], cartCount: 0 }),
 			})),
 			{
-				name: "__bimals_closet_cart__",
+				name: "__mateo_shoes_cart__",
 			}
 		)
 	)

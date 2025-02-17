@@ -3,21 +3,23 @@ import {
 	useHydratedCartState,
 	useHydratedStoreState,
 } from "@/hooks/state/hydrated";
+import { useSelectPayMethod } from "@/hooks/state/selectPayMethod";
 import { CartItem, useCartState } from "@/hooks/state/storage";
 import { useShowToast } from "@/hooks/toast/useShowToast";
-import { CheckoutProps } from "@/types/cart";
+import { SelectPayMethodProps } from "@/types/selectPayMethod";
 import { Box, Center, Flex, Icon, Text } from "@chakra-ui/react";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BiChevronLeft } from "react-icons/bi";
 import { FaGhost } from "react-icons/fa";
-import { usePaystackPayment } from "react-paystack";
 import { CartProductCard } from "./CartProductCard";
 
 export const CartItems = () => {
 	const cart = useHydratedCartState("cart");
-
 	const token = useHydratedStoreState("token");
+
+	const { mutateAsync, isLoading } = useSelectPayMethod();
 
 	const { quantityCount, removeFromCart, emptyCart } = useCartState(
 		(state) => state
@@ -28,6 +30,7 @@ export const CartItems = () => {
 	const toast = useShowToast();
 
 	const [userEmail, setUserEmail] = useState("");
+	const [userName, setUserName] = useState<string>("");
 
 	const totalCartPrice =
 		cart?.reduce((total, item) => {
@@ -35,43 +38,67 @@ export const CartItems = () => {
 			return total + itemTotal;
 		}, 0) ?? 0;
 
-	const convertTotalAmountToKobo = totalCartPrice * 100;
+	const handlePurchase = async () => {
+		try {
+			if (cart) {
+				const purchaseData: SelectPayMethodProps = {
+					items: cart.map((item) => ({
+						id: item.id,
+						quantity: item.quantity,
+					})),
+					payer: {
+						name: userName,
+						email: userEmail,
+					},
+				};
 
-	// Paystack Integration
-	const config: CheckoutProps = {
-		reference: new Date().getTime().toString(),
-		email: userEmail,
-		amount: convertTotalAmountToKobo,
-		publicKey: process.env.NEXT_PUBLIC_PAYSTACK_LIVE_KEY ?? "",
-	};
+				const res = await mutateAsync(purchaseData);
 
-	const initializePayment = usePaystackPayment(config);
+				if (res?.status === "success") {
+					toast({
+						status: "success",
+						title: "Compra realizada con éxito",
+						description:
+							"Gracias por tu compra. Revisa tu correo para más detalles.",
+					});
 
-	const checkToken = () => {
-		if (!token) {
-			return toast({
-				status: "error",
-				title: "Logueate para continuar",
-			});
+					emptyCart();
+
+					router.push("/thank-you");
+				}
+			}
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				toast({
+					status: "error",
+					title: "Error en la compra",
+					description:
+						error?.response?.data?.message ||
+						"Ocurrió un error. Intenta nuevamente.",
+				});
+			} else {
+				toast({
+					status: "error",
+					title: "Error inesperado",
+					description:
+						"Algo salió mal. Por favor, inténtalo de nuevo más tarde.",
+				});
+			}
 		}
-
-		initializePayment(onSuccess);
-	};
-
-	const onSuccess = () => {
-		toast({
-			status: "success",
-			title: `Compra exitosa! Comprobante de la compra: ${config?.reference}`,
-		});
 	};
 
 	useEffect(() => {
-		const storedUser = sessionStorage.getItem("user");
-		const user = storedUser ? JSON.parse(storedUser) : null;
+		const storedUser = localStorage.getItem("MateoShoesUser");
+		const user = storedUser && token ? JSON.parse(storedUser) : null;
 		const email = user ? user.email : null;
 
-		setUserEmail(email);
-	}, [userEmail]);
+		if (userEmail !== email) {
+			setUserEmail(email);
+		}
+		if (userName !== user) {
+			setUserName(user?.name.split(" ")[0]);
+		}
+	}, [userEmail, userName, token]);
 
 	return (
 		<Box pt="15rem" pb="5rem">
@@ -115,7 +142,7 @@ export const CartItems = () => {
 						<Box overflow="hidden" borderRadius="1rem">
 							<Text fontWeight="600">Total de Items</Text>
 							<Text textAlign="center">{cart?.length}</Text>
-							<Box onClick={checkToken}>
+							<Box onClick={handlePurchase}>
 								<CustomButton
 									{...{
 										text: "Pagar",
@@ -123,6 +150,7 @@ export const CartItems = () => {
 										border: ".2rem solid",
 										borderColor: "transparent",
 										isDisabled: cart?.length < 1,
+										isLoading,
 									}}
 								/>
 							</Box>
@@ -130,7 +158,7 @@ export const CartItems = () => {
 
 						<Box overflow="hidden" borderRadius="1rem">
 							<Text fontWeight="600">Precio Total</Text>
-							<Text textAlign="center">ARS {totalCartPrice?.toFixed(2)}</Text>
+							<Text textAlign="center">AR$ {totalCartPrice?.toFixed(2)}</Text>
 							<Box onClick={emptyCart}>
 								<CustomButton
 									{...{

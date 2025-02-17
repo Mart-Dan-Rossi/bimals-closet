@@ -10,5 +10,5 @@ export const getAllProducts = async (): Promise<Product[]> => {
 export const getParticularProduct = async (slug: string): Promise<Product> => {
 	const { data } = await AxiosInstance.get(`/api/products/${slug}`);
 
-	return data;
+	return data.data.product;
 };

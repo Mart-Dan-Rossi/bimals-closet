@@ -1,30 +1,22 @@
 import { BoxCardLoader } from "@/components/animations/CustomLoader";
 import { useGlobalContext } from "@/context/GlobalContext";
-import { useGetAllProducts } from "@/hooks/products/useProduct";
 import { Product } from "@/types/product";
 import { Box, SimpleGrid, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
 import { ProductCard } from "./ProductCard";
 
 export const SimilarProduct = () => {
-	// const { data: productData, isLoading: isLoadingProductData } =
-	// 	useGetAllProducts();
+	const router = useRouter();
+	const { slug } = router.query;
 
-	const { currentSizeType } = useGlobalContext();
-
-	const productsData = useGetAllProducts();
-
-	const [isLoadingProductData, setIsLoadingProductData] = useState(true);
-
-	useEffect(() => {
-		setTimeout(() => {
-			setIsLoadingProductData(false);
-		}, 1000);
-	}, []);
+	const { finalProductsData, isLoadingProductData } = useGlobalContext();
 
 	const [shuffledProducts, setShuffledProducts] = useState<Product[]>([]);
 
-	const shuffleArray = (array: Product[]) => {
+	const shuffleArray = (array: Product[] | undefined) => {
+		if (!array) return [];
+
 		const shuffledArray = [...array];
 		for (let i = shuffledArray.length - 1; i > 0; i--) {
 			const j = Math.floor(Math.random() * (i + 1));
@@ -36,27 +28,36 @@ export const SimilarProduct = () => {
 		return shuffledArray;
 	};
 
-	// useEffect(() => {
-	// 	if (productData) {
-	// 		const shuffled = shuffleArray(productData?.data?.products);
-	// 		setShuffledProducts(shuffled);
-	// 	}
-	// }, [productData]);
-
 	useEffect(() => {
-		if (productsData) {
-			const shuffled = shuffleArray(productsData).filter((product) => {
-				if (currentSizeType === "any") {
-					return true;
-				}
-				return Object.keys(product.sizeOptions).includes(currentSizeType);
-			});
+		if (finalProductsData) {
+			const shuffled = shuffleArray(getSimilarProducts());
 			setShuffledProducts(shuffled);
 		}
-		// }, [productsData]);
-	}, [currentSizeType]);
+	}, [finalProductsData, slug]);
 
-	console.log("productsData: ", productsData);
+	function getSimilarProducts() {
+		const currentProduct = finalProductsData?.find(
+			(product) => product.slug === slug
+		);
+
+		const filteredProducts = finalProductsData?.filter((product) => {
+			const tagsFiltering = product.tags?.some(
+				(tag) => currentProduct?.tags?.includes(tag)
+			);
+
+			const sizeFiltering = Object.keys(product.sizeOptions || {}).some(
+				(key) => {
+					return currentProduct?.sizeOptions[key]?.some(
+						(num) => product.sizeOptions[key]?.includes(num)
+					);
+				}
+			);
+
+			return tagsFiltering || sizeFiltering;
+		});
+
+		return filteredProducts;
+	}
 
 	return (
 		<Box maxW="1280px" mx="auto" px="3rem" pb="8rem" pt="3rem">
@@ -72,10 +73,7 @@ export const SimilarProduct = () => {
 							{isLoadingProductData ? (
 								<BoxCardLoader rounded=".6rem" h={["230px", "300px"]} />
 							) : (
-								<ProductCard
-									product={product}
-									productsData={shuffledProducts}
-								/>
+								<ProductCard product={product} />
 							)}
 						</Fragment>
 					))}

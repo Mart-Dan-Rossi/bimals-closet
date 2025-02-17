@@ -19,7 +19,7 @@ export const AuthAxiosInstance = axios.create({
 
 AuthAxiosInstance.interceptors.request.use(
 	async (request) => {
-		const token = getLocalStorage("__bimals_closet_store_data__");
+		const token = getLocalStorage("__mateo_shoes_store_data__");
 
 		if ((token as ConfigResponse)?.state?.token) {
 			(request.headers as Record<string, unknown>)[

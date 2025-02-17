@@ -3,13 +3,15 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useShowToast } from "../toast/useShowToast";
 import { addFavorite, myFavorites, removeFavorite } from "@/queries/favorite";
 import { FavoriteProps } from "@/types/favorite";
+import { Product } from "@/types/product";
 
 export const useAddFavorite = () => {
 	const queryClient = useQueryClient();
 	const toast = useShowToast();
-
 	return useMutation({
-		mutationFn: (payload: FavoriteProps) => addFavorite(payload),
+		mutationFn: (payload: FavoriteProps) => {
+			return addFavorite(payload);
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();
 			toast({
@@ -39,7 +41,7 @@ export const useRemoveFavorite = () => {
 };
 
 export const useGetMyFavorites = () => {
-	return useQuery({
+	return useQuery<Product[]>({
 		queryKey: ["getMyFavorites"],
 		queryFn: () => myFavorites(),
 		retry: 2,

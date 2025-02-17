@@ -1,35 +1,54 @@
 import { BoxCardLoader } from "@/components/animations/CustomLoader";
-import { useGetAllProducts } from "@/hooks/products/useProduct";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
 import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { ProductCard } from "../product/ProductCard";
 import { ConfigSizeFormatButton } from "./ConfigSizeFormatButton";
-import { useGlobalContext } from "@/context/GlobalContext";
+import { FiltersButton } from "./FiltersButton";
 
 export const Products = () => {
-	// const { data: productData, isLoading: isLoadingProductData } =
-	// 	useGetAllProducts();
+	const { currentSizeType, filter, finalProductsData, isLoadingProductData } =
+		useGlobalContext();
 
-	const { currentSizeType } = useGlobalContext();
-
-	const { data: productsData } = useGetAllProducts();
-	const [isLoadingProductData, setIsLoadingProductData] = useState(true);
+	const [filteredProductsData, setFinalProductsData] =
+		useState(finalProductsData);
 
 	useEffect(() => {
-		setTimeout(() => {
-			setIsLoadingProductData(false);
-		}, 1000);
-	}, []);
+		if (finalProductsData) {
+			const filteredProducts = finalProductsData.filter((product) => {
+				let passAllFilters =
+					currentSizeType === "any" ||
+					Object.keys(product.sizeOptions).includes(currentSizeType);
 
-	const finalProductsData =
-		currentSizeType === "any"
-			? productsData
-			: productsData &&
-			  productsData.filter((product) =>
-					Object.keys(product.sizeOptions).includes(currentSizeType)
-			  );
+				if (filter) {
+					if (passAllFilters && filter.sizeOptions) {
+						const sizeOptionsKey = Object.keys(filter.sizeOptions)[0]; // Should only have 1 and never be "any"
+						if (sizeOptionsKey === currentSizeType) {
+							const isOverMin = product.sizeOptions[sizeOptionsKey]?.some(
+								(size) => {
+									return size >= filter.sizeOptions[sizeOptionsKey].min;
+								}
+							);
+
+							const isUnderMax = product.sizeOptions[sizeOptionsKey]?.some(
+								(size) => {
+									return size <= filter.sizeOptions[sizeOptionsKey].max;
+								}
+							);
+
+							passAllFilters = !!(isOverMin && isUnderMax);
+						}
+					}
+				}
+
+				return passAllFilters;
+			});
+
+			setFinalProductsData(filteredProducts);
+		}
+	}, [finalProductsData, filter, currentSizeType]);
 
 	return (
 		<Box
@@ -63,7 +82,10 @@ export const Products = () => {
 								Nuevos productos!
 							</Text>
 						</Flex>
-						<ConfigSizeFormatButton />
+						<Flex>
+							<FiltersButton />
+							<ConfigSizeFormatButton />
+						</Flex>
 					</Flex>
 
 					<SimpleGrid columns={[2, 3, 3, 4]} gap="2rem" mt="1rem">
@@ -82,13 +104,12 @@ export const Products = () => {
 						) : (
 							<Fragment>
 								{/* {productsData?.data?.products?.map((product: Product) => ( */}
-								{finalProductsData &&
-									productsData &&
-									finalProductsData.map((product: Product) => (
+								{filteredProductsData &&
+									finalProductsData &&
+									filteredProductsData.map((product: Product) => (
 										<ProductCard
 											key={`products-general-view-${product._id}-${product.slug}`}
 											product={product}
-											productsData={productsData}
 										/>
 									))}
 							</Fragment>

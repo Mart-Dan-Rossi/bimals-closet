@@ -1,15 +1,13 @@
+import { useGlobalContext } from "@/context/GlobalContext";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { AuthModalData } from "@/utils/modal";
 import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { Fragment } from "react";
 
-export const MobileNavbar = ({
-	handleLogout,
-	token,
-}: {
-	handleLogout: () => void;
-	token: string | null;
-}) => {
+export const MobileNavbar = () => {
+	const { handleLogout } = useGlobalContext();
+	const token = useHydratedStoreState("token");
 	return (
 		<Box
 			bg="brand.dark100"

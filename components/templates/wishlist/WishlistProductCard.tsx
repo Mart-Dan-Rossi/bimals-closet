@@ -25,6 +25,7 @@ export const WishlistProductCard = ({ product, wishlistData }: Props) => {
 	const mapProducts = wishlistData?.map((item: Product) => {
 		const res = {
 			...item,
+			isFavorite: true,
 		};
 		return res;
 	});
@@ -44,8 +45,7 @@ export const WishlistProductCard = ({ product, wishlistData }: Props) => {
 						<Img
 							width="140px"
 							height="140px"
-							// src={product?.image[0]}
-							src={product?.image}
+							src={`/assets/images/${product?.images[0]}`}
 							alt="Imágen del producto"
 						/>
 					</Box>
@@ -74,7 +74,7 @@ export const WishlistProductCard = ({ product, wishlistData }: Props) => {
 								fontWeight="600"
 								color="brand.secondaryColor1"
 							>
-								ARS {product?.price?.toFixed(2)}{" "}
+								AR$ {product?.price?.toFixed(2)}{" "}
 							</Text>
 						</Flex>
 

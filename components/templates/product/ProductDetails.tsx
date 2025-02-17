@@ -1,7 +1,6 @@
 import { useParticularProduct } from "@/hooks/products/useProduct";
 import { Box, Icon, SimpleGrid } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { BiChevronLeft } from "react-icons/bi";
 import { ProductDetailImages } from "./ProductDetailImages";
 import { ProductDetailMainData } from "./ProductDetailMainData";
@@ -10,21 +9,8 @@ export const ProductDetails = () => {
 	const router = useRouter();
 	const { slug } = router.query;
 
-	// const {
-	// data: particularProductData,
-	// 	isLoading: isLoadingParticulaProductData,
-	// } = useParticularProduct(slug as string);
-
-	const particularProductData = useParticularProduct(slug as string);
-
-	const [isLoadingParticulaProductData, setIsLoadingParticulaProductData] =
-		useState(true);
-
-	useEffect(() => {
-		setTimeout(() => {
-			setIsLoadingParticulaProductData(false);
-		}, 1000);
-	}, []);
+	const { data: product, isLoading: isLoadingParticulaProductData } =
+		useParticularProduct(slug as string);
 
 	return (
 		<Box pt="15rem" bg="brand.white100">
@@ -42,12 +28,12 @@ export const ProductDetails = () => {
 				>
 					<ProductDetailImages
 						isLoadingParticulaProductData={isLoadingParticulaProductData}
-						particularProductData={particularProductData}
+						product={product}
 					/>
 
 					<ProductDetailMainData
 						isLoadingParticulaProductData={isLoadingParticulaProductData}
-						particularProductData={particularProductData}
+						product={product}
 					/>
 				</SimpleGrid>
 			</Box>

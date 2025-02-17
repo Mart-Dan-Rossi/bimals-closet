@@ -27,8 +27,7 @@ export const CartProductCard = ({
 					<Img
 						width="140px"
 						height="140px"
-						// src={item?.image}
-						src={`${item?.image}`}
+						src={`/assets/images/${item?.image}`}
 						alt="Imágen de producto"
 					/>
 				</Box>
@@ -47,7 +46,7 @@ export const CartProductCard = ({
 							fontWeight="600"
 							color="brand.secondaryColor1"
 						>
-							ARS {item?.price?.toFixed(2)}{" "}
+							AR$ {item?.price?.toFixed(2)}{" "}
 						</Text>
 						<Text
 							ml=".5rem"
@@ -57,7 +56,7 @@ export const CartProductCard = ({
 						>
 							{item?.quantity &&
 								item?.quantity > 1 &&
-								`x ${item?.quantity} = ARS ${(
+								`x ${item?.quantity} = AR$ ${(
 									item?.price * item?.quantity
 								).toFixed(2)}`}
 						</Text>
@@ -68,7 +67,7 @@ export const CartProductCard = ({
 							fontWeight="600"
 							color="brand.secondaryColor1"
 						>
-							Talle:
+							Talle ({item?.sizeType}):
 						</Text>
 						<Text as="span" fontWeight="400" ml=".5rem">
 							{item?.size}

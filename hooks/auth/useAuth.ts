@@ -20,7 +20,7 @@ export const useLoginUser = () => {
 			queryClient.invalidateQueries();
 			toast({
 				status: "success",
-				title: "Login successful",
+				title: "Logueado exitosamente",
 			});
 		},
 		onError,
@@ -37,7 +37,7 @@ export const useRegisterUser = () => {
 			queryClient.invalidateQueries();
 			toast({
 				status: "success",
-				title: "You've been registered successfully",
+				title: "Te has registrado con éxito",
 			});
 		},
 		onError,
@@ -55,7 +55,7 @@ export const useForgotPassword = () => {
 			toast({
 				status: "success",
 				title:
-					"A password reset email has been successfully sent. Please check your inbox for further instructions.",
+					"Un email de cambio de contraseña ha sido enviado exitosamente. Por favor, revisa tu bandeja de entrada para más instrucciones",
 			});
 		},
 		onError,
@@ -72,8 +72,7 @@ export const useResetPassword = () => {
 			queryClient.invalidateQueries();
 			toast({
 				status: "success",
-				title:
-					"Password Reset Successful! Your account is now secure with a new password.",
+				title: "Contraseña cambiada exitosamente!",
 			});
 		},
 		onError,

@@ -1,11 +1,17 @@
+type SizeOptions = {
+	[key: string]: number[] | undefined; // Permite cualquier clave con valores `number[]` o `undefined`
+};
+
 export type Product = {
 	_id: string;
 	name: string;
 	slug: string;
-	image: string;
+	images: string[];
 	price: number;
+	sizeOptions: SizeOptions;
 	desc?: string;
-	sizeOptions: { us?: number[]; eu?: number[] };
+	tags?: string[];
+	isFavorite?: boolean;
 };
 
 export type ProductListProps = {

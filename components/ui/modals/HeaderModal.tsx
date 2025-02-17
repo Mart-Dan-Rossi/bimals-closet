@@ -2,14 +2,12 @@ import { Box, Flex, Icon, Stack, Text } from "@chakra-ui/react";
 import { AuthModalData } from "@/utils/modal";
 import { Fragment } from "react";
 import Link from "next/link";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 
-export const AuthModal = ({
-	handleLogout,
-	token,
-}: {
-	handleLogout: () => void;
-	token: string | null | undefined;
-}) => {
+export const AuthModal = () => {
+	const { handleLogout } = useGlobalContext();
+	const token = useHydratedStoreState("token");
 	return (
 		<Box
 			position="absolute"

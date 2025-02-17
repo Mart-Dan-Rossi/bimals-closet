@@ -21,3 +21,15 @@ export function getSizeName(
 		return displayableSizeName.toUpperCase();
 	}
 }
+
+export function getPropperSizeType(
+	currentSizeType: "any" | "us" | "eu",
+	sizeTypes: ("any" | "us" | "eu")[],
+	lowerCase?: boolean
+) {
+	const sizeType = currentSizeType === "any" ? sizeTypes[1] : currentSizeType;
+
+	if (lowerCase) return sizeType.toLocaleLowerCase();
+
+	return sizeType.toUpperCase();
+}

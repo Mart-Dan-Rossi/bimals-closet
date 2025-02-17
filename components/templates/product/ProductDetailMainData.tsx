@@ -7,45 +7,41 @@ import { useGlobalContext } from "@/context/GlobalContext";
 import { CartItem, useCartState } from "@/hooks/state/storage";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 import { Product } from "@/types/product";
-import { getSizeName } from "@/utils/functions";
+import { getPropperSizeType, getSizeName } from "@/utils/functions";
 import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import {
-	// GoHeart,
-	GoHeartFill,
-} from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import { ConfigSizeFormatButton } from "../main/ConfigSizeFormatButton";
 import { SizeOptions } from "./SizeOptions";
+import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 
 interface Props {
 	isLoadingParticulaProductData: boolean;
-	particularProductData?: Product;
+	product?: Product;
 }
 
 export const ProductDetailMainData = ({
 	isLoadingParticulaProductData,
-	particularProductData,
+	product,
 }: Props) => {
+	const { finalProductsData } = useGlobalContext();
 	const toast = useShowToast();
 
 	const router = useRouter();
 
-	const { currentSizeType } = useGlobalContext();
+	const { currentSizeType, sizeTypes } = useGlobalContext();
 
 	const { addToCart } = useCartState((state) => state);
 
 	const [selectedSize, setSelectedSize] = useState<string>("");
 
 	const handleAddToCart = () => {
-		// const product = particularProductData?.data?.product;
-		const product = particularProductData;
-
 		const id = product?._id;
 		const name = product?.name;
 		const price = product?.price;
-		const image = product?.image;
+		const image = product?.images[0];
 
 		if (id && name && price && image) {
 			if (!selectedSize) {
@@ -54,13 +50,14 @@ export const ProductDetailMainData = ({
 					title: "Selecciona un talle antes de agregarlo al carrito",
 				});
 			}
+
 			const payload: CartItem = {
 				id,
 				name,
 				size: selectedSize,
+				sizeType: getPropperSizeType(currentSizeType, sizeTypes),
 				price,
 				quantity: 1,
-				// image: image?.[0],
 				image: image,
 			};
 			addToCart(payload);
@@ -80,6 +77,11 @@ export const ProductDetailMainData = ({
 			}, 700);
 		}
 	};
+
+	const { toggleProductChecked, isProductChecked } = useToggleFavorite(
+		finalProductsData ?? []
+	);
+
 	return (
 		<>
 			{isLoadingParticulaProductData ? (
@@ -94,14 +96,13 @@ export const ProductDetailMainData = ({
 				</Box>
 			) : (
 				<>
-					{particularProductData && (
+					{product && (
 						<Box>
 							<Text
 								fontSize={["2.5rem", "3.2rem", "2.5rem", "3.2rem"]}
 								fontWeight="600"
 							>
-								{/* {particularProductData?.data?.product?.name} */}
-								{particularProductData.name}
+								{product.name}
 							</Text>
 							<Flex
 								align="center"
@@ -109,24 +110,17 @@ export const ProductDetailMainData = ({
 								borderBottom="1px solid"
 								borderColor="brand.white600"
 								pb="2rem"
+								onClick={() => toggleProductChecked(product?._id)}
 							>
 								<Icon
 									cursor="pointer"
 									color={
-										// particularProductData?.data?.product?.isFavorite
-										// particularProductData.isFavorite
-										// false ?
-										"brand.red100"
-										//  : "brand.secondaryColor2"
+										product?.isFavorite
+											? "brand.red100"
+											: "brand.secondaryColor2"
 									}
 									fontSize="2rem"
-									as={
-										// particularProductData?.data?.product?.isFavorite
-										// particularProductData.isFavorite
-										// false ?
-										GoHeartFill
-										// : GoHeart
-									}
+									as={isProductChecked(product._id) ? GoHeartFill : GoHeart}
 								/>
 							</Flex>
 
@@ -136,8 +130,7 @@ export const ProductDetailMainData = ({
 									fontSize={["2.5rem", "4.2rem", "2.5rem", "4.2rem"]}
 									fontWeight="600"
 								>
-									{/* ₦{particularProductData?.data?.product?.price} */}
-									ARS {particularProductData.price}
+									AR$ {product.price}
 								</Text>
 
 								<Box mt="2rem">
@@ -147,30 +140,32 @@ export const ProductDetailMainData = ({
 											fontWeight="600"
 											color="brand.secondaryColor1"
 										>
-											Talles (
-											{getSizeName(particularProductData, currentSizeType)})
+											Talles ({getSizeName(product, currentSizeType)})
 										</Text>
 										<ConfigSizeFormatButton />
 									</Flex>
 									<SizeOptions
-										product={particularProductData}
+										product={product}
 										selectedSize={selectedSize}
 										select={setSelectedSize}
 									/>
 								</Box>
 
 								<Box mt="2rem">
-									{/* TODO Check next comment */}
-									{/* <Text
-								fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
-								fontWeight="600"
-								color="brand.secondaryColor1"
-							>
-								Descripción:
-							</Text> 
-							<Text fontSize={["1.5rem", "1.5rem", "1.3rem", "1.5rem"]}>
-                        {particularProductData?.data?.product?.desc} 
-                    </Text> */}
+									{product.desc && (
+										<>
+											<Text
+												fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
+												fontWeight="600"
+												color="brand.secondaryColor1"
+											>
+												Descripción:
+											</Text>
+											<Text fontSize={["1.5rem", "1.5rem", "1.3rem", "1.5rem"]}>
+												{product?.desc}
+											</Text>
+										</>
+									)}
 									<HStack w="100%" gap="1rem">
 										<Box w="100%" onClick={handleAddToCart}>
 											<CustomButton

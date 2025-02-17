@@ -1,7 +1,5 @@
-import {
-	MapProduct,
-	useToggleFavorite,
-} from "@/hooks/favorite/useToggleFavorite";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 import { Product } from "@/types/product";
 import { Box, Circle, Flex, Icon, Text } from "@chakra-ui/react";
 import Image from "next/image";
@@ -11,20 +9,14 @@ import { SizeOptions } from "./SizeOptions";
 
 interface Props {
 	product: Product;
-	productsData: Product[];
 }
 
-export const ProductCard = ({ product, productsData }: Props) => {
-	// const mapProducts = productData?.data?.products?.map((item: Product) => {
-	const mapProducts: MapProduct[] = productsData?.map((item) => {
-		const res = {
-			...item,
-		};
-		return res;
-	});
+export const ProductCard = ({ product }: Props) => {
+	const { finalProductsData } = useGlobalContext();
 
-	const { toggleProductChecked, isProductChecked } =
-		useToggleFavorite(mapProducts);
+	const { toggleProductChecked, isProductChecked } = useToggleFavorite(
+		finalProductsData ?? []
+	);
 
 	return (
 		<Box key={product?._id} pos="relative" cursor="pointer">
@@ -54,40 +46,42 @@ export const ProductCard = ({ product, productsData }: Props) => {
 					overflow="hidden"
 				>
 					<Image
-						// src={product?.image[0]}
-						src={product?.image}
+						src={`/assets/images/${product?.images[0]}`}
 						width={300}
 						height={200}
-						// objectFit="cover"
+						objectFit="cover"
 						alt="Imágen del producto"
 					/>
 
 					<Box p={["1rem", "2rem", "2rem", "2rem"]}>
 						<Flex
-							align={"end"}
+							align={"start"}
 							justify="space-between"
-							flexDir={["column", "row"]}
+							flexDir={"column"}
+							gap={2}
 						>
-							<Text
-								color="brand.secondaryColor1"
-								textAlign="left"
-								maxW="200px"
-								fontSize={["1.4rem", "1.5rem"]}
-								fontWeight="600"
-								isTruncated
-							>
-								{product?.name}
-							</Text>
-							<SizeOptions product={product} />
-							<Box>
+							<Flex justify={"space-between"} width={"100%"}>
 								<Text
-									fontSize={["1.2rem", "1.3rem"]}
-									fontWeight="500"
-									color="brand.blue100"
+									color="brand.secondaryColor1"
+									textAlign="left"
+									maxW="200px"
+									fontSize={["1.4rem", "1.5rem"]}
+									fontWeight="600"
+									isTruncated
 								>
-									ARS {product?.price}
+									{product?.name}
 								</Text>
-							</Box>
+								<Box>
+									<Text
+										fontSize={["1.2rem", "1.3rem"]}
+										fontWeight="500"
+										color="brand.blue100"
+									>
+										AR$ {product?.price}
+									</Text>
+								</Box>
+							</Flex>
+							<SizeOptions product={product} />
 						</Flex>
 					</Box>
 				</Box>

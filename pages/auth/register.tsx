@@ -59,11 +59,9 @@ const Register = () => {
 		<Box>
 			<Stack spacing="0" direction={["column", "column", "row"]}>
 				<Box
-					// h="100vh"
 					w={["100%", "100%", "50%"]}
 					bg="brand.color1"
 					p="2rem"
-					// display="flex"
 					display={["none", "none", "flex"]}
 					flexDir="column"
 					justifyContent="space-between"
@@ -154,7 +152,7 @@ const Register = () => {
 											autoFormat={true}
 											onChange={(e) => {
 												setPhoneInput(e);
-												field.onChange(Number(e));
+												field.onChange(e);
 											}}
 											inputClass="phone-input"
 											inputProps={{
@@ -229,7 +227,7 @@ const Register = () => {
 									fontWeight="500"
 									fontSize="1.3rem"
 								>
-									Ya tienes una contraseña?
+									Ya tienes una cuenta?
 									<span style={{ color: "#00AF54" }}> Logueate</span>
 								</Text>
 							</Link>
@@ -247,7 +245,7 @@ const Register = () => {
 								textAlign="left"
 								fontSize="1.5rem"
 							>
-								Paseo 1 de 3
+								Paso 1 de 3
 							</Text>
 						</Box>
 					</Box>

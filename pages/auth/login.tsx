@@ -9,13 +9,13 @@ import Link from "next/link";
 import { CustomInput } from "@/components/ui/forms/CustomInput";
 import { IFormLoginInput } from "@/types/auth";
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import withAuth from "../withAuth";
 import { useStoreState } from "@/hooks/state/storage";
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
-	const router = useRouter();
+	// const router = useRouter();
 	const toast = useShowToast();
 	const { mutateAsync, isLoading } = useLoginUser();
 	const { setToken } = useStoreState((state) => state);
@@ -29,19 +29,15 @@ const Login = () => {
 	const onSubmit: SubmitHandler<IFormLoginInput> = async (data) => {
 		try {
 			const res = await mutateAsync(data);
-			setTimeout(() => {
-				setToken(res?.data?.token);
-				sessionStorage.setItem(
-					"user",
-					JSON.stringify({
-						name: res?.data?.user?.fullName,
-						id: res?.data?.user?._id,
-						email: res?.data?.user?.email,
-					})
-				);
-
-				router.push("/");
-			}, 50);
+			setToken(res?.data?.token);
+			localStorage.setItem(
+				"MateoShoesUser",
+				JSON.stringify({
+					name: res?.data?.user?.fullName,
+					id: res?.data?.user?._id,
+					email: res?.data?.user?.email,
+				})
+			);
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				toast({
