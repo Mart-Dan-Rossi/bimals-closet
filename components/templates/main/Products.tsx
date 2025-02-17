@@ -28,13 +28,23 @@ export const Products = () => {
 						if (sizeOptionsKey === currentSizeType) {
 							const isOverMin = product.sizeOptions[sizeOptionsKey]?.some(
 								(size) => {
-									return size >= filter.sizeOptions[sizeOptionsKey].min;
+									if (
+										filter.sizeOptions &&
+										filter.sizeOptions[sizeOptionsKey]
+									) {
+										return size >= filter.sizeOptions[sizeOptionsKey].min;
+									}
 								}
 							);
 
 							const isUnderMax = product.sizeOptions[sizeOptionsKey]?.some(
 								(size) => {
-									return size <= filter.sizeOptions[sizeOptionsKey].max;
+									if (
+										filter.sizeOptions &&
+										filter.sizeOptions[sizeOptionsKey]
+									) {
+										return size <= filter.sizeOptions[sizeOptionsKey].max;
+									}
 								}
 							);
 
