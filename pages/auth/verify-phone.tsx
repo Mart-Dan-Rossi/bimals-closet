@@ -3,7 +3,7 @@ import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { SetStateAction, useState } from "react";
 import OtpInput from "react-otp-input";
-import { withAuth } from "../withAuth/withAuth";
+import { withAuth } from "../../components/templates/withAuth";
 
 const VerifyPhone = () => {
 	const [otp, setOtp] = useState("");

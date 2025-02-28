@@ -8,7 +8,7 @@ import axios from "axios";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoMdCheckmarkCircle } from "react-icons/io";
-import { withAuth } from "../withAuth/withAuth";
+import { withAuth } from "../../components/templates/withAuth";
 
 const ForgotPassword = () => {
 	const [status, setStatus] = useBoolean();
