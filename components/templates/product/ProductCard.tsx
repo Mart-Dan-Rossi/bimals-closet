@@ -28,14 +28,18 @@ export const ProductCard = ({ product }: Props) => {
 				top="15px"
 			>
 				<Icon
-					onClick={() => toggleProductChecked(product?._id)}
+					onClick={() => {
+						if (product._id) toggleProductChecked(product?._id);
+					}}
 					color={`${
-						isProductChecked(product._id)
+						product._id && isProductChecked(product._id)
 							? "brand.red100"
 							: "brand.secondaryColor2"
 					}`}
 					fontSize="1.5rem"
-					as={isProductChecked(product._id) ? GoHeartFill : GoHeart}
+					as={
+						product._id && isProductChecked(product._id) ? GoHeartFill : GoHeart
+					}
 				/>
 			</Circle>
 			<Link href={`/product/${product?.slug}`}>
