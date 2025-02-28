@@ -11,7 +11,7 @@ import { Fragment, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoMdCheckmarkCircle } from "react-icons/io";
-import withAuth from "../withAuth";
+import { withAuth } from "../withAuth";
 
 const ResetPassword = () => {
 	const [showPassword, setShowPassword] = useState(false);
