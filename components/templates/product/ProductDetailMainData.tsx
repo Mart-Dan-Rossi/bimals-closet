@@ -110,7 +110,9 @@ export const ProductDetailMainData = ({
 								borderBottom="1px solid"
 								borderColor="brand.white600"
 								pb="2rem"
-								onClick={() => toggleProductChecked(product?._id)}
+								onClick={() => {
+									if (product._id) toggleProductChecked(product?._id);
+								}}
 							>
 								<Icon
 									cursor="pointer"
@@ -120,7 +122,11 @@ export const ProductDetailMainData = ({
 											: "brand.secondaryColor2"
 									}
 									fontSize="2rem"
-									as={isProductChecked(product._id) ? GoHeartFill : GoHeart}
+									as={
+										product._id && isProductChecked(product._id)
+											? GoHeartFill
+											: GoHeart
+									}
 								/>
 							</Flex>
 
