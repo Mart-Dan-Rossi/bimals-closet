@@ -1,21 +1,21 @@
 import { Box, Image, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
-import axios from "axios";
-import { useShowToast } from "@/hooks/toast/useShowToast";
-import { useRegisterUser } from "@/hooks/auth/useAuth";
-import { IFormRegisterInput } from "@/types/auth";
-import Link from "next/link";
-import { CustomInput } from "@/components/ui/forms/CustomInput";
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
+import { CustomInput } from "@/components/ui/forms/CustomInput";
+import { useRegisterUser } from "@/hooks/auth/useAuth";
+import { useShowToast } from "@/hooks/toast/useShowToast";
+import { IFormRegisterInput } from "@/types/auth";
+import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import withAuth from "../withAuth";
+import { withAuth } from "../withAuth";
 
 const Register = () => {
 	const [phoneInput, setPhoneInput] = useState("");
