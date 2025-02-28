@@ -15,7 +15,7 @@ import { IFormRegisterInput } from "@/types/auth";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { withAuth } from "../withAuth";
+import { withAuth } from "../withAuth/withAuth";
 
 const Register = () => {
 	const [phoneInput, setPhoneInput] = useState("");
