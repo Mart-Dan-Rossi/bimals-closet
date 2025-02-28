@@ -78,7 +78,12 @@ export const WishlistProductCard = ({ product, wishlistData }: Props) => {
 							</Text>
 						</Flex>
 
-						<Box w="100%" onClick={() => toggleProductChecked(product?._id)}>
+						<Box
+							w="100%"
+							onClick={() => {
+								if (product._id) toggleProductChecked(product?._id);
+							}}
+						>
 							<CustomButton
 								{...{
 									text: "Quitar de lista de deseados",

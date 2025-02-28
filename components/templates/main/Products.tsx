@@ -120,12 +120,15 @@ export const Products = () => {
 								{/* {productsData?.data?.products?.map((product: Product) => ( */}
 								{filteredProductsData &&
 									finalProductsData &&
-									filteredProductsData.map((product: Product) => (
-										<ProductCard
-											key={`products-general-view-${product._id}-${product.slug}`}
-											product={product}
-										/>
-									))}
+									filteredProductsData.map(
+										(product: Product) =>
+											product._id && (
+												<ProductCard
+													key={`products-general-view-${product._id}-${product.slug}`}
+													product={product}
+												/>
+											)
+									)}
 							</Fragment>
 						)}
 					</SimpleGrid>
