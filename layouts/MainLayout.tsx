@@ -1,11 +1,11 @@
-import React from "react";
 import { Box } from "@chakra-ui/react";
+import React from "react";
 
-import { Header } from "./Header";
-import { Footer } from "./Footer";
-import { GlobalContextProvider } from "@/context/GlobalContext";
-import { SizeTypesDrawer } from "@/components/SizeTypesDrawer";
 import { FiltersDrawer } from "@/components/FiltersDrawer";
+import { SizeTypesDrawer } from "@/components/SizeTypesDrawer";
+import { GlobalContextProvider } from "@/context/GlobalContext";
+import { Footer } from "./Footer";
+import { Header } from "./Header";
 
 type childrenProps = {
 	children: React.ReactNode;
@@ -17,7 +17,9 @@ const MainLayout = ({ children, subHeaderName }: childrenProps) => {
 		<GlobalContextProvider>
 			<Box>
 				<Header {...{ subHeaderName }} />
-				<Box minH={"92vh"}>{children}</Box>
+				<Box minH={"92vh"} h={"fit-content"}>
+					{children}
+				</Box>
 				<Footer />
 			</Box>
 			<FiltersDrawer />

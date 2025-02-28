@@ -47,9 +47,14 @@ export const SimilarProduct = () => {
 
 			const sizeFiltering = Object.keys(product.sizeOptions || {}).some(
 				(key) => {
-					return currentProduct?.sizeOptions[key]?.some(
-						(num) => product.sizeOptions[key]?.includes(num)
-					);
+					return currentProduct?.sizeOptions[key]
+						?.map((sizeData1) => sizeData1.size)
+						.some(
+							(num) =>
+								product.sizeOptions[key]
+									?.map((sizeData2) => sizeData2.size)
+									.includes(num)
+						);
 				}
 			);
 

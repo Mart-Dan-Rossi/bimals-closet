@@ -1,17 +1,17 @@
-import { Box, Stack, Image, Text } from "@chakra-ui/react";
-import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import axios from "axios";
-import { useShowToast } from "@/hooks/toast/useShowToast";
-import { useLoginUser } from "@/hooks/auth/useAuth";
-import Link from "next/link";
-import { CustomInput } from "@/components/ui/forms/CustomInput";
-import { IFormLoginInput } from "@/types/auth";
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
+import { CustomInput } from "@/components/ui/forms/CustomInput";
+import { useLoginUser } from "@/hooks/auth/useAuth";
+import { useShowToast } from "@/hooks/toast/useShowToast";
+import { IFormLoginInput } from "@/types/auth";
+import { Box, Image, Stack, Text } from "@chakra-ui/react";
+import axios from "axios";
+import Link from "next/link";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 // import { useRouter } from "next/router";
-import withAuth from "../withAuth";
 import { useStoreState } from "@/hooks/state/storage";
+import { useRouter } from "next/router";
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -38,6 +38,8 @@ const Login = () => {
 					email: res?.data?.user?.email,
 				})
 			);
+			const router = useRouter();
+			router.push("/");
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				toast({
@@ -197,4 +199,4 @@ const Login = () => {
 	);
 };
 
-export default withAuth(Login);
+export default Login;

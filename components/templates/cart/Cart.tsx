@@ -3,12 +3,8 @@ import {
 	useHydratedCartState,
 	useHydratedStoreState,
 } from "@/hooks/state/hydrated";
-import { useSelectPayMethod } from "@/hooks/state/selectPayMethod";
 import { CartItem, useCartState } from "@/hooks/state/storage";
-import { useShowToast } from "@/hooks/toast/useShowToast";
-import { SelectPayMethodProps } from "@/types/selectPayMethod";
 import { Box, Center, Flex, Icon, Text } from "@chakra-ui/react";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BiChevronLeft } from "react-icons/bi";
@@ -19,15 +15,11 @@ export const CartItems = () => {
 	const cart = useHydratedCartState("cart");
 	const token = useHydratedStoreState("token");
 
-	const { mutateAsync, isLoading } = useSelectPayMethod();
-
 	const { quantityCount, removeFromCart, emptyCart } = useCartState(
 		(state) => state
 	);
 
 	const router = useRouter();
-
-	const toast = useShowToast();
 
 	const [userEmail, setUserEmail] = useState("");
 	const [userName, setUserName] = useState<string>("");
@@ -37,55 +29,6 @@ export const CartItems = () => {
 			const itemTotal = Number(item.price) * Number(item.quantity);
 			return total + itemTotal;
 		}, 0) ?? 0;
-
-	const handlePurchase = async () => {
-		try {
-			if (cart) {
-				const purchaseData: SelectPayMethodProps = {
-					items: cart.map((item) => ({
-						id: item.id,
-						quantity: item.quantity,
-					})),
-					payer: {
-						name: userName,
-						email: userEmail,
-					},
-				};
-
-				const res = await mutateAsync(purchaseData);
-
-				if (res?.status === "success") {
-					toast({
-						status: "success",
-						title: "Compra realizada con éxito",
-						description:
-							"Gracias por tu compra. Revisa tu correo para más detalles.",
-					});
-
-					emptyCart();
-
-					router.push("/thank-you");
-				}
-			}
-		} catch (error) {
-			if (axios.isAxiosError(error)) {
-				toast({
-					status: "error",
-					title: "Error en la compra",
-					description:
-						error?.response?.data?.message ||
-						"Ocurrió un error. Intenta nuevamente.",
-				});
-			} else {
-				toast({
-					status: "error",
-					title: "Error inesperado",
-					description:
-						"Algo salió mal. Por favor, inténtalo de nuevo más tarde.",
-				});
-			}
-		}
-	};
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
@@ -142,7 +85,7 @@ export const CartItems = () => {
 						<Box overflow="hidden" borderRadius="1rem">
 							<Text fontWeight="600">Total de Items</Text>
 							<Text textAlign="center">{cart?.length}</Text>
-							<Box onClick={handlePurchase}>
+							<Box>
 								<CustomButton
 									{...{
 										text: "Pagar",
@@ -150,7 +93,6 @@ export const CartItems = () => {
 										border: ".2rem solid",
 										borderColor: "transparent",
 										isDisabled: cart?.length < 1,
-										isLoading,
 									}}
 								/>
 							</Box>

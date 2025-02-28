@@ -16,9 +16,10 @@ import { TiShoppingCart } from "react-icons/ti";
 import { AuthModal } from "../ui/modals";
 interface Props {
 	name: string;
+	loggedIsAdmin: boolean;
 }
 
-export const DesktopUserInteraction = ({ name }: Props) => {
+export const DesktopUserInteraction = ({ name, loggedIsAdmin }: Props) => {
 	const cart = useHydratedCartState("cart");
 	const [openDropDown, setOpenDropDown] = useBoolean();
 
@@ -31,6 +32,8 @@ export const DesktopUserInteraction = ({ name }: Props) => {
 				fontSize="2rem"
 				fontWeight="500"
 			>
+				{loggedIsAdmin && <Link href="/adminPanel">Admin panel</Link>}
+
 				<Link href="/cart">
 					<Box as="span" pos="relative">
 						<Circle

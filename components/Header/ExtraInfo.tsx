@@ -7,9 +7,14 @@ import { MobileNavbar } from "../ui/modals/MobileNavbar";
 interface Props {
 	subHeaderName: string | undefined;
 	openModal: boolean;
+	loggedIsAdmin: boolean;
 }
 
-export const ExtraInfo = ({ subHeaderName, openModal }: Props) => {
+export const ExtraInfo = ({
+	subHeaderName,
+	openModal,
+	loggedIsAdmin,
+}: Props) => {
 	const token = useHydratedStoreState("token");
 	const [openCatgories, setOpenCatgories] = useBoolean();
 
@@ -51,7 +56,9 @@ export const ExtraInfo = ({ subHeaderName, openModal }: Props) => {
 				</Flex>
 			</Box>
 
-			{openModal && token !== undefined ? <MobileNavbar /> : null}
+			{openModal && token !== undefined ? (
+				<MobileNavbar loggedIsAdmin={loggedIsAdmin} />
+			) : null}
 			{openCatgories && subHeaderName === "Categories" ? (
 				<CategoriesModal />
 			) : null}

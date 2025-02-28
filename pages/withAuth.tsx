@@ -1,10 +1,12 @@
-import { useHydratedStoreState } from "@/hooks/state/hydrated";
-import { Center } from "@chakra-ui/react";
+import { ComponentType, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import { JSX, useEffect, useState } from "react";
+import { Center } from "@chakra-ui/react";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 
-const withAuth = (WrappedComponent: JSX.ElementType) => {
-	const AuthenticatedComponent = (props: unknown[]) => {
+export const withAuth = <T extends object>(
+	WrappedComponent: ComponentType<T>
+) => {
+	const AuthenticatedComponent = (props: T) => {
 		const router = useRouter();
 		const token = useHydratedStoreState("token");
 		const [authChecked, setAuthChecked] = useState(false);
@@ -13,26 +15,28 @@ const withAuth = (WrappedComponent: JSX.ElementType) => {
 		useEffect(() => {
 			const checkAuthentication = async () => {
 				if (token !== undefined) {
-					if (token) {
+					if (token && router.pathname !== "/") {
 						await router.push("/");
-					} else {
-						// await router.push("/auth/login");
+					} else if (!token && router.pathname !== "/auth/login") {
+						await router.push("/auth/login");
 					}
 					setAuthChecked(true);
+					setRenderLoading(false);
 				}
 			};
 
-			const timer = setTimeout(() => {
-				setRenderLoading(false);
-				checkAuthentication();
-			}, 0); // Delayed execution to allow "Loading..." to render
-
-			return () => clearTimeout(timer); // Cleanup to cancel rendering "Loading..."
+			checkAuthentication();
 		}, [token, router]);
+
+		const MemoizedWrappedComponent = useMemo(
+			() => <WrappedComponent {...props} />,
+			[props]
+		);
 
 		if (!authChecked || renderLoading) {
 			return (
 				<Center justifyContent="center" w="100%">
+					{/* SVG Loader */}
 					<svg
 						version="1.1"
 						id="L5"
@@ -79,11 +83,8 @@ const withAuth = (WrappedComponent: JSX.ElementType) => {
 			);
 		}
 
-		// If auth is checked and token is not authenticated, render the wrapped component
-		return <WrappedComponent {...props} />;
+		return MemoizedWrappedComponent;
 	};
 
 	return AuthenticatedComponent;
 };
-
-export default withAuth;

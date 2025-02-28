@@ -16,7 +16,7 @@ export const useAddFavorite = () => {
 			queryClient.invalidateQueries();
 			toast({
 				status: "success",
-				title: "Product added to favorites successfully.",
+				title: "Producto agregado a favoritos exitosamente.",
 			});
 		},
 		onError,
@@ -33,7 +33,7 @@ export const useRemoveFavorite = () => {
 			queryClient.invalidateQueries();
 			toast({
 				status: "success",
-				title: "Product removed from favorites successfully.",
+				title: "Se ha quitado el producto de favoritos.",
 			});
 		},
 		onError,

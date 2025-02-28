@@ -30,10 +30,9 @@ export const FiltersDrawer = () => {
 		let stackAllSizes: number[] = [];
 
 		finalProductsData?.forEach((product) => {
-			const productSizeOptions =
-				product.sizeOptions[
-					getPropperSizeType(currentSizeType, sizeTypes, true)
-				];
+			const productSizeOptions = product.sizeOptions[
+				getPropperSizeType(currentSizeType, sizeTypes, true)
+			]?.map((option) => option.size);
 
 			if (productSizeOptions) {
 				stackAllSizes = [...stackAllSizes, ...productSizeOptions];

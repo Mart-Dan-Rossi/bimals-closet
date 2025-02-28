@@ -4,7 +4,7 @@ import { ExtraInfo } from "@/components/Header/ExtraInfo";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const Header = ({
 	subHeaderName,
@@ -15,13 +15,27 @@ export const Header = ({
 	const [openModal, setOpenModal] = useBoolean();
 	const [name, setName] = useState<string>("");
 
+	function getAdminsIds() {
+		const allIds = process.env.NEXT_PUBLIC_ADMINS_IDS || "0";
+		return allIds?.split("/");
+	}
+
+	const adminIds = useRef(getAdminsIds()).current as string[];
+
+	const [loggedIsAdmin, setLoggedIsAdmin] = useState(false);
+
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
 		const user = storedUser && token ? JSON.parse(storedUser) : undefined;
 		const fullName = user ? user.name : undefined;
+		const userId = user ? user.id : undefined;
 
 		if (JSON.stringify(name) !== JSON.stringify(fullName)) {
 			setName(fullName);
+		}
+
+		if (userId) {
+			setLoggedIsAdmin(adminIds.includes(userId));
 		}
 	}, [name, token]);
 
@@ -46,11 +60,17 @@ export const Header = ({
 
 					<BurguerIcon setOpenModal={setOpenModal} />
 
-					<DesktopUserInteraction name={name} />
+					<DesktopUserInteraction name={name} loggedIsAdmin={loggedIsAdmin} />
 				</Stack>
 			</Box>
 
-			{<ExtraInfo subHeaderName={subHeaderName} openModal={openModal} />}
+			{
+				<ExtraInfo
+					subHeaderName={subHeaderName}
+					openModal={openModal}
+					loggedIsAdmin={loggedIsAdmin}
+				/>
+			}
 		</Box>
 	);
 };

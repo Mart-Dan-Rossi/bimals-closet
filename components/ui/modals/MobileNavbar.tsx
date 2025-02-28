@@ -5,7 +5,11 @@ import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { Fragment } from "react";
 
-export const MobileNavbar = () => {
+interface Props {
+	loggedIsAdmin: boolean;
+}
+
+export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 	const { handleLogout } = useGlobalContext();
 	const token = useHydratedStoreState("token");
 	return (
@@ -35,6 +39,7 @@ export const MobileNavbar = () => {
 					fontWeight="500"
 					spacing={0}
 				>
+					{loggedIsAdmin && <Link href="/adminPanel">Admin panel</Link>}
 					{AuthModalData.map((item, idx) => {
 						return (
 							<Fragment key={idx}>

@@ -16,7 +16,7 @@ export const SizeOptions = ({ product, select, selectedSize }: Props) => {
 
 	function getPropperSize() {
 		return currentSizeType !== "any"
-			? product?.sizeOptions[currentSizeType]
+			? product?.sizeOptions[currentSizeType].map((sizeData) => sizeData.size)
 			: getAnySizeData();
 	}
 
@@ -37,8 +37,12 @@ export const SizeOptions = ({ product, select, selectedSize }: Props) => {
 				sizeType !== "any" &&
 				Object.keys(product.sizeOptions).includes(sizeType)
 			) {
-				if (product.sizeOptions[sizeType]) {
-					firstSizeTypeDataFound = product.sizeOptions[sizeType] ?? [0];
+				if (
+					product.sizeOptions[sizeType].map((sizeoption) => sizeoption.size)
+				) {
+					firstSizeTypeDataFound = product.sizeOptions[sizeType].map(
+						(sizeOption) => sizeOption.size
+					) ?? [0];
 				}
 			}
 		});
@@ -51,7 +55,9 @@ export const SizeOptions = ({ product, select, selectedSize }: Props) => {
 			{select && typeof selectedSize === "string" ? (
 				<Flex gap={4} mt="1rem" maxW={"100%"}>
 					{currentSizeType !== "any" &&
-						!product?.sizeOptions[currentSizeType] && (
+						!product?.sizeOptions[currentSizeType].map(
+							(sizeOption) => sizeOption.size
+						) && (
 							<Text>No se pueden mostrar talles en este formato de talle</Text>
 						)}
 					{finalProductSizes?.map((size) => (
