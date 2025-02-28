@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { IoMdCheckmarkCircle } from "react-icons/io";
-import withAuth from "../withAuth";
+import { withAuth } from "../withAuth";
 
 const VerifyEmail = () => {
 	const router = useRouter();
