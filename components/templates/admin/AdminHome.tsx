@@ -2,12 +2,12 @@ import { useGlobalContext } from "@/context/GlobalContext";
 import { useDeleteProduct } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product } from "@/types/product";
-import { Box, Button, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { AddNewProductModal } from "./AddNewProductModal";
 import { AdminProductCard } from "./AdminProductCard";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
+import { ProductEditionModal } from "./ProductEditionModal";
 
 export const AdminHome = () => {
 	const { finalProductsData } = useGlobalContext();
@@ -25,7 +25,10 @@ export const AdminHome = () => {
 	} = useDisclosure();
 
 	const [isDeleteProduct, setIsDeleteProduct] = useState(false);
-	const [productToDelete, setProductToDelete] = useState<Product | undefined>();
+	const [productToInteractWith, setProductToInteractWith] = useState<
+		Product | undefined
+	>();
+	const [editingProduct, setEditingProduct] = useState(false);
 	const [sizeToDelete, setSizeToDelete] = useState<
 		{ sizeOption: string; sizeToDelete: number } | undefined
 	>();
@@ -60,13 +63,14 @@ export const AdminHome = () => {
 	}, [token]);
 
 	function handleDeleteProduct() {
-		if (productToDelete) {
-			removeMutateAsync(productToDelete);
+		if (productToInteractWith) {
+			removeMutateAsync(productToInteractWith);
 		}
 	}
 
-	function handleDeleteSize() {
-		console.log("Delete size");
+	function handleOpenCreateProduct() {
+		setEditingProduct(false);
+		onOpenAddNewProduct();
 	}
 
 	return (
@@ -76,21 +80,33 @@ export const AdminHome = () => {
 					key={`admin-product-card-${item.slug}-${index}`}
 					item={item}
 					setIsDeleteProduct={setIsDeleteProduct}
-					onOpen={onOpenConfirmDeleteModal}
-					setProductToDelete={setProductToDelete}
+					onOpenConfirmDeleteModal={onOpenConfirmDeleteModal}
+					onOpenAddNewProduct={onOpenAddNewProduct}
+					setProductToInteractWith={setProductToInteractWith}
+					setEditingProduct={setEditingProduct}
 					setSizeToDelete={setSizeToDelete}
 				/>
 			))}
-			<Button onClick={onOpenAddNewProduct}>Agregar producto +</Button>
-			<AddNewProductModal
+			<Flex justifyContent={"center"} mb={"2rem"}>
+				<Button
+					bg={"brand.color2"}
+					padding={"2rem"}
+					onClick={handleOpenCreateProduct}
+				>
+					Agregar producto +
+				</Button>
+			</Flex>
+			<ProductEditionModal
 				isOpen={isAddNewProductOpen}
 				onClose={onCloseAddNewProduct}
+				editingProduct={editingProduct}
+				item={productToInteractWith}
 			/>
 			<ConfirmDeleteModal
 				isOpen={isConfirmDeleteModalOpen}
 				onClose={onCloseConfirmDeleteModal}
 				deletingProduct={isDeleteProduct}
-				handler={isDeleteProduct ? handleDeleteProduct : handleDeleteSize}
+				handler={handleDeleteProduct}
 			/>
 		</Box>
 	);

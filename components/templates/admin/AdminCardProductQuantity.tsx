@@ -1,7 +1,5 @@
 import { Product } from "@/types/product";
-import { Flex, Icon, Text } from "@chakra-ui/react";
-import { AiFillPlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { Flex, Text } from "@chakra-ui/react";
 
 interface Props {
 	item: Product;
@@ -11,20 +9,19 @@ interface Props {
 
 export const AdminCardProductQuantity = ({
 	sizeOption,
-	item,
-	openDeleteSizeModal,
+	item, // openDeleteSizeModal,
 }: Props) => {
-	function handleDecreaceQuantity(prevQuantity: number, size: number) {
-		if (prevQuantity === 0) {
-			openDeleteSizeModal(sizeOption, size);
-		} else {
-			// decreaceQuantity();
-		}
-	}
+	// function handleDecreaceQuantity(prevQuantity: number, size: number) {
+	// 	if (prevQuantity === 0) {
+	// 		openDeleteSizeModal(sizeOption, size);
+	// 	} else {
+	// 		// decreaceQuantity();
+	// 	}
+	// }
 
-	function handleIncreaseQuantity() {
-		console.log("increaseQuantity");
-	}
+	// function handleIncreaseQuantity() {
+	// 	console.log("increaseQuantity");
+	// }
 
 	return (
 		<Flex pl={2} align="left" direction={"column"} gap={2}>
@@ -51,7 +48,7 @@ export const AdminCardProductQuantity = ({
 						>
 							Cantidad:
 						</Text>
-						<Icon
+						{/* <Icon
 							onClick={() =>
 								handleDecreaceQuantity(sizeData.quantity, sizeData.size)
 							}
@@ -66,15 +63,15 @@ export const AdminCardProductQuantity = ({
 									? "brand.secondaryColor2"
 									: "brand.color1"
 							}
-						/>
+						/> */}
 						<Text mx="1rem">{sizeData.quantity}</Text>
-						<Icon
+						{/* <Icon
 							onClick={handleIncreaseQuantity}
 							as={AiFillPlusCircle}
 							fontSize="2rem"
 							cursor="pointer"
 							color="brand.color1"
-						/>
+						/> */}
 					</Flex>
 				);
 			})}

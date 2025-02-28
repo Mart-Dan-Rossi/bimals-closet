@@ -1,15 +1,16 @@
 import { Product } from "@/types/product";
 import { Box, Flex, Icon, Img, Stack, Text } from "@chakra-ui/react";
 import { SetStateAction } from "react";
-import { AiFillPlusSquare } from "react-icons/ai";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { RiDeleteBinLine, RiPencilLine } from "react-icons/ri";
 import { AdminCardProductQuantity } from "./AdminCardProductQuantity";
 
 interface Props {
 	item: Product;
 	setIsDeleteProduct: React.Dispatch<SetStateAction<boolean>>;
-	onOpen: () => void;
-	setProductToDelete: React.Dispatch<SetStateAction<Product | undefined>>;
+	onOpenConfirmDeleteModal: () => void;
+	onOpenAddNewProduct: () => void;
+	setProductToInteractWith: React.Dispatch<SetStateAction<Product | undefined>>;
+	setEditingProduct: React.Dispatch<SetStateAction<boolean>>;
 	setSizeToDelete: React.Dispatch<
 		SetStateAction<{ sizeOption: string; sizeToDelete: number } | undefined>
 	>;
@@ -18,25 +19,33 @@ interface Props {
 export const AdminProductCard = ({
 	item,
 	setIsDeleteProduct,
-	onOpen,
-	setProductToDelete,
+	onOpenConfirmDeleteModal,
+	onOpenAddNewProduct,
+	setProductToInteractWith,
+	setEditingProduct,
 	setSizeToDelete,
 }: Props) => {
-	function handleAddSize() {
-		console.log("Add size");
-	}
+	// function handleAddSize() {
+	// 	console.log("Add size");
+	// }
 
 	function openDeleteProductModal() {
-		setProductToDelete(item);
+		setProductToInteractWith(item);
 		setIsDeleteProduct(true);
-		onOpen();
+		onOpenConfirmDeleteModal();
+	}
+
+	function openProductEditionModal() {
+		setProductToInteractWith(item);
+		setEditingProduct(true);
+		onOpenAddNewProduct();
 	}
 
 	function openDeleteSizeModal(sizeOption: string, sizeToDelete: number) {
-		setProductToDelete(item);
+		setProductToInteractWith(item);
 		setSizeToDelete({ sizeOption, sizeToDelete });
 		setIsDeleteProduct(false);
-		onOpen();
+		onOpenConfirmDeleteModal();
 	}
 	return (
 		<Flex
@@ -83,7 +92,7 @@ export const AdminProductCard = ({
 					<Flex direction={"column"} align={"center"}>
 						{Object.keys(item.sizeOptions).map((sizeOption, index) => {
 							return (
-								<>
+								<Box key={`admin-card-product-quantity-container-${index}`}>
 									{index === 0 && (
 										<>
 											<AdminCardProductQuantity
@@ -93,22 +102,29 @@ export const AdminProductCard = ({
 											/>
 										</>
 									)}
-								</>
+								</Box>
 							);
 						})}
 
-						<Icon
+						{/* <Icon
 							onClick={handleAddSize}
 							as={AiFillPlusSquare}
 							fontSize="2rem"
 							cursor="pointer"
 							color="brand.color1"
-						/>
+						/> */}
 					</Flex>
 				</Stack>
 			</Flex>
 
-			<Box>
+			<Flex>
+				<Icon
+					onClick={openProductEditionModal}
+					as={RiPencilLine}
+					fontSize="2rem"
+					cursor="pointer"
+					color="brand.secondaryColor2"
+				/>
 				<Icon
 					onClick={openDeleteProductModal}
 					as={RiDeleteBinLine}
@@ -116,7 +132,7 @@ export const AdminProductCard = ({
 					cursor="pointer"
 					color="brand.secondaryColor2"
 				/>
-			</Box>
+			</Flex>
 		</Flex>
 	);
 };
