@@ -92,7 +92,10 @@ export const SizeOptions = ({ product, select, selectedSize }: Props) => {
 					<Text margin={"0"} fontWeight={"bold"}>
 						Talles ({getSizeName(product, currentSizeType)}):{" "}
 					</Text>
-					<SizeDisplayer keyHelper={product._id} allSizes={finalProductSizes} />
+					<SizeDisplayer
+						keyHelper={product._id || "undefined"}
+						allSizes={finalProductSizes}
+					/>
 				</VStack>
 			)}
 		</>
