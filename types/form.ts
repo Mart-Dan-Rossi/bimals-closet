@@ -3,7 +3,7 @@ import { UseFormRegisterReturn } from "react-hook-form";
 
 export type CustomInputProps = {
 	id: string;
-	defaultValue?: string;
+	defaultValue?: string | number;
 	placeholder: string;
 	type: string;
 	passwordIcon?: ReactNode;

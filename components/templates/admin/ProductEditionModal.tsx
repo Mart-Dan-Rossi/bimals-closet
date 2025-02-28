@@ -1,7 +1,10 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
 import { CustomInput } from "@/components/ui/forms/CustomInput";
 import { useCreateProduct } from "@/hooks/products/useProduct";
-import { Product, SizeOptions } from "@/types/product";
+import {
+	Product,
+	//  SizeOptions
+} from "@/types/product";
 import {
 	Box,
 	Button,
@@ -16,7 +19,7 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { RiAddCircleLine } from "react-icons/ri";
 
@@ -33,28 +36,45 @@ export const ProductEditionModal = ({
 	editingProduct,
 	item,
 }: Props) => {
-	const [name, setName] = useState<string | undefined>(item?.name);
-	const [slug, setSlug] = useState<string | undefined>(item?.slug);
-	const [images, setImages] = useState<string[] | undefined>(item?.images);
-	const [price, setPrice] = useState<number | undefined>(item?.price);
-	const [sizeOptions, setSizeOptions] = useState<SizeOptions | undefined>(
-		item?.sizeOptions
+	const defaultItem = useMemo(
+		() =>
+			item || {
+				name: "",
+				slug: "",
+				images: [],
+				price: 0,
+				sizeOptions: {},
+				desc: "",
+				tags: "",
+			},
+		[item]
+	) as Product;
+	const [name, setName] = useState(defaultItem?.name || "");
+	const [slug, setSlug] = useState(defaultItem?.slug || "");
+	const [images, setImages] = useState(defaultItem?.images || []);
+	const [price, setPrice] = useState(defaultItem?.price || 0);
+	const [sizeOptions, setSizeOptions] = useState(
+		defaultItem?.sizeOptions || {}
 	);
-	const [desc, setDesc] = useState<string | undefined>(item?.desc);
-	const [tags, setTags] = useState<string[] | undefined>(item?.tags);
-
-	useEffect(() => {
-		setName(undefined);
-		setSlug(undefined);
-		setImages(undefined);
-		setPrice(undefined);
-		setSizeOptions(undefined);
-		setDesc(undefined);
-		setTags(undefined);
-	}, []);
+	const [desc, setDesc] = useState(defaultItem?.desc || "");
+	const [tags, setTags] = useState(defaultItem?.tags || []);
 
 	const [amountOfImages, setAmountOfImages] = useState<number>(1);
-	const [amountOfSizes, setAmountOfSizes] = useState<number>(1);
+	// const [amountOfSizes, setAmountOfSizes] = useState<number>(1);
+	const [amountOfTags, setAmountOfTags] = useState<number>(1);
+
+	useEffect(() => {
+		setName(defaultItem?.name || "");
+		setSlug(defaultItem?.slug || "");
+		setImages(defaultItem?.images || []);
+		setPrice(defaultItem?.price || 0);
+		setSizeOptions(defaultItem?.sizeOptions || {});
+		setDesc(defaultItem?.desc || "");
+		setTags(defaultItem?.tags || []);
+		setAmountOfImages(1);
+		// setAmountOfSizes(1)
+		setAmountOfTags(0);
+	}, [defaultItem]);
 
 	const { mutateAsync: addMutateAsyncCreateProduct } = useCreateProduct();
 
@@ -66,76 +86,70 @@ export const ProductEditionModal = ({
 
 	const toast = useToast();
 
-	function checkIfEveryKeyHaveValue(obj: SizeOptions) {
-		return (
-			Object.keys(obj)
-				.map((key: string) => {
-					return obj[key];
-				})
-				.filter((valor) => valor === undefined).length !==
-			Object.keys(obj).length
-		);
+	async function handleUploadProduct() {
+		try {
+			const product: Product = {
+				name,
+				slug,
+				images,
+				price,
+				sizeOptions,
+				desc,
+				tags,
+			};
+
+			const res = editingProduct
+				? () => {
+						console.log("Editing product");
+				  }
+				: await addMutateAsyncCreateProduct(product);
+
+			if (res?.status === "success") {
+				toast({ status: "success", title: "Producto cargado correctamente" });
+			}
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				toast({
+					status: "error",
+					title:
+						error?.response?.data?.message ||
+						"Ha ocurrido un error! Intenta nuevamente más tarde",
+				});
+			}
+		}
 	}
 
-	async function handleUploadProduct() {
-		if (
-			name &&
-			slug &&
-			images &&
-			price &&
-			sizeOptions &&
-			checkIfEveryKeyHaveValue(sizeOptions)
-		) {
-			try {
-				const product: Product = {
-					name,
-					slug,
-					images,
-					price,
-					sizeOptions,
-					desc,
-					tags,
-				};
+	function handleSetName(e: ChangeEvent<HTMLInputElement>) {
+		setName(e.target.value);
+	}
 
-				const res = editingProduct
-					? () => {
-							console.log("Editing product");
-					  }
-					: await addMutateAsyncCreateProduct(product);
+	function handleSetSlug(e: ChangeEvent<HTMLInputElement>) {
+		setSlug(e.target.value);
+	}
 
-				if (res?.status === "success") {
-					toast({ status: "success", title: "Producto cargado correctamente" });
-				}
-			} catch (error) {
-				if (axios.isAxiosError(error)) {
-					toast({
-						status: "error",
-						title:
-							error?.response?.data?.message ||
-							"Ha ocurrido un error! Intenta nuevamente más tarde",
-					});
-				}
-			}
-		} else {
-			const singlePropMissing =
-				[name && slug && images && price && sizeOptions].filter(Boolean)
-					.length === 1;
-			toast({
-				status: "error",
-				title: "Falta alguna propiedad",
-				description: `Falta${!singlePropMissing && "n"} la${
-					!singlePropMissing && "s"
-				} siguiente${!singlePropMissing && "s"} característica${
-					!singlePropMissing && "s"
-				}: ${!name && "Nombre"} ${!slug && "Identificador"} ${
-					!images && "Imagenes"
-				} ${!price && "Precio"} ${!sizeOptions && "Opciones de talle"} ${
-					sizeOptions &&
-					!checkIfEveryKeyHaveValue(sizeOptions) &&
-					"Algún talle fue puesto pero se le asignó un valor"
-				}`,
-			});
-		}
+	function handleSetImageIndex(
+		index: number,
+		e: ChangeEvent<HTMLInputElement>
+	) {
+		const imagesData = images;
+		imagesData[index] = e.target.value;
+
+		setImages(imagesData);
+	}
+
+	function handleSetPrice(e: ChangeEvent<HTMLInputElement>) {
+		setPrice(Number(e.target.value));
+	}
+
+	function handleSetDescription(e: ChangeEvent<HTMLInputElement>) {
+		setDesc(e.target.value);
+	}
+
+	function handleSetTagIndex(index: number, e: ChangeEvent<HTMLInputElement>) {
+		const tagsData = tags;
+		tagsData[index] = e.target.value;
+
+		setTags(tagsData);
 	}
 
 	return (
@@ -157,6 +171,9 @@ export const ProductEditionModal = ({
 								{...{
 									id: "productName",
 									placeholder: "Nombre",
+									value: name,
+									defaultValue: name,
+									onChange: handleSetName,
 									type: "text",
 									formHook: register("name", {
 										required: "Por favor introduce el nombre del producto",
@@ -172,6 +189,9 @@ export const ProductEditionModal = ({
 								{...{
 									id: "productSlug",
 									placeholder: "Slug",
+									value: slug,
+									defaultValue: slug,
+									onChange: handleSetSlug,
 									type: "text",
 									formHook: register("slug", {
 										required: "Por favor introduce un slug único",
@@ -194,6 +214,10 @@ export const ProductEditionModal = ({
 											{...{
 												id: `productImagesURL${index}`,
 												placeholder: "URL de imágen",
+												value: images[index],
+												defaultValue: images[index] || "",
+												onChange: (e: ChangeEvent<HTMLInputElement>) =>
+													handleSetImageIndex(index, e),
 												type: "text",
 												formHook: register("images", {
 													required: "Por favor introduce una URL",
@@ -214,11 +238,14 @@ export const ProductEditionModal = ({
 							</Button>
 						</Box>
 						<Box my="2rem">
-							<Text>Precio:</Text>
+							<Text>Precio (AR$):</Text>
 							<CustomInput
 								{...{
 									id: "productPrice",
 									placeholder: "Precio",
+									value: price,
+									defaultValue: price,
+									onChange: handleSetPrice,
 									type: "number",
 									formHook: register("price", {
 										required: "Por favor el valor en pesos",
@@ -227,13 +254,13 @@ export const ProductEditionModal = ({
 								}}
 							/>
 						</Box>
-						<Box
+						{/* <Box
 							my="2rem"
 							padding={"1rem"}
 							borderRadius={"10px"}
 							border={"1px solid black"}
 						>
-							<Text>Imágenes:</Text>
+							<Text>SizeOptions:</Text>
 							{Array.from({ length: amountOfSizes }).map((__, index) => {
 								return (
 									<Box key={`create-product-size-${index}`}>
@@ -241,6 +268,7 @@ export const ProductEditionModal = ({
 											{...{
 												id: `productSizeOption${index}`,
 												placeholder: "Talle en US",
+												defaultValue: sizeOptions,
 												type: "text",
 												formHook: register("sizeOptions", {
 													required: "Por favor introduce un talle",
@@ -260,13 +288,16 @@ export const ProductEditionModal = ({
 							>
 								<Icon as={RiAddCircleLine} fontSize="2rem" />
 							</Button>
-						</Box>
+						</Box> */}
 						<Box my="2rem">
 							<Text>Descripción (Optativo):</Text>
 							<CustomInput
 								{...{
 									id: "productDesc",
 									placeholder: "Descripción",
+									value: desc,
+									defaultValue: desc,
+									onChange: handleSetDescription,
 									type: "text",
 									errorMessage: errors.slug?.message as string,
 									formHook: register("desc"),
@@ -275,15 +306,25 @@ export const ProductEditionModal = ({
 						</Box>
 						<Box my="2rem">
 							<Text>Tags (Optativo):</Text>
-							<CustomInput
-								{...{
-									id: "productTags",
-									placeholder: "Tags",
-									type: "text",
-									errorMessage: errors.tags?.message as string,
-									formHook: register("tags"),
-								}}
-							/>
+							{Array.from({ length: amountOfTags }).map((__, index) => {
+								return (
+									<Box key={`create-product-tags-${index}`}>
+										<CustomInput
+											{...{
+												id: "productTags",
+												placeholder: "Tags",
+												value: tags[index],
+												defaultValue: tags[index],
+												onChange: (e: ChangeEvent<HTMLInputElement>) =>
+													handleSetTagIndex(index, e),
+												type: "text",
+												errorMessage: errors.tags?.message as string,
+												formHook: register("tags"),
+											}}
+										/>
+									</Box>
+								);
+							})}
 						</Box>
 
 						<CustomButton {...{ text: "Crear cuenta" }} />
