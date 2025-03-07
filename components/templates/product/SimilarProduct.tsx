@@ -45,18 +45,16 @@ export const SimilarProduct = () => {
 				(tag) => currentProduct?.tags?.includes(tag)
 			);
 
-			const sizeFiltering = Object.keys(product.sizeOptions || {}).some(
-				(key) => {
-					return currentProduct?.sizeOptions[key]
-						?.map((sizeData1) => sizeData1.size)
-						.some(
-							(num) =>
-								product.sizeOptions[key]
-									?.map((sizeData2) => sizeData2.size)
-									.includes(num)
-						);
-				}
-			);
+			const sizeFiltering = product.sizeOptions.some((__) => {
+				return currentProduct?.sizeOptions
+					?.map((sizeData1) => sizeData1.usSize)
+					.some(
+						(num) =>
+							product.sizeOptions
+								?.map((sizeData2) => sizeData2.usSize)
+								.includes(num)
+					);
+			});
 
 			return tagsFiltering || sizeFiltering;
 		});

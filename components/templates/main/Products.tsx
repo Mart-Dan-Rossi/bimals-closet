@@ -5,7 +5,6 @@ import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { ProductCard } from "../product/ProductCard";
-import { ConfigSizeFormatButton } from "./ConfigSizeFormatButton";
 import { FiltersButton } from "./FiltersButton";
 
 export const Products = () => {
@@ -18,42 +17,23 @@ export const Products = () => {
 	useEffect(() => {
 		if (finalProductsData) {
 			const filteredProducts = finalProductsData.filter((product) => {
-				let passAllFilters =
-					currentSizeType === "any" ||
-					Object.keys(product.sizeOptions).includes(currentSizeType);
+				let passAllFilters = true;
 
 				if (filter) {
 					if (passAllFilters && filter.sizeOptions) {
-						const sizeOptionsKey = Object.keys(filter.sizeOptions)[0]; // Should only have 1 and never be "any"
-						if (sizeOptionsKey === currentSizeType) {
-							const isOverMin = product.sizeOptions[sizeOptionsKey]?.some(
-								(sizeData) => {
-									if (
-										filter.sizeOptions &&
-										filter.sizeOptions[sizeOptionsKey]
-									) {
-										return (
-											sizeData.size >= filter.sizeOptions[sizeOptionsKey].min
-										);
-									}
-								}
-							);
+						const isOverMin = product.sizeOptions?.some((sizeData) => {
+							if (filter.sizeOptions && filter.sizeOptions.usSize) {
+								return sizeData.usSize >= filter.sizeOptions.usSize.min;
+							}
+						});
 
-							const isUnderMax = product.sizeOptions[sizeOptionsKey]?.some(
-								(sizeData) => {
-									if (
-										filter.sizeOptions &&
-										filter.sizeOptions[sizeOptionsKey]
-									) {
-										return (
-											sizeData.size <= filter.sizeOptions[sizeOptionsKey].max
-										);
-									}
-								}
-							);
+						const isUnderMax = product.sizeOptions?.some((sizeData) => {
+							if (filter.sizeOptions && filter.sizeOptions.usSize) {
+								return sizeData.usSize <= filter.sizeOptions.usSize.max;
+							}
+						});
 
-							passAllFilters = !!(isOverMin && isUnderMax);
-						}
+						passAllFilters = !!(isOverMin && isUnderMax);
 					}
 				}
 
@@ -98,7 +78,6 @@ export const Products = () => {
 						</Flex>
 						<Flex>
 							<FiltersButton />
-							<ConfigSizeFormatButton />
 						</Flex>
 					</Flex>
 

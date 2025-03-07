@@ -12,4 +12,6 @@ export type CustomInputProps = {
 	onChange?: React.ChangeEventHandler<HTMLInputElement>;
 	formHook?: UseFormRegisterReturn;
 	repeatInput?: boolean;
+	maxWidth?: string;
+	display?: string;
 };

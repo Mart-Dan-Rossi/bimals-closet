@@ -11,9 +11,11 @@ export const CustomInput = ({
 	passwordIcon,
 	errorMessage,
 	isDisabled,
+	maxWidth,
+	display,
 }: CustomInputProps) => {
 	return (
-		<Box>
+		<Box maxWidth={maxWidth || "unset"} display={display || "block"}>
 			<Box pos="relative">
 				<Input
 					id={id}

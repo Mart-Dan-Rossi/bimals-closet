@@ -1,35 +1,32 @@
-import { ValidSizeOptions } from "@/context/GlobalContext";
+import { ProductsFilter } from "@/types/filters";
 import { Product } from "@/types/product";
 
-export function getSizeName(
-	product: Product,
-	currentSizeType: "any" | "us" | "eu"
-) {
-	if (currentSizeType !== "any") {
-		return currentSizeType.toUpperCase();
-	} else {
-		let displayableSizeName = "";
-		Object.keys(product.sizeOptions).forEach((sizeOption) => {
-			const option = sizeOption as keyof ValidSizeOptions;
-			if (
-				product.sizeOptions[option] &&
-				(product?.sizeOptions[option]?.length ?? 0) > 0
-			) {
-				displayableSizeName = option;
-			}
-		});
-		return displayableSizeName.toUpperCase();
-	}
+export function capitalize(string: string) {
+	return `${string[0].toUpperCase()}${string.slice(1)}`;
 }
 
-export function getPropperSizeType(
-	currentSizeType: "any" | "us" | "eu",
-	sizeTypes: ("any" | "us" | "eu")[],
-	lowerCase?: boolean
-) {
-	const sizeType = currentSizeType === "any" ? sizeTypes[1] : currentSizeType;
+export function applyFilters(
+	products: Product[] | undefined,
+	filter?: ProductsFilter
+): Product[] {
+	if (!products) return [];
+	if (!filter) return products;
+	return products.filter((product) => {
+		const passSizeFilter = (() => {
+			if (!filter.sizeOptions?.usSize) return true;
 
-	if (lowerCase) return sizeType.toLocaleLowerCase();
+			const { min, max } = filter.sizeOptions.usSize;
+			return product.sizeOptions.some(
+				({ usSize }) => usSize >= min && usSize <= max
+			);
+		})();
 
-	return sizeType.toUpperCase();
+		const passTagFilter = (() => {
+			if (!filter.tags || filter.tags.length === 0) return true;
+
+			return filter.tags.every((tag) => product.tags?.includes(tag));
+		})();
+
+		return passSizeFilter && passTagFilter;
+	});
 }

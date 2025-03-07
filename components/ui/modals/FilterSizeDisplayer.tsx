@@ -1,5 +1,4 @@
 import { useGlobalContext } from "@/context/GlobalContext";
-import { getPropperSizeType } from "@/utils/functions";
 import {
 	RangeSlider,
 	RangeSliderFilledTrack,
@@ -34,11 +33,9 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 			const sizeOptionMin = newRange[0];
 			const sizeOptionMax = newRange[1];
 
-			const key = getPropperSizeType(currentSizeType, sizeTypes, true);
-
 			const filterToAdd = {
 				sizeOptions: {
-					[key]: { min: sizeOptionMin, max: sizeOptionMax },
+					usSize: { min: sizeOptionMin, max: sizeOptionMax },
 				},
 			};
 

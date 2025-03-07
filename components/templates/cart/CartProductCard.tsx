@@ -67,7 +67,7 @@ export const CartProductCard = ({
 							fontWeight="600"
 							color="brand.secondaryColor1"
 						>
-							Talle ({item?.sizeType}):
+							Talle (US):
 						</Text>
 						<Text as="span" fontWeight="400" ml=".5rem">
 							{item?.size}

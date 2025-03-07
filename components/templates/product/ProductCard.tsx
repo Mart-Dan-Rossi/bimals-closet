@@ -1,11 +1,12 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 import { Product } from "@/types/product";
-import { Box, Circle, Flex, Icon, Text } from "@chakra-ui/react";
+import { Box, Circle, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { SizeOptions } from "./SizeOptions";
+import { capitalize } from "@/utils/functions";
 
 interface Props {
 	product: Product;
@@ -65,16 +66,28 @@ export const ProductCard = ({ product }: Props) => {
 							gap={2}
 						>
 							<Flex justify={"space-between"} width={"100%"}>
-								<Text
-									color="brand.secondaryColor1"
-									textAlign="left"
-									maxW="200px"
-									fontSize={["1.4rem", "1.5rem"]}
-									fontWeight="600"
-									isTruncated
-								>
-									{product?.name}
-								</Text>
+								<HStack>
+									<Text
+										color="brand.secondaryColor1"
+										textAlign="left"
+										maxW="200px"
+										fontSize={["1.4rem", "1.5rem"]}
+										fontWeight="600"
+										isTruncated
+									>
+										{product?.name}
+									</Text>
+									<Text
+										color="brand.secondaryColor1"
+										textAlign="left"
+										maxW="200px"
+										fontSize={["1.4rem", "1.5rem"]}
+										fontWeight="600"
+										isTruncated
+									>
+										{capitalize(product.brand)}
+									</Text>
+								</HStack>
 								<Box>
 									<Text
 										fontSize={["1.2rem", "1.3rem"]}

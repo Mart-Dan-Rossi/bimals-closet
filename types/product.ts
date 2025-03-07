@@ -1,6 +1,11 @@
 export type SizeOptions = {
-	[key: string]: { size: number; quantity: number }[];
-};
+	usSize: number;
+	color: string;
+	quantity: number;
+	arg?: number;
+	cm?: number;
+	eu?: number;
+}[];
 
 export type Product = {
 	name: string;
@@ -8,6 +13,7 @@ export type Product = {
 	images: string[];
 	price: number;
 	sizeOptions: SizeOptions;
+	brand: "puma" | "nike" | "adidas" | "underArmour" | "other"; // If the brand is "other" make SizeOptions mandatory to upload
 	_id?: string;
 	desc?: string;
 	tags?: string[];

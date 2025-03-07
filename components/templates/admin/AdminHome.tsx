@@ -2,15 +2,17 @@ import { useGlobalContext } from "@/context/GlobalContext";
 import { useDeleteProduct } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product } from "@/types/product";
+import { applyFilters } from "@/utils/functions";
 import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+import { FiltersButton } from "../main/FiltersButton";
 import { AdminProductCard } from "./AdminProductCard";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { ProductEditionModal } from "./ProductEditionModal";
 
 export const AdminHome = () => {
-	const { finalProductsData } = useGlobalContext();
+	const { finalProductsData, filter } = useGlobalContext();
 
 	const {
 		isOpen: isConfirmDeleteModalOpen,
@@ -29,13 +31,10 @@ export const AdminHome = () => {
 		Product | undefined
 	>();
 	const [editingProduct, setEditingProduct] = useState(false);
-	const [sizeToDelete, setSizeToDelete] = useState<
-		{ sizeOption: string; sizeToDelete: number } | undefined
-	>();
 
-	useEffect(() => {
-		console.log(sizeToDelete);
-	}, []);
+	const [filteredProductsData, setFilteredProductsData] = useState<
+		Product[] | undefined
+	>(finalProductsData);
 
 	const { mutateAsync: removeMutateAsync } = useDeleteProduct();
 
@@ -48,6 +47,10 @@ export const AdminHome = () => {
 	}
 
 	const adminIds = useRef(getAdminsIds()).current as string[];
+
+	useEffect(() => {
+		setFilteredProductsData(applyFilters(finalProductsData, filter));
+	}, [finalProductsData, filter]);
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
@@ -75,7 +78,8 @@ export const AdminHome = () => {
 
 	return (
 		<Box position="relative" pt="15rem">
-			{finalProductsData?.map((item, index) => (
+			<FiltersButton />
+			{filteredProductsData?.map((item, index) => (
 				<AdminProductCard
 					key={`admin-product-card-${item.slug}-${index}`}
 					item={item}
@@ -84,7 +88,6 @@ export const AdminHome = () => {
 					onOpenAddNewProduct={onOpenAddNewProduct}
 					setProductToInteractWith={setProductToInteractWith}
 					setEditingProduct={setEditingProduct}
-					setSizeToDelete={setSizeToDelete}
 				/>
 			))}
 			<Flex justifyContent={"center"} mb={"2rem"}>

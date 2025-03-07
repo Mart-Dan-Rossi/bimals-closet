@@ -1,5 +1,4 @@
 import { useGlobalContext } from "@/context/GlobalContext";
-import { getPropperSizeType } from "@/utils/functions";
 import {
 	Drawer,
 	DrawerBody,
@@ -12,39 +11,46 @@ import {
 	VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { ConfigSizeFormatButton } from "./templates/main/ConfigSizeFormatButton";
 import { FilterSizeDisplayer } from "./ui/modals/FilterSizeDisplayer";
+import { FilterTagsDisplayer } from "./ui/modals/FilterTagsDisplayer";
 
 export const FiltersDrawer = () => {
-	const {
-		sizeTypes,
-		currentSizeType,
-		isFiltersDrawerOpen,
-		onCloseFiltersDrawer,
-		finalProductsData,
-	} = useGlobalContext();
+	const { isFiltersDrawerOpen, onCloseFiltersDrawer, finalProductsData } =
+		useGlobalContext();
 
 	const [allSizes, setAllSizes] = useState<number[] | undefined>();
+	const [allTags, setAllTags] = useState<string[]>();
 
 	useEffect(() => {
 		let stackAllSizes: number[] = [];
+		let stackAllTags: string[] = [];
 
 		finalProductsData?.forEach((product) => {
-			const productSizeOptions = product.sizeOptions[
-				getPropperSizeType(currentSizeType, sizeTypes, true)
-			]?.map((option) => option.size);
+			const productSizeOptions = product.sizeOptions?.map(
+				(option) => option.usSize
+			);
+			const emptyTagsFiltered = product.tags
+				? product.tags.filter((tag) => tag !== "")
+				: [];
 
 			if (productSizeOptions) {
 				stackAllSizes = [...stackAllSizes, ...productSizeOptions];
+			}
+			if (emptyTagsFiltered) {
+				stackAllTags = [...stackAllTags, ...emptyTagsFiltered];
 			}
 		});
 
 		stackAllSizes = stackAllSizes.filter(
 			(value, index, array) => array.indexOf(value) === index
 		);
+		stackAllTags = stackAllTags.filter(
+			(value, index, array) => array.indexOf(value) === index
+		);
 
 		setAllSizes(stackAllSizes);
-	}, [finalProductsData, currentSizeType]);
+		setAllTags([...stackAllTags].sort());
+	}, [finalProductsData]);
 
 	return (
 		<Drawer
@@ -62,13 +68,14 @@ export const FiltersDrawer = () => {
 					<VStack align={"start"} width={"100%"}>
 						<Flex flexDirection={"column"} gap={1} width={"100%"}>
 							<Flex justify={"start"} gap={2} align={"end"}>
-								<Text>
-									Talles ({getPropperSizeType(currentSizeType, sizeTypes)})
-								</Text>
-								<ConfigSizeFormatButton />
+								<Text>Talles (US)</Text>
 							</Flex>
 							<FilterSizeDisplayer allSizes={allSizes} />
 						</Flex>
+						<VStack mt={"2rem"} alignItems={"flex-start"}>
+							<Text>Etiquetas:</Text>
+							<FilterTagsDisplayer allTags={allTags} />
+						</VStack>
 					</VStack>
 				</DrawerBody>
 			</DrawerContent>

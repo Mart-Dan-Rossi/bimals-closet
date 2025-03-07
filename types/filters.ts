@@ -1,5 +1,6 @@
-export interface SizeFilter {
+export interface ProductsFilter {
 	sizeOptions?: {
-		[key: string]: { min: number; max: number };
+		usSize: { min: number; max: number };
 	};
+	tags?: string[];
 }

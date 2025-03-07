@@ -1,8 +1,10 @@
 import { Product } from "@/types/product";
-import { Box, Flex, Icon, Img, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, Img, Stack, Tag, Text } from "@chakra-ui/react";
 import { SetStateAction } from "react";
 import { RiDeleteBinLine, RiPencilLine } from "react-icons/ri";
-import { AdminCardProductQuantity } from "./AdminCardProductQuantity";
+import { DisplayColorSizesAndQuantityInputsContainer } from "../product/DisplayColorSizesAndQuantityInputsContainer";
+import { capitalize } from "@/utils/functions";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
 	item: Product;
@@ -11,9 +13,6 @@ interface Props {
 	onOpenAddNewProduct: () => void;
 	setProductToInteractWith: React.Dispatch<SetStateAction<Product | undefined>>;
 	setEditingProduct: React.Dispatch<SetStateAction<boolean>>;
-	setSizeToDelete: React.Dispatch<
-		SetStateAction<{ sizeOption: string; sizeToDelete: number } | undefined>
-	>;
 }
 
 export const AdminProductCard = ({
@@ -23,11 +22,12 @@ export const AdminProductCard = ({
 	onOpenAddNewProduct,
 	setProductToInteractWith,
 	setEditingProduct,
-	setSizeToDelete,
 }: Props) => {
 	// function handleAddSize() {
 	// 	console.log("Add size");
 	// }
+
+	const { onOpenFiltersDrawer } = useGlobalContext();
 
 	function openDeleteProductModal() {
 		setProductToInteractWith(item);
@@ -41,12 +41,6 @@ export const AdminProductCard = ({
 		onOpenAddNewProduct();
 	}
 
-	function openDeleteSizeModal(sizeOption: string, sizeToDelete: number) {
-		setProductToInteractWith(item);
-		setSizeToDelete({ sizeOption, sizeToDelete });
-		setIsDeleteProduct(false);
-		onOpenConfirmDeleteModal();
-	}
 	return (
 		<Flex
 			bg="brand.secondaryColor5"
@@ -66,54 +60,36 @@ export const AdminProductCard = ({
 				</Box>
 
 				<Stack ml="2rem" flexDir="column" spacing="1.2rem">
-					<Text
-						fontSize="1.8rem"
-						fontWeight="300"
-						color="brand.secondaryColor1"
-					>
-						{item?.name}
-					</Text>
+					<Flex gap={"2rem"}>
+						<Text
+							fontSize="1.8rem"
+							fontWeight="600"
+							color="brand.secondaryColor1"
+						>
+							{item?.name} {item.brand && capitalize(item.brand)}
+						</Text>
+						{item.tags &&
+							item.tags.map((tag) => (
+								<Tag
+									key={`${item.slug}-${tag}-tag`}
+									cursor={"pointer"}
+									onClick={onOpenFiltersDrawer}
+								>
+									{capitalize(tag)}
+								</Tag>
+							))}
+					</Flex>
 					<Flex align="center">
 						<Text
 							fontSize="1.7rem"
 							fontWeight="600"
 							color="brand.secondaryColor1"
 						>
-							AR$ {item?.price?.toFixed(2)}{" "}
+							AR$ {item?.price?.toFixed(2)}
 						</Text>
 					</Flex>
-					<Text
-						fontSize="1.4rem"
-						fontWeight="600"
-						color="brand.secondaryColor1"
-					>
-						{`Talles (${Object.keys(item.sizeOptions)[0]}):`}
-					</Text>
-					<Flex direction={"column"} align={"center"}>
-						{Object.keys(item.sizeOptions).map((sizeOption, index) => {
-							return (
-								<Box key={`admin-card-product-quantity-container-${index}`}>
-									{index === 0 && (
-										<>
-											<AdminCardProductQuantity
-												item={item}
-												sizeOption={sizeOption}
-												openDeleteSizeModal={openDeleteSizeModal}
-											/>
-										</>
-									)}
-								</Box>
-							);
-						})}
 
-						{/* <Icon
-							onClick={handleAddSize}
-							as={AiFillPlusSquare}
-							fontSize="2rem"
-							cursor="pointer"
-							color="brand.color1"
-						/> */}
-					</Flex>
+					<DisplayColorSizesAndQuantityInputsContainer item={item} />
 				</Stack>
 			</Flex>
 

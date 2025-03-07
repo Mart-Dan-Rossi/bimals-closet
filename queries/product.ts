@@ -14,6 +14,7 @@ export const getParticularProduct = async (slug: string): Promise<Product> => {
 };
 
 export const createProduct = async (payload: Product) => {
+	console.log("payload: ", payload);
 	const { data } = await AxiosInstance.post("/api/products/add", payload);
 
 	return data;

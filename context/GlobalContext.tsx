@@ -2,7 +2,7 @@ import { useGetMyFavorites } from "@/hooks/favorite/useFavorite";
 import { useGetAllProducts } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { useStoreState } from "@/hooks/state/storage";
-import { SizeFilter } from "@/types/filters";
+import { ProductsFilter } from "@/types/filters";
 import { Product } from "@/types/product";
 import { useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -23,17 +23,15 @@ interface GlobalContextProps {
 	currentSizeType: "any" | "us" | "eu";
 	useSetCurrentSizeType: (sizeType: "any" | "us" | "eu") => void;
 	sizeTypes: ("any" | "us" | "eu")[];
-	isSizeTypesDrawerOpen: boolean;
-	onOpenSizeTypesDrawer: () => void;
-	onCloseSizeTypesDrawer: () => void;
 	isFiltersDrawerOpen: boolean;
 	onOpenFiltersDrawer: () => void;
 	onCloseFiltersDrawer: () => void;
-	filter: SizeFilter | undefined;
-	setFilter: React.Dispatch<React.SetStateAction<SizeFilter | undefined>>;
+	filter: ProductsFilter | undefined;
+	setFilter: React.Dispatch<React.SetStateAction<ProductsFilter | undefined>>;
 	handleLogout: () => void;
 	finalProductsData: Product[] | undefined;
 	isLoadingProductData: boolean;
+	handleClearFilters: () => void;
 }
 
 const GlobalContext = React.createContext({} as GlobalContextProps);
@@ -43,12 +41,6 @@ export const GlobalContextProvider = ({
 }: {
 	children: ReactNode;
 }) => {
-	const {
-		isOpen: isSizeTypesDrawerOpen,
-		onOpen: onOpenSizeTypesDrawer,
-		onClose: onCloseSizeTypesDrawer,
-	} = useDisclosure();
-
 	const {
 		isOpen: isFiltersDrawerOpen,
 		onOpen: onOpenFiltersDrawer,
@@ -64,10 +56,15 @@ export const GlobalContextProvider = ({
 		"any"
 	);
 	const [token, setToken] = useState(useHydratedStoreState("token"));
-	const [filter, setFilter] = useState<SizeFilter | undefined>();
+	const [filter, setFilter] = useState<ProductsFilter | undefined>();
 	const [finalProductsData, setFinalProductsData] = useState<
 		Product[] | undefined
 	>();
+
+	function handleClearFilters() {
+		localStorage.removeItem("mateosShoes-shoesSizeFilterRange");
+		setFilter(undefined);
+	}
 
 	function useSetCurrentSizeType(sizeType: "any" | "us" | "eu") {
 		localStorage.setItem("mateoShooes-sizeType-stored", sizeType);
@@ -109,11 +106,15 @@ export const GlobalContextProvider = ({
 	}, [token]);
 
 	useEffect(() => {
-		if (productsData) {
+		if (productsData && wishlistData && wishlistData !== null) {
 			const mapProducts: Product[] = productsData.map((item) => {
-				const isFavorite = wishlistData?.some(
-					(wishlistItem) => wishlistItem._id === item._id
-				);
+				const isFavorite = wishlistData?.some((wishlistItem) => {
+					if (wishlistItem) {
+						return wishlistItem._id === item._id;
+					} else {
+						return false;
+					}
+				});
 				const itemCopy = {
 					...item,
 				};
@@ -140,9 +141,6 @@ export const GlobalContextProvider = ({
 				currentSizeType,
 				useSetCurrentSizeType,
 				sizeTypes,
-				isSizeTypesDrawerOpen,
-				onOpenSizeTypesDrawer,
-				onCloseSizeTypesDrawer,
 				isFiltersDrawerOpen,
 				onOpenFiltersDrawer,
 				onCloseFiltersDrawer,
@@ -151,6 +149,7 @@ export const GlobalContextProvider = ({
 				handleLogout,
 				finalProductsData,
 				isLoadingProductData,
+				handleClearFilters,
 			}}
 		>
 			{children}

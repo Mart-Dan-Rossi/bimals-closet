@@ -1,27 +1,31 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
-import { CustomInput } from "@/components/ui/forms/CustomInput";
-import { useCreateProduct } from "@/hooks/products/useProduct";
 import {
-	Product,
-	//  SizeOptions
-} from "@/types/product";
+	useCreateProduct,
+	useUpdateProduct,
+} from "@/hooks/products/useProduct";
+import { Product } from "@/types/product";
+import { Brand } from "@/utils/sizesEquivalencies";
 import {
 	Box,
-	Button,
-	Icon,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
 	ModalOverlay,
-	Text,
 	useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { RiAddCircleLine } from "react-icons/ri";
+import { BrandSelector } from "./BrandSelector";
+import { DescriptionInput } from "./DescriptionInput";
+import { ImagesInputsContainer } from "./ImagesInputsContainer";
+import { NameInput } from "./NameInput";
+import { PriceInput } from "./PriceInput";
+import { ProductStockEdited } from "./ProductStockEditer";
+import { SlugInput } from "./SlugInput";
+import { TagsInputs } from "./TagsInputs";
 
 interface Props {
 	isOpen: boolean;
@@ -29,6 +33,25 @@ interface Props {
 	editingProduct: boolean;
 	item: Product | undefined;
 }
+
+export const inputStyles = {
+	border: "1px solid #EAEAEA",
+	borderRadius: "1rem",
+	py: "2rem",
+	fontSize: "1.6rem",
+	_placeholder: {
+		fontWeight: 500,
+		fontSize: "1.3rem",
+		color: "brand.secondaryColor1",
+	},
+	_focus: {
+		borderColor: "brand.color1",
+		boxShadow: "none",
+	},
+	_hover: {
+		borderColor: "none",
+	},
+};
 
 export const ProductEditionModal = ({
 	isOpen,
@@ -43,16 +66,19 @@ export const ProductEditionModal = ({
 				slug: "",
 				images: [],
 				price: 0,
+				brand: "other",
 				sizeOptions: {},
 				desc: "",
 				tags: "",
 			},
 		[item]
 	) as Product;
+
 	const [name, setName] = useState(defaultItem?.name || "");
 	const [slug, setSlug] = useState(defaultItem?.slug || "");
 	const [images, setImages] = useState(defaultItem?.images || []);
 	const [price, setPrice] = useState(defaultItem?.price || 0);
+	const [brand, setBrand] = useState(defaultItem?.brand || "other");
 	const [sizeOptions, setSizeOptions] = useState(
 		defaultItem?.sizeOptions || {}
 	);
@@ -61,28 +87,29 @@ export const ProductEditionModal = ({
 
 	const [amountOfImages, setAmountOfImages] = useState<number>(1);
 	// const [amountOfSizes, setAmountOfSizes] = useState<number>(1);
-	const [amountOfTags, setAmountOfTags] = useState<number>(1);
+	const [amountOfTags, setAmountOfTags] = useState<number>(tags.length || 1);
 
 	useEffect(() => {
-		setName(defaultItem?.name || "");
-		setSlug(defaultItem?.slug || "");
-		setImages(defaultItem?.images || []);
-		setPrice(defaultItem?.price || 0);
-		setSizeOptions(defaultItem?.sizeOptions || {});
-		setDesc(defaultItem?.desc || "");
-		setTags(defaultItem?.tags || []);
-		setAmountOfImages(1);
-		// setAmountOfSizes(1)
-		setAmountOfTags(0);
-	}, [defaultItem]);
+		setName((editingProduct && defaultItem?.name) || "");
+		setSlug((editingProduct && defaultItem?.slug) || "");
+		setImages((editingProduct && defaultItem?.images) || []);
+		setPrice((editingProduct && defaultItem?.price) || 0);
+		setBrand((editingProduct && defaultItem?.brand) || "other");
+		setSizeOptions(
+			(editingProduct && defaultItem?.sizeOptions) || [
+				{ usSize: 0, color: "", quantity: 0 },
+			]
+		);
+		setDesc((editingProduct && defaultItem?.desc) || "");
+		setTags((editingProduct && defaultItem?.tags) || []);
+		setAmountOfImages((editingProduct && defaultItem.images.length) || 1);
+		setAmountOfTags((editingProduct && tags.length) || 1);
+	}, [defaultItem, editingProduct]);
 
 	const { mutateAsync: addMutateAsyncCreateProduct } = useCreateProduct();
+	const { mutateAsync: addMutateAsynceEditProduct } = useUpdateProduct();
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<Product>();
+	const { handleSubmit } = useForm<Product>();
 
 	const toast = useToast();
 
@@ -91,17 +118,25 @@ export const ProductEditionModal = ({
 			const product: Product = {
 				name,
 				slug,
-				images,
+				images: images.filter((urlImg) => urlImg.length > 0),
 				price,
-				sizeOptions,
+				sizeOptions: sizeOptions.filter(
+					(sizeOption) =>
+						sizeOption.color.length > 0 &&
+						sizeOption.quantity > 0 &&
+						sizeOption.usSize &&
+						sizeOption.usSize > 0 &&
+						(brand !== "other" ||
+							(sizeOption.arg && sizeOption.cm) ||
+							sizeOption.eu)
+				),
+				brand: brand.toLocaleLowerCase() as Brand,
 				desc,
-				tags,
+				tags: tags ? tags.filter((tag) => tag !== "") : undefined,
 			};
 
 			const res = editingProduct
-				? () => {
-						console.log("Editing product");
-				  }
+				? await addMutateAsynceEditProduct(product)
 				: await addMutateAsyncCreateProduct(product);
 
 			if (res?.status === "success") {
@@ -124,17 +159,20 @@ export const ProductEditionModal = ({
 	}
 
 	function handleSetSlug(e: ChangeEvent<HTMLInputElement>) {
-		setSlug(e.target.value);
+		const value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
+
+		setSlug(value);
 	}
 
 	function handleSetImageIndex(
 		index: number,
 		e: ChangeEvent<HTMLInputElement>
 	) {
-		const imagesData = images;
-		imagesData[index] = e.target.value;
-
-		setImages(imagesData);
+		setImages((prevImages) => {
+			const newImages = [...prevImages];
+			newImages[index] = e.target.value;
+			return newImages;
+		});
 	}
 
 	function handleSetPrice(e: ChangeEvent<HTMLInputElement>) {
@@ -146,17 +184,37 @@ export const ProductEditionModal = ({
 	}
 
 	function handleSetTagIndex(index: number, e: ChangeEvent<HTMLInputElement>) {
-		const tagsData = tags;
+		const tagsData = [...tags];
 		tagsData[index] = e.target.value;
 
 		setTags(tagsData);
+	}
+
+	function handleAddSizeOptionsInput() {
+		setSizeOptions((prevSizeOptions) => [
+			...prevSizeOptions,
+			{
+				usSize: 0,
+				color: "",
+				quantity: 0,
+				arg: undefined,
+				cm: undefined,
+				eu: undefined,
+			},
+		]);
+	}
+
+	function handleAddTagsInput() {
+		setTags((prevTags) => [...prevTags, ""]);
 	}
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent minWidth={"80%"}>
-				<ModalHeader>Está seguro?</ModalHeader>
+				<ModalHeader>{`${
+					editingProduct ? "Editar" : "Crear nuevo"
+				} producto`}</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
 					<Box
@@ -165,169 +223,36 @@ export const ProductEditionModal = ({
 						px="4rem"
 						onSubmit={handleSubmit(handleUploadProduct)}
 					>
-						<Box my="2rem">
-							<Text>Nombre:</Text>
-							<CustomInput
-								{...{
-									id: "productName",
-									placeholder: "Nombre",
-									value: name,
-									defaultValue: name,
-									onChange: handleSetName,
-									type: "text",
-									formHook: register("name", {
-										required: "Por favor introduce el nombre del producto",
-									}),
-									errorMessage: errors.name?.message as string,
-								}}
-							/>
-						</Box>
+						<NameInput name={name} handleSetName={handleSetName} />
 
-						<Box my="2rem">
-							<Text>Slug:</Text>
-							<CustomInput
-								{...{
-									id: "productSlug",
-									placeholder: "Slug",
-									value: slug,
-									defaultValue: slug,
-									onChange: handleSetSlug,
-									type: "text",
-									formHook: register("slug", {
-										required: "Por favor introduce un slug único",
-									}),
-									errorMessage: errors.slug?.message as string,
-								}}
-							/>
-						</Box>
-						<Box
-							my="2rem"
-							padding={"1rem"}
-							borderRadius={"10px"}
-							border={"1px solid black"}
-						>
-							<Text>Imágenes:</Text>
-							{Array.from({ length: amountOfImages }).map((__, index) => {
-								return (
-									<Box key={`create-product-image-${index}`}>
-										<CustomInput
-											{...{
-												id: `productImagesURL${index}`,
-												placeholder: "URL de imágen",
-												value: images[index],
-												defaultValue: images[index] || "",
-												onChange: (e: ChangeEvent<HTMLInputElement>) =>
-													handleSetImageIndex(index, e),
-												type: "text",
-												formHook: register("images", {
-													required: "Por favor introduce una URL",
-												}),
-												errorMessage: errors.images?.message as string,
-											}}
-										/>
-									</Box>
-								);
-							})}
-							<Button
-								colorScheme="blue"
-								onClick={() => {
-									setAmountOfImages((prev) => prev + 1);
-								}}
-							>
-								<Icon as={RiAddCircleLine} fontSize="2rem" />
-							</Button>
-						</Box>
-						<Box my="2rem">
-							<Text>Precio (AR$):</Text>
-							<CustomInput
-								{...{
-									id: "productPrice",
-									placeholder: "Precio",
-									value: price,
-									defaultValue: price,
-									onChange: handleSetPrice,
-									type: "number",
-									formHook: register("price", {
-										required: "Por favor el valor en pesos",
-									}),
-									errorMessage: errors.slug?.message as string,
-								}}
-							/>
-						</Box>
-						{/* <Box
-							my="2rem"
-							padding={"1rem"}
-							borderRadius={"10px"}
-							border={"1px solid black"}
-						>
-							<Text>SizeOptions:</Text>
-							{Array.from({ length: amountOfSizes }).map((__, index) => {
-								return (
-									<Box key={`create-product-size-${index}`}>
-										<CustomInput
-											{...{
-												id: `productSizeOption${index}`,
-												placeholder: "Talle en US",
-												defaultValue: sizeOptions,
-												type: "text",
-												formHook: register("sizeOptions", {
-													required: "Por favor introduce un talle",
-												}),
-												errorMessage: errors.images?.message as string,
-											}}
-										/>
-									</Box>
-								);
-							})}
-							<Button
-								colorScheme="blue"
-								margin={"0 auto"}
-								onClick={() => {
-									setAmountOfSizes((prev) => prev + 1);
-								}}
-							>
-								<Icon as={RiAddCircleLine} fontSize="2rem" />
-							</Button>
-						</Box> */}
-						<Box my="2rem">
-							<Text>Descripción (Optativo):</Text>
-							<CustomInput
-								{...{
-									id: "productDesc",
-									placeholder: "Descripción",
-									value: desc,
-									defaultValue: desc,
-									onChange: handleSetDescription,
-									type: "text",
-									errorMessage: errors.slug?.message as string,
-									formHook: register("desc"),
-								}}
-							/>
-						</Box>
-						<Box my="2rem">
-							<Text>Tags (Optativo):</Text>
-							{Array.from({ length: amountOfTags }).map((__, index) => {
-								return (
-									<Box key={`create-product-tags-${index}`}>
-										<CustomInput
-											{...{
-												id: "productTags",
-												placeholder: "Tags",
-												value: tags[index],
-												defaultValue: tags[index],
-												onChange: (e: ChangeEvent<HTMLInputElement>) =>
-													handleSetTagIndex(index, e),
-												type: "text",
-												errorMessage: errors.tags?.message as string,
-												formHook: register("tags"),
-											}}
-										/>
-									</Box>
-								);
-							})}
-						</Box>
+						<SlugInput slug={slug} handleSetSlug={handleSetSlug} />
 
-						<CustomButton {...{ text: "Crear cuenta" }} />
+						<ImagesInputsContainer
+							images={images}
+							handleSetImageIndex={handleSetImageIndex}
+							amountOfImages={amountOfImages}
+							setAmountOfImages={setAmountOfImages}
+						/>
+						<PriceInput price={price} handleSetPrice={handleSetPrice} />
+						<BrandSelector brand={brand} setBrand={setBrand} />
+
+						<ProductStockEdited
+							sizeOptions={sizeOptions}
+							brand={brand}
+							setSizeOptions={setSizeOptions}
+							handleAddSizeOptionsInput={handleAddSizeOptionsInput}
+						/>
+						<DescriptionInput
+							desc={desc}
+							handleSetDescription={handleSetDescription}
+						/>
+						<TagsInputs
+							tags={tags}
+							handleSetTagIndex={handleSetTagIndex}
+							handleAddTagsInput={handleAddTagsInput}
+						/>
+
+						<CustomButton {...{ text: "Cargar producto" }} />
 					</Box>
 				</ModalBody>
 			</ModalContent>

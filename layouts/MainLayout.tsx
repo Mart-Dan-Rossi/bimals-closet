@@ -2,7 +2,6 @@ import { Box } from "@chakra-ui/react";
 import React from "react";
 
 import { FiltersDrawer } from "@/components/FiltersDrawer";
-import { SizeTypesDrawer } from "@/components/SizeTypesDrawer";
 import { GlobalContextProvider } from "@/context/GlobalContext";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
@@ -23,7 +22,6 @@ const MainLayout = ({ children, subHeaderName }: childrenProps) => {
 				<Footer />
 			</Box>
 			<FiltersDrawer />
-			<SizeTypesDrawer />
 		</GlobalContextProvider>
 	);
 };

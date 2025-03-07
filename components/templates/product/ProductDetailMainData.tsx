@@ -4,18 +4,16 @@ import {
 } from "@/components/animations/CustomLoader";
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
 import { useGlobalContext } from "@/context/GlobalContext";
+import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 import { CartItem, useCartState } from "@/hooks/state/storage";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 import { Product } from "@/types/product";
-import { getPropperSizeType, getSizeName } from "@/utils/functions";
 import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { GoHeart, GoHeartFill } from "react-icons/go";
-import { ConfigSizeFormatButton } from "../main/ConfigSizeFormatButton";
 import { SizeOptions } from "./SizeOptions";
-import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 
 interface Props {
 	isLoadingParticulaProductData: boolean;
@@ -30,8 +28,6 @@ export const ProductDetailMainData = ({
 	const toast = useShowToast();
 
 	const router = useRouter();
-
-	const { currentSizeType, sizeTypes } = useGlobalContext();
 
 	const { addToCart } = useCartState((state) => state);
 
@@ -55,7 +51,6 @@ export const ProductDetailMainData = ({
 				id,
 				name,
 				size: selectedSize,
-				sizeType: getPropperSizeType(currentSizeType, sizeTypes),
 				price,
 				quantity: 1,
 				image: image,
@@ -146,9 +141,8 @@ export const ProductDetailMainData = ({
 											fontWeight="600"
 											color="brand.secondaryColor1"
 										>
-											Talles ({getSizeName(product, currentSizeType)})
+											Talles (US)
 										</Text>
-										<ConfigSizeFormatButton />
 									</Flex>
 									<SizeOptions
 										product={product}

@@ -25,7 +25,6 @@ export type CartItem = {
 	quantity: number;
 	image?: string;
 	size?: number | string;
-	sizeType: string;
 };
 
 export const useCartState = create<TCartState>()(

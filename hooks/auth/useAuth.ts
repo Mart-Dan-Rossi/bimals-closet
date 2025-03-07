@@ -9,15 +9,18 @@ import {
 	verifyEmailToken,
 } from "@/queries/auth";
 import { IFormLoginInput, IFormRegisterInput } from "@/types/auth";
+import { useRouter } from "next/router";
 
 export const useLoginUser = () => {
 	const queryClient = useQueryClient();
 	const toast = useShowToast();
+	const router = useRouter();
 
 	return useMutation({
 		mutationFn: (payload: IFormLoginInput) => loginUser(payload),
 		onSuccess: () => {
 			queryClient.invalidateQueries();
+			router.push("/");
 			toast({
 				status: "success",
 				title: "Logueado exitosamente",
