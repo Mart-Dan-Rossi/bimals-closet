@@ -86,8 +86,6 @@ export const ProductEditionModal = ({
 	const [tags, setTags] = useState(defaultItem?.tags || []);
 
 	const [amountOfImages, setAmountOfImages] = useState<number>(1);
-	// const [amountOfSizes, setAmountOfSizes] = useState<number>(1);
-	const [amountOfTags, setAmountOfTags] = useState<number>(tags.length || 1);
 
 	useEffect(() => {
 		setName((editingProduct && defaultItem?.name) || "");
@@ -103,7 +101,6 @@ export const ProductEditionModal = ({
 		setDesc((editingProduct && defaultItem?.desc) || "");
 		setTags((editingProduct && defaultItem?.tags) || []);
 		setAmountOfImages((editingProduct && defaultItem.images.length) || 1);
-		setAmountOfTags((editingProduct && tags.length) || 1);
 	}, [defaultItem, editingProduct]);
 
 	const { mutateAsync: addMutateAsyncCreateProduct } = useCreateProduct();

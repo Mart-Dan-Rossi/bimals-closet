@@ -45,7 +45,7 @@ export const SimilarProduct = () => {
 				(tag) => currentProduct?.tags?.includes(tag)
 			);
 
-			const sizeFiltering = product.sizeOptions.some((__) => {
+			const sizeFiltering = product.sizeOptions.some(() => {
 				return currentProduct?.sizeOptions
 					?.map((sizeData1) => sizeData1.usSize)
 					.some(
