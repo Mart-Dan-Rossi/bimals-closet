@@ -13,6 +13,7 @@ import {
 	ModalContent,
 	ModalHeader,
 	ModalOverlay,
+	useBoolean,
 	useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -26,6 +27,7 @@ import { PriceInput } from "./PriceInput";
 import { ProductStockEdited } from "./ProductStockEditer";
 import { SlugInput } from "./SlugInput";
 import { TagsInputs } from "./TagsInputs";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
 	isOpen: boolean;
@@ -59,6 +61,8 @@ export const ProductEditionModal = ({
 	editingProduct,
 	item,
 }: Props) => {
+	const { finalProductsData } = useGlobalContext();
+
 	const defaultItem = useMemo(
 		() =>
 			item || {
@@ -87,6 +91,30 @@ export const ProductEditionModal = ({
 
 	const [amountOfImages, setAmountOfImages] = useState<number>(1);
 
+	const [isValidNameData, { on: setInvalidNameData, off: setValidNameData }] =
+		useBoolean(editingProduct);
+
+	const [isValidSlugData, { on: setInvalidSlugData, off: setValidSlugData }] =
+		useBoolean(editingProduct);
+
+	const [
+		isValidImagesData,
+		{ on: setInvalidImagesData, off: setValidImagesData },
+	] = useBoolean(editingProduct);
+
+	const [
+		isValidPriceData,
+		{ on: setInvalidPriceData, off: setValidPriceData },
+	] = useBoolean(editingProduct);
+
+	const [
+		isValidsizeOptionsData,
+		{ on: setInvalidsizeOptionsData, off: setValidsizeOptionsData },
+	] = useBoolean(editingProduct);
+
+	const [showFormErrors, { on: handleShowErrors, off: handleHideErrors }] =
+		useBoolean(false);
+
 	useEffect(() => {
 		setName((editingProduct && defaultItem?.name) || "");
 		setSlug((editingProduct && defaultItem?.slug) || "");
@@ -101,7 +129,37 @@ export const ProductEditionModal = ({
 		setDesc((editingProduct && defaultItem?.desc) || "");
 		setTags((editingProduct && defaultItem?.tags) || []);
 		setAmountOfImages((editingProduct && defaultItem.images.length) || 1);
+		handleHideErrors();
 	}, [defaultItem, editingProduct]);
+
+	useEffect(() => {
+		function areAllSizeOptionsDataValid() {
+			const anyValid = !item?.sizeOptions.some((sizeOption) => {
+				const { usSize, quantity, color, arg, cm, eu } = sizeOption;
+
+				const hasSizeOrQuantity = usSize || quantity;
+				const hasColor = color !== "";
+				const hasAnySize = hasSizeOrQuantity || hasColor;
+				const hasInvalidSize = !arg || !cm || !eu;
+
+				const isInvalid =
+					(hasSizeOrQuantity && !hasColor) ||
+					(hasColor && !usSize) ||
+					(hasAnySize && hasInvalidSize) ||
+					(hasColor && quantity);
+
+				return isInvalid;
+			});
+
+			return anyValid;
+		}
+
+		if (areAllSizeOptionsDataValid()) {
+			setInvalidsizeOptionsData();
+		} else {
+			setValidsizeOptionsData();
+		}
+	}, [sizeOptions]);
 
 	const { mutateAsync: addMutateAsyncCreateProduct } = useCreateProduct();
 	const { mutateAsync: addMutateAsynceEditProduct } = useUpdateProduct();
@@ -153,12 +211,46 @@ export const ProductEditionModal = ({
 
 	function handleSetName(e: ChangeEvent<HTMLInputElement>) {
 		setName(e.target.value);
+		if (name === "") {
+			setInvalidNameData();
+		} else {
+			setValidNameData();
+		}
+	}
+
+	function handleIsSlugAllowed(value: string) {
+		if (editingProduct) {
+			const otherProducts = finalProductsData?.filter(
+				(product) => product._id !== item?._id
+			);
+
+			const otherProductHaveThisSlug = otherProducts?.some((product) => {
+				return product.slug.toString() === value;
+			});
+
+			if (otherProductHaveThisSlug) {
+				console.log("invalid1");
+				setValidSlugData();
+			} else {
+				console.log("valid 1");
+				setInvalidSlugData();
+			}
+		} else {
+			if (finalProductsData?.some((product) => product.slug == value)) {
+				console.log("invalid 2");
+				setInvalidSlugData();
+			} else {
+				console.log("valid 2");
+				setValidSlugData();
+			}
+		}
 	}
 
 	function handleSetSlug(e: ChangeEvent<HTMLInputElement>) {
 		const value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
 
 		setSlug(value);
+		handleIsSlugAllowed(value);
 	}
 
 	function handleSetImageIndex(
@@ -168,12 +260,27 @@ export const ProductEditionModal = ({
 		setImages((prevImages) => {
 			const newImages = [...prevImages];
 			newImages[index] = e.target.value;
+
+			const anyNotEmptyImageURL = newImages.some(
+				(imageURL) => imageURL.length > 0
+			);
+
+			if (anyNotEmptyImageURL) {
+				setValidImagesData();
+			} else {
+				setInvalidImagesData();
+			}
 			return newImages;
 		});
 	}
 
 	function handleSetPrice(e: ChangeEvent<HTMLInputElement>) {
 		setPrice(Number(e.target.value));
+		if (price) {
+			setValidPriceData();
+		} else {
+			setInvalidPriceData();
+		}
 	}
 
 	function handleSetDescription(e: ChangeEvent<HTMLInputElement>) {
@@ -220,17 +327,13 @@ export const ProductEditionModal = ({
 						px="4rem"
 						onSubmit={handleSubmit(handleUploadProduct)}
 					>
-						<NameInput name={name} handleSetName={handleSetName} />
-
-						<SlugInput slug={slug} handleSetSlug={handleSetSlug} />
-
-						<ImagesInputsContainer
-							images={images}
-							handleSetImageIndex={handleSetImageIndex}
-							amountOfImages={amountOfImages}
-							setAmountOfImages={setAmountOfImages}
+						<NameInput
+							name={name}
+							handleSetName={handleSetName}
+							showFormErrors={showFormErrors}
+							isValidNameData={isValidNameData}
 						/>
-						<PriceInput price={price} handleSetPrice={handleSetPrice} />
+
 						<BrandSelector brand={brand} setBrand={setBrand} />
 
 						<ProductStockEdited
@@ -238,7 +341,32 @@ export const ProductEditionModal = ({
 							brand={brand}
 							setSizeOptions={setSizeOptions}
 							handleAddSizeOptionsInput={handleAddSizeOptionsInput}
+							showFormErrors={showFormErrors}
+							isValidsizeOptionsData={isValidsizeOptionsData}
 						/>
+
+						<SlugInput
+							slug={slug}
+							handleSetSlug={handleSetSlug}
+							showFormErrors={showFormErrors}
+							isSlugAllowed={isValidSlugData}
+						/>
+
+						<ImagesInputsContainer
+							images={images}
+							handleSetImageIndex={handleSetImageIndex}
+							amountOfImages={amountOfImages}
+							setAmountOfImages={setAmountOfImages}
+							showFormErrors={showFormErrors}
+							isValidImagesData={isValidImagesData}
+						/>
+						<PriceInput
+							price={price}
+							handleSetPrice={handleSetPrice}
+							showFormErrors={showFormErrors}
+							isValidPriceData={isValidPriceData}
+						/>
+
 						<DescriptionInput
 							desc={desc}
 							handleSetDescription={handleSetDescription}
@@ -249,7 +377,17 @@ export const ProductEditionModal = ({
 							handleAddTagsInput={handleAddTagsInput}
 						/>
 
-						<CustomButton {...{ text: "Cargar producto" }} />
+						<CustomButton
+							{...{ text: "Cargar producto" }}
+							handleShowFormErrors={handleShowErrors}
+							isValidData={
+								isValidNameData &&
+								isValidSlugData &&
+								isValidImagesData &&
+								isValidPriceData &&
+								isValidsizeOptionsData
+							}
+						/>
 					</Box>
 				</ModalBody>
 			</ModalContent>

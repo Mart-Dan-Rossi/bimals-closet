@@ -16,7 +16,9 @@ export const TagsInputs = ({
 }: Props) => {
 	return (
 		<Box my="2rem">
-			<Text>Tags (Optativo):</Text>
+			<Text fontSize="1.7rem" fontWeight="600" color="brand.secondaryColor1">
+				Tags (Optativo):
+			</Text>
 			{tags.map((tag, index) => {
 				return (
 					<Box key={`create-product-tags-${index}`} mt={"1rem"}>

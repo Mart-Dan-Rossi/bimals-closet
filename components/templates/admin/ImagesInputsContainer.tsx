@@ -11,6 +11,8 @@ interface Props {
 	) => void;
 	amountOfImages: number;
 	setAmountOfImages: Dispatch<SetStateAction<number>>;
+	showFormErrors: boolean;
+	isValidImagesData: boolean;
 }
 
 export const ImagesInputsContainer = ({
@@ -18,6 +20,8 @@ export const ImagesInputsContainer = ({
 	handleSetImageIndex,
 	amountOfImages,
 	setAmountOfImages,
+	showFormErrors,
+	isValidImagesData,
 }: Props) => {
 	return (
 		<Box
@@ -26,7 +30,9 @@ export const ImagesInputsContainer = ({
 			borderRadius={"10px"}
 			border={"1px solid black"}
 		>
-			<Text>Imágenes:</Text>
+			<Text fontSize="1.7rem" fontWeight="600" color="brand.secondaryColor1">
+				Imágenes:
+			</Text>
 			{Array.from({ length: amountOfImages }).map((__, index) => {
 				return (
 					<Box key={`create-product-image-${index}`} mt={"1rem"}>
@@ -43,6 +49,11 @@ export const ImagesInputsContainer = ({
 					</Box>
 				);
 			})}
+			{showFormErrors && isValidImagesData && (
+				<Text color="red" fontSize={"sm"}>
+					Al menos una URL de imágen es requerida!
+				</Text>
+			)}
 			<Button
 				mt={"1rem"}
 				colorScheme="blue"

@@ -17,4 +17,6 @@ export type CustomButtonProps = {
 	isLoading?: boolean;
 	isDisabled?: boolean;
 	isBtnIcon?: boolean;
+	isValidData?: boolean;
+	handleShowFormErrors?: () => void;
 };

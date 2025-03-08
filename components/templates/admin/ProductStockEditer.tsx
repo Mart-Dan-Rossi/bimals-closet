@@ -11,6 +11,8 @@ interface Props {
 	brand: Brand | "other";
 	setSizeOptions: Dispatch<SetStateAction<SizeOptions>>;
 	handleAddSizeOptionsInput: () => void;
+	showFormErrors: boolean;
+	isValidsizeOptionsData: boolean;
 }
 
 export const ProductStockEdited = ({
@@ -18,6 +20,8 @@ export const ProductStockEdited = ({
 	brand,
 	setSizeOptions,
 	handleAddSizeOptionsInput,
+	showFormErrors,
+	isValidsizeOptionsData,
 }: Props) => {
 	return (
 		<Box
@@ -39,6 +43,8 @@ export const ProductStockEdited = ({
 							index1={index1}
 							setSizeOptions={setSizeOptions}
 							inputStyles={inputStyles}
+							showFormErrors={showFormErrors}
+							isValidsizeOptionsData={isValidsizeOptionsData}
 						/>
 					</Flex>
 				);

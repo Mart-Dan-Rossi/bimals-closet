@@ -5,12 +5,21 @@ import { ChangeEvent } from "react";
 interface Props {
 	price: number;
 	handleSetPrice: (e: ChangeEvent<HTMLInputElement>) => void;
+	showFormErrors: boolean;
+	isValidPriceData: boolean;
 }
 
-export const PriceInput = ({ price, handleSetPrice }: Props) => {
+export const PriceInput = ({
+	price,
+	handleSetPrice,
+	showFormErrors,
+	isValidPriceData,
+}: Props) => {
 	return (
 		<Box my="2rem">
-			<Text>Precio (AR$):</Text>
+			<Text fontSize="1.7rem" fontWeight="600" color="brand.secondaryColor1">
+				Precio (AR$):
+			</Text>
 			<Input
 				id={"productPrice"}
 				value={price || ""}
@@ -19,6 +28,11 @@ export const PriceInput = ({ price, handleSetPrice }: Props) => {
 				onChange={handleSetPrice}
 				{...inputStyles}
 			/>
+			{showFormErrors && isValidPriceData && (
+				<Text color="red" fontSize={"sm"}>
+					El precio no puede ser igual a 0
+				</Text>
+			)}
 		</Box>
 	);
 };

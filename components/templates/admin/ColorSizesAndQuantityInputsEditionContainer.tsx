@@ -22,6 +22,8 @@ interface Props {
 	sizeOptions: SizeOptions;
 	index1: number;
 	setSizeOptions: Dispatch<SetStateAction<SizeOptions>>;
+	showFormErrors: boolean;
+	isValidsizeOptionsData: boolean;
 }
 
 export const ColorSizesAndQuantityInputsEditionContainer = ({
@@ -30,6 +32,8 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 	sizeOptions,
 	index1,
 	setSizeOptions,
+	showFormErrors,
+	isValidsizeOptionsData,
 }: Props) => {
 	const optionalSizes = ["arg", "eu", "cm"] as const;
 
@@ -75,6 +79,14 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 					type="text"
 					{...inputStyles}
 				/>
+				{showFormErrors &&
+					!isValidsizeOptionsData &&
+					(sizeOptions[index1].usSize || sizeOptions[index1].quantity) &&
+					sizeOptions[index1].color === "" && (
+						<Text color="red" fontSize={"sm"}>
+							Este campo es requerido!
+						</Text>
+					)}
 			</Box>
 
 			<Box margin={"0 1rem"}>
@@ -87,6 +99,14 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 					type="number"
 					{...inputStyles}
 				/>
+				{showFormErrors &&
+					!isValidsizeOptionsData &&
+					(sizeOptions[index1].color !== "" || sizeOptions[index1].quantity) &&
+					!sizeOptions[index1].usSize && (
+						<Text color="red" fontSize={"sm"}>
+							Este campo es requerido!
+						</Text>
+					)}
 				{brand === "other" && (
 					<>
 						{optionalSizes.map((optionalSize: "arg" | "eu" | "cm", index2) => {
@@ -109,6 +129,16 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 										type="number"
 										{...inputStyles}
 									/>
+									{showFormErrors &&
+										!isValidsizeOptionsData &&
+										(sizeOptions[index1].color !== "" ||
+											sizeOptions[index1].quantity ||
+											sizeOptions[index1].usSize) &&
+										!sizeOptions[index1][optionalSize] && (
+											<Text color="red" fontSize={"sm"}>
+												Este campo es requerido!
+											</Text>
+										)}
 								</Box>
 							);
 						})}
@@ -128,6 +158,14 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 					type="number"
 					{...inputStyles}
 				/>
+				{showFormErrors &&
+					!isValidsizeOptionsData &&
+					(sizeOptions[index1].color !== "" || sizeOptions[index1].usSize) &&
+					!sizeOptions[index1].quantity && (
+						<Text color="red" fontSize={"sm"}>
+							Este campo es requerido!
+						</Text>
+					)}
 			</Box>
 		</>
 	);

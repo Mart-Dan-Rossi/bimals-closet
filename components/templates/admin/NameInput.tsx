@@ -5,12 +5,21 @@ import { inputStyles } from "./ProductEditionModal";
 interface Props {
 	name: string;
 	handleSetName: (e: ChangeEvent<HTMLInputElement>) => void;
+	showFormErrors: boolean;
+	isValidNameData: boolean;
 }
 
-export const NameInput = ({ name, handleSetName }: Props) => {
+export const NameInput = ({
+	name,
+	handleSetName,
+	showFormErrors,
+	isValidNameData,
+}: Props) => {
 	return (
 		<Box my="2rem">
-			<Text>Nombre:</Text>
+			<Text fontSize="1.7rem" fontWeight="600" color="brand.secondaryColor1">
+				Nombre:
+			</Text>
 			<Input
 				id={"productName"}
 				value={name || ""}
@@ -19,6 +28,11 @@ export const NameInput = ({ name, handleSetName }: Props) => {
 				onChange={handleSetName}
 				{...inputStyles}
 			/>
+			{showFormErrors && isValidNameData && (
+				<Text color="red" fontSize={"sm"}>
+					Este campo es requerido!
+				</Text>
+			)}
 		</Box>
 	);
 };

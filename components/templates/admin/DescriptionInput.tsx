@@ -10,7 +10,9 @@ interface Props {
 export const DescriptionInput = ({ desc, handleSetDescription }: Props) => {
 	return (
 		<Box my="2rem">
-			<Text>Descripción (Optativo):</Text>
+			<Text fontSize="1.7rem" fontWeight="600" color="brand.secondaryColor1">
+				Descripción (Optativo):
+			</Text>
 			<Input
 				id={"productDesc"}
 				value={desc || ""}

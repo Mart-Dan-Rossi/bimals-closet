@@ -18,6 +18,8 @@ export const CustomButton = ({
 	isLoading,
 	isDisabled,
 	isBtnIcon,
+	isValidData,
+	handleShowFormErrors,
 }: CustomButtonProps) => {
 	return (
 		<Box>
@@ -32,7 +34,14 @@ export const CustomButton = ({
 				boxShadow={boxShadow || "0px 4px 20px rgba(0, 175, 84, 0.25)"}
 				border={border}
 				borderColor={borderColor}
-				type="submit"
+				type={isValidData ? "submit" : "button"}
+				onClick={
+					isValidData
+						? () => {
+								console.log("Upload data");
+						  }
+						: handleShowFormErrors
+				}
 				cursor="pointer"
 				fontSize={fontSize || "1.42rem"}
 				isLoading={isLoading}
