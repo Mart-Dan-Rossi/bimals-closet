@@ -30,8 +30,6 @@ import { TagsInputs } from "./TagsInputs";
 import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
-	isOpen: boolean;
-	onClose: () => void;
 	editingProduct: boolean;
 	item: Product | undefined;
 }
@@ -55,13 +53,9 @@ export const inputStyles = {
 	},
 };
 
-export const ProductEditionModal = ({
-	isOpen,
-	onClose,
-	editingProduct,
-	item,
-}: Props) => {
-	const { finalProductsData } = useGlobalContext();
+export const ProductEditionModal = ({ editingProduct, item }: Props) => {
+	const { finalProductsData, isAddNewProductOpen, onCloseAddNewProduct } =
+		useGlobalContext();
 
 	const defaultItem = useMemo(
 		() =>
@@ -71,7 +65,7 @@ export const ProductEditionModal = ({
 				images: [],
 				price: 0,
 				brand: "other",
-				sizeOptions: {},
+				sizeOptions: [{}],
 				desc: "",
 				tags: "",
 			},
@@ -80,36 +74,34 @@ export const ProductEditionModal = ({
 
 	const [name, setName] = useState(defaultItem?.name || "");
 	const [slug, setSlug] = useState(defaultItem?.slug || "");
-	const [images, setImages] = useState(defaultItem?.images || []);
+	const [images, setImages] = useState(defaultItem?.images || [""]);
 	const [price, setPrice] = useState(defaultItem?.price || 0);
 	const [brand, setBrand] = useState(defaultItem?.brand || "other");
 	const [sizeOptions, setSizeOptions] = useState(
-		defaultItem?.sizeOptions || {}
+		defaultItem?.sizeOptions || [{}]
 	);
 	const [desc, setDesc] = useState(defaultItem?.desc || "");
 	const [tags, setTags] = useState(defaultItem?.tags || []);
 
-	const [amountOfImages, setAmountOfImages] = useState<number>(1);
-
-	const [isValidNameData, { on: setInvalidNameData, off: setValidNameData }] =
+	const [isValidNameData, { on: setValidNameData, off: setInvalidNameData }] =
 		useBoolean(editingProduct);
 
-	const [isValidSlugData, { on: setInvalidSlugData, off: setValidSlugData }] =
+	const [isValidSlugData, { on: setValidSlugData, off: setInvalidSlugData }] =
 		useBoolean(editingProduct);
 
 	const [
 		isValidImagesData,
-		{ on: setInvalidImagesData, off: setValidImagesData },
+		{ on: setValidImagesData, off: setInvalidImagesData },
 	] = useBoolean(editingProduct);
 
 	const [
 		isValidPriceData,
-		{ on: setInvalidPriceData, off: setValidPriceData },
+		{ on: setValidPriceData, off: setInvalidPriceData },
 	] = useBoolean(editingProduct);
 
 	const [
 		isValidsizeOptionsData,
-		{ on: setInvalidsizeOptionsData, off: setValidsizeOptionsData },
+		{ on: setValidsizeOptionsData, off: setInvalidsizeOptionsData },
 	] = useBoolean(editingProduct);
 
 	const [showFormErrors, { on: handleShowErrors, off: handleHideErrors }] =
@@ -118,7 +110,7 @@ export const ProductEditionModal = ({
 	useEffect(() => {
 		setName((editingProduct && defaultItem?.name) || "");
 		setSlug((editingProduct && defaultItem?.slug) || "");
-		setImages((editingProduct && defaultItem?.images) || []);
+		setImages((editingProduct && defaultItem?.images) || [""]);
 		setPrice((editingProduct && defaultItem?.price) || 0);
 		setBrand((editingProduct && defaultItem?.brand) || "other");
 		setSizeOptions(
@@ -128,36 +120,38 @@ export const ProductEditionModal = ({
 		);
 		setDesc((editingProduct && defaultItem?.desc) || "");
 		setTags((editingProduct && defaultItem?.tags) || []);
-		setAmountOfImages((editingProduct && defaultItem.images.length) || 1);
 		handleHideErrors();
 	}, [defaultItem, editingProduct]);
 
 	useEffect(() => {
 		function areAllSizeOptionsDataValid() {
-			const anyValid = !item?.sizeOptions.some((sizeOption) => {
+			const anyInvalid = sizeOptions.some((sizeOption) => {
 				const { usSize, quantity, color, arg, cm, eu } = sizeOption;
 
-				const hasSizeOrQuantity = usSize || quantity;
 				const hasColor = color !== "";
-				const hasAnySize = hasSizeOrQuantity || hasColor;
 				const hasInvalidSize = !arg || !cm || !eu;
 
 				const isInvalid =
-					(hasSizeOrQuantity && !hasColor) ||
-					(hasColor && !usSize) ||
-					(hasAnySize && hasInvalidSize) ||
-					(hasColor && quantity);
+					(!usSize && !quantity && !hasColor) ||
+					((usSize || quantity) && !hasColor) ||
+					((hasColor || quantity) && !usSize) ||
+					((usSize || hasColor) && !quantity) ||
+					(brand === "other" &&
+						(usSize || quantity || hasColor) &&
+						hasInvalidSize);
 
 				return isInvalid;
 			});
 
-			return anyValid;
+			return !anyInvalid;
 		}
 
-		if (areAllSizeOptionsDataValid()) {
-			setInvalidsizeOptionsData();
-		} else {
+		const allValid = areAllSizeOptionsDataValid();
+
+		if (allValid) {
 			setValidsizeOptionsData();
+		} else {
+			setInvalidsizeOptionsData();
 		}
 	}, [sizeOptions]);
 
@@ -170,6 +164,7 @@ export const ProductEditionModal = ({
 
 	async function handleUploadProduct() {
 		try {
+			console.log("in hup");
 			const product: Product = {
 				name,
 				slug,
@@ -211,14 +206,14 @@ export const ProductEditionModal = ({
 
 	function handleSetName(e: ChangeEvent<HTMLInputElement>) {
 		setName(e.target.value);
-		if (name === "") {
-			setInvalidNameData();
-		} else {
+		if (e.target.value !== "") {
 			setValidNameData();
+		} else {
+			setInvalidNameData();
 		}
 	}
 
-	function handleIsSlugAllowed(value: string) {
+	function isSlugAllowed(value: string) {
 		if (editingProduct) {
 			const otherProducts = finalProductsData?.filter(
 				(product) => product._id !== item?._id
@@ -229,18 +224,18 @@ export const ProductEditionModal = ({
 			});
 
 			if (otherProductHaveThisSlug) {
-				console.log("invalid1");
-				setValidSlugData();
-			} else {
-				console.log("valid 1");
 				setInvalidSlugData();
+			} else {
+				setValidSlugData();
 			}
 		} else {
-			if (finalProductsData?.some((product) => product.slug == value)) {
-				console.log("invalid 2");
+			const anyProductHaveThisSlug = finalProductsData?.some(
+				(product) => product.slug == value
+			);
+
+			if (anyProductHaveThisSlug) {
 				setInvalidSlugData();
 			} else {
-				console.log("valid 2");
 				setValidSlugData();
 			}
 		}
@@ -250,7 +245,7 @@ export const ProductEditionModal = ({
 		const value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
 
 		setSlug(value);
-		handleIsSlugAllowed(value);
+		isSlugAllowed(value);
 	}
 
 	function handleSetImageIndex(
@@ -275,8 +270,11 @@ export const ProductEditionModal = ({
 	}
 
 	function handleSetPrice(e: ChangeEvent<HTMLInputElement>) {
-		setPrice(Number(e.target.value));
-		if (price) {
+		const newPrice = Number(e.target.value);
+
+		setPrice(newPrice);
+
+		if (newPrice && newPrice > 0) {
 			setValidPriceData();
 		} else {
 			setInvalidPriceData();
@@ -312,8 +310,45 @@ export const ProductEditionModal = ({
 		setTags((prevTags) => [...prevTags, ""]);
 	}
 
+	function handleDeleteSizeOptionsInputsLine(index: number) {
+		setSizeOptions((prevSizeOptions) => {
+			let newSizeOptions;
+			if (prevSizeOptions.length === 1) {
+				newSizeOptions = [{ usSize: 0, quantity: 0, color: "" }];
+			} else {
+				newSizeOptions = prevSizeOptions.filter((__, i) => i !== index);
+			}
+			return newSizeOptions;
+		});
+	}
+
+	function handleDeleteImageInput(index: number) {
+		setImages((prevImagesData) => {
+			let newImagesData;
+			if (prevImagesData.length === 1) {
+				newImagesData = [""];
+			} else {
+				newImagesData = [...prevImagesData].filter((__, i) => i !== index);
+			}
+			return newImagesData;
+		});
+	}
+
+	function handleAddImageInput() {
+		setImages((prevImagesData) => {
+			const newImagesData = [...prevImagesData, ""];
+			return newImagesData;
+		});
+	}
+
+	function handleDeleteTagInput(index: number) {
+		setTags((prevTags) => {
+			return [...prevTags].filter((__, i) => i !== index);
+		});
+	}
+
 	return (
-		<Modal isOpen={isOpen} onClose={onClose}>
+		<Modal isOpen={isAddNewProductOpen} onClose={onCloseAddNewProduct}>
 			<ModalOverlay />
 			<ModalContent minWidth={"80%"}>
 				<ModalHeader>{`${
@@ -343,6 +378,9 @@ export const ProductEditionModal = ({
 							handleAddSizeOptionsInput={handleAddSizeOptionsInput}
 							showFormErrors={showFormErrors}
 							isValidsizeOptionsData={isValidsizeOptionsData}
+							handleDeleteSizeOptionsInputsLine={
+								handleDeleteSizeOptionsInputsLine
+							}
 						/>
 
 						<SlugInput
@@ -355,10 +393,10 @@ export const ProductEditionModal = ({
 						<ImagesInputsContainer
 							images={images}
 							handleSetImageIndex={handleSetImageIndex}
-							amountOfImages={amountOfImages}
-							setAmountOfImages={setAmountOfImages}
 							showFormErrors={showFormErrors}
 							isValidImagesData={isValidImagesData}
+							handleDeleteImageInput={handleDeleteImageInput}
+							handleAddImageInput={handleAddImageInput}
 						/>
 						<PriceInput
 							price={price}
@@ -375,6 +413,7 @@ export const ProductEditionModal = ({
 							tags={tags}
 							handleSetTagIndex={handleSetTagIndex}
 							handleAddTagsInput={handleAddTagsInput}
+							handleDeleteTagInput={handleDeleteTagInput}
 						/>
 
 						<CustomButton

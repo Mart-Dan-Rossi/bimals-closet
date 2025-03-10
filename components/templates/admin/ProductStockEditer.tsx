@@ -13,6 +13,7 @@ interface Props {
 	handleAddSizeOptionsInput: () => void;
 	showFormErrors: boolean;
 	isValidsizeOptionsData: boolean;
+	handleDeleteSizeOptionsInputsLine: (index: number) => void;
 }
 
 export const ProductStockEdited = ({
@@ -22,6 +23,7 @@ export const ProductStockEdited = ({
 	handleAddSizeOptionsInput,
 	showFormErrors,
 	isValidsizeOptionsData,
+	handleDeleteSizeOptionsInputsLine,
 }: Props) => {
 	return (
 		<Box
@@ -45,6 +47,9 @@ export const ProductStockEdited = ({
 							inputStyles={inputStyles}
 							showFormErrors={showFormErrors}
 							isValidsizeOptionsData={isValidsizeOptionsData}
+							handleDeleteSizeOptionsInputsLine={
+								handleDeleteSizeOptionsInputsLine
+							}
 						/>
 					</Flex>
 				);

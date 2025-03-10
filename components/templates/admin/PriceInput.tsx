@@ -28,7 +28,7 @@ export const PriceInput = ({
 				onChange={handleSetPrice}
 				{...inputStyles}
 			/>
-			{showFormErrors && isValidPriceData && (
+			{showFormErrors && !isValidPriceData && (
 				<Text color="red" fontSize={"sm"}>
 					El precio no puede ser igual a 0
 				</Text>

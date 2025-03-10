@@ -26,8 +26,11 @@ const Login = () => {
 		formState: { errors },
 	} = useForm<IFormLoginInput>();
 
+	const router = useRouter();
+
 	const onSubmit: SubmitHandler<IFormLoginInput> = async (data) => {
 		try {
+			console.log("a");
 			const res = await mutateAsync(data);
 			setToken(res?.data?.token);
 			localStorage.setItem(
@@ -38,7 +41,6 @@ const Login = () => {
 					email: res?.data?.user?.email,
 				})
 			);
-			const router = useRouter();
 			router.push("/");
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
@@ -177,7 +179,9 @@ const Login = () => {
 							</Text>
 						</Link>
 
-						<CustomButton {...{ text: "Loguear", isLoading }} />
+						<CustomButton
+							{...{ text: "Loguear", isLoading, isValidData: true }}
+						/>
 
 						<Box>
 							<Link href="/auth/register">

@@ -1,5 +1,5 @@
 import { SizeOptions } from "@/types/product";
-import { Box, Input, Text } from "@chakra-ui/react";
+import { Box, CloseButton, Input, Text } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 
 interface Props {
@@ -24,6 +24,7 @@ interface Props {
 	setSizeOptions: Dispatch<SetStateAction<SizeOptions>>;
 	showFormErrors: boolean;
 	isValidsizeOptionsData: boolean;
+	handleDeleteSizeOptionsInputsLine: (index: number) => void;
 }
 
 export const ColorSizesAndQuantityInputsEditionContainer = ({
@@ -34,6 +35,7 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 	setSizeOptions,
 	showFormErrors,
 	isValidsizeOptionsData,
+	handleDeleteSizeOptionsInputsLine,
 }: Props) => {
 	const optionalSizes = ["arg", "eu", "cm"] as const;
 
@@ -47,24 +49,26 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 
 	const handleSizeChange = (
 		index: number,
-		size: number,
+		size: string,
 		sizeType?: "arg" | "eu" | "cm"
 	) => {
 		setSizeOptions((prevSizeOptions) => {
+			const newSize = size ? parseInt(size) : 0;
 			return prevSizeOptions.map((sizeOption, idx) => {
 				return idx === index
-					? { ...sizeOption, [sizeType ?? "usSize"]: size }
+					? { ...sizeOption, [sizeType ?? "usSize"]: newSize }
 					: sizeOption;
 			});
 		});
 	};
 
-	const handleQuantityChange = (index: number, quantity: number) => {
-		setSizeOptions((prevSizeOptions) =>
-			prevSizeOptions.map((sizeOption, idx) =>
-				idx === index ? { ...sizeOption, quantity } : sizeOption
-			)
-		);
+	const handleQuantityChange = (index: number, quantity: string) => {
+		setSizeOptions((prevSizeOptions) => {
+			const newQuantity = quantity ? Number(quantity) : 0;
+			return prevSizeOptions.map((sizeOption, idx) =>
+				idx === index ? { ...sizeOption, quantity: newQuantity } : sizeOption
+			);
+		});
 	};
 
 	return (
@@ -81,7 +85,6 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 				/>
 				{showFormErrors &&
 					!isValidsizeOptionsData &&
-					(sizeOptions[index1].usSize || sizeOptions[index1].quantity) &&
 					sizeOptions[index1].color === "" && (
 						<Text color="red" fontSize={"sm"}>
 							Este campo es requerido!
@@ -94,15 +97,14 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 				<Input
 					id={`productSizeOptionSize${index1}`}
 					value={sizeOptions[index1].usSize || ""}
-					onChange={(e) => handleSizeChange(index1, parseInt(e.target.value))}
+					onChange={(e) => handleSizeChange(index1, e.target.value)}
 					placeholder={"Talle en US"}
 					type="number"
 					{...inputStyles}
 				/>
 				{showFormErrors &&
 					!isValidsizeOptionsData &&
-					(sizeOptions[index1].color !== "" || sizeOptions[index1].quantity) &&
-					!sizeOptions[index1].usSize && (
+					sizeOptions[index1].usSize === 0 && (
 						<Text color="red" fontSize={"sm"}>
 							Este campo es requerido!
 						</Text>
@@ -120,21 +122,14 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 										value={sizeOptions[index1][optionalSize] || ""}
 										placeholder={`Talle en ${optionalSize.toUpperCase()}`}
 										onChange={(e) =>
-											handleSizeChange(
-												index1,
-												parseInt(e.target.value),
-												optionalSize
-											)
+											handleSizeChange(index1, e.target.value, optionalSize)
 										}
 										type="number"
 										{...inputStyles}
 									/>
 									{showFormErrors &&
 										!isValidsizeOptionsData &&
-										(sizeOptions[index1].color !== "" ||
-											sizeOptions[index1].quantity ||
-											sizeOptions[index1].usSize) &&
-										!sizeOptions[index1][optionalSize] && (
+										sizeOptions[index1][optionalSize] === 0 && (
 											<Text color="red" fontSize={"sm"}>
 												Este campo es requerido!
 											</Text>
@@ -152,21 +147,19 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 					id={`productSizeOptionQuantity${index1}`}
 					value={sizeOptions[index1].quantity || ""}
 					placeholder={"Cantidad"}
-					onChange={(e) =>
-						handleQuantityChange(index1, parseInt(e.target.value))
-					}
+					onChange={(e) => handleQuantityChange(index1, e.target.value)}
 					type="number"
 					{...inputStyles}
 				/>
 				{showFormErrors &&
 					!isValidsizeOptionsData &&
-					(sizeOptions[index1].color !== "" || sizeOptions[index1].usSize) &&
-					!sizeOptions[index1].quantity && (
+					sizeOptions[index1].quantity === 0 && (
 						<Text color="red" fontSize={"sm"}>
 							Este campo es requerido!
 						</Text>
 					)}
 			</Box>
+			<CloseButton onClick={() => handleDeleteSizeOptionsInputsLine(index1)} />
 		</>
 	);
 };

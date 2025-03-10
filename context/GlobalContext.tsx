@@ -26,6 +26,9 @@ interface GlobalContextProps {
 	isFiltersDrawerOpen: boolean;
 	onOpenFiltersDrawer: () => void;
 	onCloseFiltersDrawer: () => void;
+	isAddNewProductOpen: boolean;
+	onOpenAddNewProduct: () => void;
+	onCloseAddNewProduct: () => void;
 	filter: ProductsFilter | undefined;
 	setFilter: React.Dispatch<React.SetStateAction<ProductsFilter | undefined>>;
 	handleLogout: () => void;
@@ -45,6 +48,12 @@ export const GlobalContextProvider = ({
 		isOpen: isFiltersDrawerOpen,
 		onOpen: onOpenFiltersDrawer,
 		onClose: onCloseFiltersDrawer,
+	} = useDisclosure();
+
+	const {
+		isOpen: isAddNewProductOpen,
+		onOpen: onOpenAddNewProduct,
+		onClose: onCloseAddNewProduct,
 	} = useDisclosure();
 
 	const { data: productsData, isLoading: isLoadingProductData } =
@@ -144,6 +153,9 @@ export const GlobalContextProvider = ({
 				isFiltersDrawerOpen,
 				onOpenFiltersDrawer,
 				onCloseFiltersDrawer,
+				isAddNewProductOpen,
+				onOpenAddNewProduct,
+				onCloseAddNewProduct,
 				filter,
 				setFilter,
 				handleLogout,

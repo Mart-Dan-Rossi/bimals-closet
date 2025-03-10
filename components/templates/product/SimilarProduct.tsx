@@ -48,15 +48,21 @@ export const SimilarProduct = () => {
 			const sizeFiltering = product.sizeOptions.some(() => {
 				return currentProduct?.sizeOptions
 					?.map((sizeData1) => sizeData1.usSize)
-					.some(
-						(num) =>
-							product.sizeOptions
-								?.map((sizeData2) => sizeData2.usSize)
-								.includes(num)
-					);
+					.some((num) => {
+						const productSOMapped = product.sizeOptions?.map(
+							(sizeData2) => sizeData2.usSize
+						);
+
+						const range = Array.from(
+							{ length: 5 },
+							(_, i) => num - 1 + i * 0.5
+						);
+
+						return range.some((val) => productSOMapped.includes(val));
+					});
 			});
 
-			return tagsFiltering || sizeFiltering;
+			return (tagsFiltering && sizeFiltering) || sizeFiltering;
 		});
 
 		return filteredProducts;

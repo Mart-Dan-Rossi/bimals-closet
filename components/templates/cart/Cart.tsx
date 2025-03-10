@@ -4,12 +4,13 @@ import {
 	useHydratedStoreState,
 } from "@/hooks/state/hydrated";
 import { CartItem, useCartState } from "@/hooks/state/storage";
-import { Box, Center, Flex, Icon, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Icon, Text, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BiChevronLeft } from "react-icons/bi";
 import { FaGhost } from "react-icons/fa";
 import { CartProductCard } from "./CartProductCard";
+import { ConfirmDeleteModal } from "../admin/ConfirmDeleteModal";
 
 export const CartItems = () => {
 	const cart = useHydratedCartState("cart");
@@ -23,6 +24,12 @@ export const CartItems = () => {
 
 	const [userEmail, setUserEmail] = useState("");
 	const [userName, setUserName] = useState<string>("");
+
+	const {
+		isOpen: isConfirmEmptyCartModalOpen,
+		onOpen: onOpenConfirmEmptyCartModal,
+		onClose: onCloseConfirmEmptyCartModal,
+	} = useDisclosure();
 
 	const totalCartPrice =
 		cart?.reduce((total, item) => {
@@ -101,7 +108,7 @@ export const CartItems = () => {
 						<Box overflow="hidden" borderRadius="1rem">
 							<Text fontWeight="600">Precio Total</Text>
 							<Text textAlign="center">AR$ {totalCartPrice?.toFixed(2)}</Text>
-							<Box onClick={emptyCart}>
+							<Box onClick={onOpenConfirmEmptyCartModal}>
 								<CustomButton
 									{...{
 										text: "Vaciar Carrito",
@@ -116,6 +123,12 @@ export const CartItems = () => {
 					</Flex>
 				)}
 			</Box>
+			<ConfirmDeleteModal
+				isOpen={isConfirmEmptyCartModalOpen}
+				onClose={onCloseConfirmEmptyCartModal}
+				handler={emptyCart}
+				text={"Desea vaciar el carrito?"}
+			/>
 		</Box>
 	);
 };

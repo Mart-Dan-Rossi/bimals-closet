@@ -12,18 +12,12 @@ import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { ProductEditionModal } from "./ProductEditionModal";
 
 export const AdminHome = () => {
-	const { finalProductsData, filter } = useGlobalContext();
+	const { finalProductsData, filter, onOpenAddNewProduct } = useGlobalContext();
 
 	const {
 		isOpen: isConfirmDeleteModalOpen,
 		onOpen: onOpenConfirmDeleteModal,
 		onClose: onCloseConfirmDeleteModal,
-	} = useDisclosure();
-
-	const {
-		isOpen: isAddNewProductOpen,
-		onOpen: onOpenAddNewProduct,
-		onClose: onCloseAddNewProduct,
 	} = useDisclosure();
 
 	const [isDeleteProduct, setIsDeleteProduct] = useState(false);
@@ -100,16 +94,16 @@ export const AdminHome = () => {
 				</Button>
 			</Flex>
 			<ProductEditionModal
-				isOpen={isAddNewProductOpen}
-				onClose={onCloseAddNewProduct}
 				editingProduct={editingProduct}
 				item={productToInteractWith}
 			/>
 			<ConfirmDeleteModal
 				isOpen={isConfirmDeleteModalOpen}
 				onClose={onCloseConfirmDeleteModal}
-				deletingProduct={isDeleteProduct}
 				handler={handleDeleteProduct}
+				text={`Desea borrar de forma permanente ${
+					isDeleteProduct ? "este producto" : "este talle"
+				}?`}
 			/>
 		</Box>
 	);

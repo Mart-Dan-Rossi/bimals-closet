@@ -13,15 +13,15 @@ import {
 interface Props {
 	isOpen: boolean;
 	onClose: () => void;
-	deletingProduct: boolean;
 	handler: () => void;
+	text: string;
 }
 
 export const ConfirmDeleteModal = ({
-	deletingProduct,
 	handler,
 	isOpen,
 	onClose,
+	text,
 }: Props) => {
 	function confirmDelete() {
 		handler();
@@ -35,10 +35,7 @@ export const ConfirmDeleteModal = ({
 				<ModalHeader>Está seguro?</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
-					<Text>
-						Desea borrar de forma permanente{" "}
-						{deletingProduct ? "este producto" : "este talle"}?
-					</Text>
+					<Text>{text}</Text>
 				</ModalBody>
 
 				<ModalFooter>

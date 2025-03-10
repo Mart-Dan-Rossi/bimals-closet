@@ -28,7 +28,7 @@ export const NameInput = ({
 				onChange={handleSetName}
 				{...inputStyles}
 			/>
-			{showFormErrors && isValidNameData && (
+			{showFormErrors && !isValidNameData && (
 				<Text color="red" fontSize={"sm"}>
 					Este campo es requerido!
 				</Text>

@@ -1,4 +1,12 @@
-import { Box, Button, Icon, Input, Text } from "@chakra-ui/react";
+import {
+	Box,
+	Button,
+	CloseButton,
+	HStack,
+	Icon,
+	Input,
+	Text,
+} from "@chakra-ui/react";
 import { ChangeEvent } from "react";
 import { inputStyles } from "./ProductEditionModal";
 import { RiAddCircleLine } from "react-icons/ri";
@@ -7,12 +15,14 @@ interface Props {
 	tags: string[];
 	handleSetTagIndex: (index: number, e: ChangeEvent<HTMLInputElement>) => void;
 	handleAddTagsInput: () => void;
+	handleDeleteTagInput: (index: number) => void;
 }
 
 export const TagsInputs = ({
 	tags,
 	handleSetTagIndex,
 	handleAddTagsInput,
+	handleDeleteTagInput,
 }: Props) => {
 	return (
 		<Box my="2rem">
@@ -21,7 +31,7 @@ export const TagsInputs = ({
 			</Text>
 			{tags.map((tag, index) => {
 				return (
-					<Box key={`create-product-tags-${index}`} mt={"1rem"}>
+					<HStack key={`create-product-tags-${index}`} mt={"1rem"}>
 						<Input
 							id={`productTags-${index}`}
 							value={tag || ""}
@@ -32,7 +42,8 @@ export const TagsInputs = ({
 							type="text"
 							{...inputStyles}
 						/>
-					</Box>
+						<CloseButton onClick={() => handleDeleteTagInput(index)} />
+					</HStack>
 				);
 			})}
 			<Button

@@ -1,7 +1,15 @@
-import { Box, Button, Icon, Input, Text } from "@chakra-ui/react";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { inputStyles } from "./ProductEditionModal";
+import {
+	Box,
+	Button,
+	CloseButton,
+	HStack,
+	Icon,
+	Input,
+	Text,
+} from "@chakra-ui/react";
+import { ChangeEvent } from "react";
 import { RiAddCircleLine } from "react-icons/ri";
+import { inputStyles } from "./ProductEditionModal";
 
 interface Props {
 	images: string[];
@@ -9,19 +17,19 @@ interface Props {
 		index: number,
 		e: ChangeEvent<HTMLInputElement>
 	) => void;
-	amountOfImages: number;
-	setAmountOfImages: Dispatch<SetStateAction<number>>;
 	showFormErrors: boolean;
 	isValidImagesData: boolean;
+	handleDeleteImageInput: (index: number) => void;
+	handleAddImageInput: () => void;
 }
 
 export const ImagesInputsContainer = ({
 	images,
 	handleSetImageIndex,
-	amountOfImages,
-	setAmountOfImages,
 	showFormErrors,
 	isValidImagesData,
+	handleDeleteImageInput,
+	handleAddImageInput,
 }: Props) => {
 	return (
 		<Box
@@ -33,9 +41,9 @@ export const ImagesInputsContainer = ({
 			<Text fontSize="1.7rem" fontWeight="600" color="brand.secondaryColor1">
 				Imágenes:
 			</Text>
-			{Array.from({ length: amountOfImages }).map((__, index) => {
+			{images.map((__, index) => {
 				return (
-					<Box key={`create-product-image-${index}`} mt={"1rem"}>
+					<HStack key={`create-product-image-${index}`} mt={"1rem"}>
 						<Input
 							id={`productImagesURL${index}`}
 							value={images[index] || ""}
@@ -46,21 +54,16 @@ export const ImagesInputsContainer = ({
 							}
 							{...inputStyles}
 						/>
-					</Box>
+						<CloseButton onClick={() => handleDeleteImageInput(index)} />
+					</HStack>
 				);
 			})}
-			{showFormErrors && isValidImagesData && (
+			{showFormErrors && !isValidImagesData && (
 				<Text color="red" fontSize={"sm"}>
 					Al menos una URL de imágen es requerida!
 				</Text>
 			)}
-			<Button
-				mt={"1rem"}
-				colorScheme="blue"
-				onClick={() => {
-					setAmountOfImages((prev) => prev + 1);
-				}}
-			>
+			<Button mt={"1rem"} colorScheme="blue" onClick={handleAddImageInput}>
 				<Icon as={RiAddCircleLine} fontSize="2rem" />
 			</Button>
 		</Box>
