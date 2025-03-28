@@ -1,3 +1,4 @@
+import { CartItemMPFormat } from "@/types/order";
 import { TCartState, TStoreState } from "@/types/storeState";
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
@@ -18,28 +19,22 @@ export const useStoreState = create<TStoreState>()(
 	)
 );
 
-export type CartItem = {
-	id: string;
-	name: string;
-	price: number;
-	quantity: number;
-	image?: string;
-	size?: number | string;
-};
-
 export const useCartState = create<TCartState>()(
 	devtools(
 		persist(
 			subscribeWithSelector((set, get) => ({
 				cart: [],
 				cartCount: 0,
-				addToCart: (payload: CartItem) => {
+				addToCart: (payload: CartItemMPFormat) => {
 					const cartClone = [...get().cart];
 					const isInCartIdx = cartClone.findIndex(
 						(item) => item.id === payload.id
 					);
 
-					if (isInCartIdx === -1) {
+					if (
+						isInCartIdx === -1 ||
+						cartClone[isInCartIdx].name !== payload.name
+					) {
 						payload.quantity = 1;
 						const cartItems = [...cartClone, payload];
 						return set({ cart: cartItems, cartCount: cartItems.length });
@@ -64,14 +59,20 @@ export const useCartState = create<TCartState>()(
 					}
 				},
 
-				removeFromCart: (id: string | string[], isMultiple?: boolean) => {
+				removeFromCart: (
+					id: string | string[],
+					name: string,
+					isMultiple?: boolean
+				) => {
 					const cartClone = [...get().cart];
 					const updatedCart = cartClone.filter((item) =>
-						isMultiple ? !(id as string[]).includes(item.id) : item.id !== id
+						isMultiple
+							? !(id as string[]).includes(item.id) || item.name !== name
+							: item.id !== id || item.name !== name
 					);
 
 					// if (!isToast) {
-					// 	toast.warn("Item removed from cart ☹️", { autoClose: 750 });
+					//  toast.warn("Item removed from cart ☹️", { autoClose: 750 });
 					// }
 
 					return set({

@@ -3,9 +3,11 @@ import {
 	deleteProduct,
 	getAllProducts,
 	getParticularProduct,
+	reserveProducts,
+	updateMultipleProducts,
 	updateProduct,
 } from "@/queries/product";
-import { Product } from "@/types/product";
+import { Product, ReserveProductData } from "@/types/product";
 import { onError } from "@/utils/error";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useShowToast } from "../toast/useShowToast";
@@ -60,6 +62,47 @@ export const useUpdateProduct = () => {
 			});
 		},
 		onError,
+	});
+};
+
+export const useReserveMultipleProducts = () => {
+	const queryClient = useQueryClient();
+	const toast = useShowToast();
+	return useMutation({
+		mutationFn: (payload: ReserveProductData[]) => {
+			return reserveProducts(payload);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries();
+			toast({
+				status: "success",
+				title: "Producto modificado exitosamente.",
+			});
+		},
+		onError,
+	});
+};
+
+export const useUpdateMultipleProducts = () => {
+	const queryClient = useQueryClient();
+	const toast = useShowToast();
+
+	return useMutation({
+		mutationFn: (products: Product[]) => updateMultipleProducts(products),
+		onSuccess: () => {
+			queryClient.invalidateQueries();
+			toast({
+				status: "success",
+				title: "Productos modificados exitosamente.",
+			});
+		},
+		onError: (error) => {
+			toast({
+				status: "error",
+				title: "Error al actualizar los productos.",
+				description: JSON.stringify(error),
+			});
+		},
 	});
 };
 

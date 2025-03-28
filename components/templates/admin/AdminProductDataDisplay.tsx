@@ -1,0 +1,82 @@
+import { useGlobalContext } from "@/context/GlobalContext";
+import { SizeOptions } from "@/types/product";
+import { capitalize } from "@/utils/functions";
+import { Brand } from "@/utils/sizesEquivalencies";
+import { Flex, Stack, Tag, Text } from "@chakra-ui/react";
+import { DisplayColorSizesAndQuantityInputsContainer } from "../product/DisplayColorSizesAndQuantityInputsContainer";
+
+interface Props {
+	name: string;
+	sizeOptions: SizeOptions;
+	price?: number;
+	slug?: string;
+	tags?: string[];
+	brand?: Brand;
+	allowTagFiltering?: boolean;
+}
+
+const AdminProductDataDisplay = ({
+	name,
+	sizeOptions,
+	price,
+	brand,
+	tags,
+	slug,
+	allowTagFiltering,
+}: Props) => {
+	const { onOpenFiltersDrawer, isDarkMode } = useGlobalContext();
+
+	const validSizeOptions = sizeOptions.filter((sizeOption) => sizeOption);
+
+	function getPropperTagOnclickFunction() {
+		return allowTagFiltering
+			? onOpenFiltersDrawer
+			: () => {
+					console.log("tagOnClickFunction");
+			  };
+	}
+	return (
+		<Stack ml="2rem" flexDir="column" spacing="1.2rem">
+			<Flex gap={"2rem"}>
+				<Text
+					fontSize="1.8rem"
+					fontWeight="600"
+					color={
+						isDarkMode ? "darkBrand.secondaryColor5" : "brand.secondaryColor1"
+					}
+				>
+					{name} {brand && capitalize(brand)}
+				</Text>
+				{tags &&
+					slug &&
+					tags.map((tag) => (
+						<Tag
+							key={`${slug}-${tag}-tag`}
+							cursor={"pointer"}
+							onClick={getPropperTagOnclickFunction()}
+						>
+							{capitalize(tag)}
+						</Tag>
+					))}
+			</Flex>
+			<Flex align="center">
+				<Text
+					fontSize="1.7rem"
+					fontWeight="600"
+					color={
+						isDarkMode ? "darkBrand.secondaryColor4" : "brand.secondaryColor1"
+					}
+				>
+					AR$ {Number(price)?.toFixed(2)}
+				</Text>
+			</Flex>
+
+			<DisplayColorSizesAndQuantityInputsContainer
+				sizeOptions={validSizeOptions}
+				brand={brand}
+			/>
+		</Stack>
+	);
+};
+
+export default AdminProductDataDisplay;

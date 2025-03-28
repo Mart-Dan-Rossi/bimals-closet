@@ -1,5 +1,5 @@
 import { AxiosInstance } from "@/config";
-import { Product } from "@/types/product";
+import { Product, ReserveProductData } from "@/types/product";
 
 export const getAllProducts = async (): Promise<Product[]> => {
 	const { data } = await AxiosInstance.get("/api/products");
@@ -14,7 +14,6 @@ export const getParticularProduct = async (slug: string): Promise<Product> => {
 };
 
 export const createProduct = async (payload: Product) => {
-	console.log("payload: ", payload);
 	const { data } = await AxiosInstance.post("/api/products/add", payload);
 
 	return data;
@@ -22,6 +21,23 @@ export const createProduct = async (payload: Product) => {
 
 export const updateProduct = async (payload: Product) => {
 	const { data } = await AxiosInstance.post("/api/products/update", payload);
+
+	return data;
+};
+
+export const reserveProducts = async (payload: ReserveProductData[]) => {
+	const { data } = await AxiosInstance.post(
+		"/api/products/reserveProducts",
+		payload
+	);
+
+	return data;
+};
+
+export const updateMultipleProducts = async (products: Product[]) => {
+	const { data } = await AxiosInstance.post("/api/products/update-multiple", {
+		products,
+	});
 
 	return data;
 };

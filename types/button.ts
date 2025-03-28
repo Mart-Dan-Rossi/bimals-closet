@@ -8,6 +8,7 @@ export type CustomButtonProps = {
 	color?: string;
 	bg?: string;
 	bgHover?: string;
+	colorHover?: string;
 	border?: string;
 	borderColor?: string;
 	fontSize?: string | string[];
@@ -18,5 +19,5 @@ export type CustomButtonProps = {
 	isDisabled?: boolean;
 	isBtnIcon?: boolean;
 	isValidData?: boolean;
-	handleShowFormErrors?: () => void;
+	onClickFunction?: () => void;
 };

@@ -1,3 +1,4 @@
+import { useGlobalContext } from "@/context/GlobalContext";
 import { Brand } from "@/utils/sizesEquivalencies";
 import { Box, HStack, Radio, RadioGroup, Text } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
@@ -8,9 +9,17 @@ interface Props {
 }
 
 export const BrandSelector = ({ brand, setBrand }: Props) => {
+	const { isDarkMode } = useGlobalContext();
+
 	return (
 		<Box>
-			<Text fontSize="1.7rem" fontWeight="600" color="brand.secondaryColor1">
+			<Text
+				fontSize="1.7rem"
+				fontWeight="600"
+				color={
+					isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
+				}
+			>
 				Marca:
 			</Text>
 			<RadioGroup

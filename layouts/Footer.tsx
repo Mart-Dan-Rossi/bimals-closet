@@ -1,6 +1,8 @@
+import { useGlobalContext } from "@/context/GlobalContext";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 // import { IFormRegisterInput } from "@/types/auth";
-import { Box, Flex, Icon, Link } from "@chakra-ui/react";
+import { Box, Flex, Icon } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 // import { useForm } from "react-hook-form";
 import {
 	FaFacebookF,
@@ -16,6 +18,10 @@ export const Footer = () => {
 	// 	// control,
 	// 	// formState: { errors },
 	// } = useForm<IFormRegisterInput>();
+
+	const router = useRouter();
+
+	const { isDarkMode } = useGlobalContext();
 
 	const toast = useShowToast();
 
@@ -40,36 +46,42 @@ export const Footer = () => {
 	}
 
 	return (
-		<Box bg="brand.dark200">
+		<Box bg={isDarkMode ? "darkBrand.white200" : "brand.dark200"}>
 			<Box maxW="1280px" mx="auto" p="1.5rem 3rem">
 				<Flex
 					mt="1rem"
 					w="100%"
-					color="brand.white400"
+					color={isDarkMode ? "darkBrand.white400" : "brand.white400"}
 					fontSize="2.5rem"
 					justifyContent="center"
 					gap="2rem"
 				>
-					<Link href="https://www.google.com" target="_blank">
+					<Box
+						cursor="pointer"
+						onClick={() => router.push("https://www.google.com")}
+					>
 						<Icon cursor="pointer" as={FaFacebookF} />
-					</Link>
-					<Link href="http://www.instagram.com" target="_blank">
+					</Box>
+					<Box
+						cursor="pointer"
+						onClick={() => router.push("http://www.instagram.com")}
+					>
 						<Icon cursor="pointer" as={FaInstagram} />
-					</Link>
-					<Link>
+					</Box>
+					<Box>
 						<Icon
 							cursor="pointer"
 							as={FaWhatsapp}
 							onClick={handleCopyPhoneNumber}
 						/>
-					</Link>
-					<Link>
+					</Box>
+					<Box>
 						<Icon
 							cursor="pointer"
 							as={FaTelegram}
 							onClick={handleCopyPhoneNumber}
 						/>
-					</Link>
+					</Box>
 				</Flex>
 			</Box>
 		</Box>

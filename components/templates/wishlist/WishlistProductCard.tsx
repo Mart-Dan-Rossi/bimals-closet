@@ -1,17 +1,9 @@
-import { CustomButton } from "@/components/ui/buttons/CustomButton";
-import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
+import { Box, Circle, Flex, Icon, Img, Stack, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import {
-	Box,
-	Circle,
-	Flex,
-	Icon,
-	Img,
-	Link,
-	Stack,
-	Text,
-} from "@chakra-ui/react";
-import {
+	GoHeart,
 	// GoHeart,
 	GoHeartFill,
 } from "react-icons/go";
@@ -22,25 +14,30 @@ interface Props {
 }
 
 export const WishlistProductCard = ({ product, wishlistData }: Props) => {
-	const mapProducts = wishlistData?.map((item: Product) => {
-		const res = {
-			...item,
-			isFavorite: true,
-		};
-		return res;
-	});
+	const router = useRouter();
+	const { isDarkMode } = useGlobalContext();
 
-	const { toggleProductChecked } = useToggleFavorite(mapProducts);
+	// const mapProducts = wishlistData?.map((item: Product) => {
+	// 	const res = {
+	// 		...item,
+	// 		isFavorite: true,
+	// 	};
+	// 	return res;
+	// });
+
 	return (
 		<Flex
-			bg="brand.secondaryColor5"
+			bg={isDarkMode ? "darkBrand.color2" : "brand.color2"}
 			borderRadius="1rem"
 			p="1rem"
 			justify="space-between"
 			mb="2rem"
 		>
 			<Flex w="100%">
-				<Link href={`/product/${product?.slug}`}>
+				<Box
+					cursor="pointer"
+					onClick={() => router.push(`/product/${product?.slug}`)}
+				>
 					<Box overflow="hidden" borderRadius="1rem">
 						<Img
 							width="140px"
@@ -49,7 +46,7 @@ export const WishlistProductCard = ({ product, wishlistData }: Props) => {
 							alt="Imágen del producto"
 						/>
 					</Box>
-				</Link>
+				</Box>
 
 				<Flex w="100%" justify="space-between" pos="relative">
 					<Stack
@@ -58,50 +55,36 @@ export const WishlistProductCard = ({ product, wishlistData }: Props) => {
 						flexDir="column"
 						spacing="1.2rem"
 					>
-						<Link href={`/product/${product?.slug}`}>
+						<Box
+							cursor="pointer"
+							onClick={() => router.push(`/product/${product?.slug}`)}
+						>
 							<Text
 								fontSize="1.8rem"
 								fontWeight="300"
-								color="brand.secondaryColor1"
+								color={
+									isDarkMode
+										? "darkBrand.secondaryColor1"
+										: "brand.secondaryColor1"
+								}
 							>
 								{product?.name}
 							</Text>
-						</Link>
+						</Box>
 
 						<Flex align="center">
 							<Text
 								fontSize="1.7rem"
 								fontWeight="600"
-								color="brand.secondaryColor1"
+								color={isDarkMode ? "darkBrand.color3" : "brand.color3"}
 							>
 								AR$ {product?.price?.toFixed(2)}{" "}
 							</Text>
 						</Flex>
-
-						<Box
-							w="100%"
-							onClick={() => {
-								if (product._id) toggleProductChecked(product?._id);
-							}}
-						>
-							<CustomButton
-								{...{
-									text: "Quitar de lista de deseados",
-									py: ["2rem", "2rem"],
-									bg: "transparent",
-									color: "brand.color3",
-									boxShadow: "0",
-									border: ".2rem solid",
-									borderColor: "brand.color3",
-									fontSize: ["1.3rem", "1.5rem"],
-									bgHover: "brand.white300",
-								}}
-							/>
-						</Box>
 					</Stack>
 
 					<Circle
-						bg="brand.white100"
+						bg={isDarkMode ? "darkBrand.white100" : "brand.white100"}
 						p=".5rem"
 						pos="absolute"
 						right="0"
@@ -109,18 +92,16 @@ export const WishlistProductCard = ({ product, wishlistData }: Props) => {
 					>
 						<Icon
 							color={`${
-								// product?.isFavorite
-								// false ?
-								"brand.red100"
-								//  : "brand.secondaryColor2"
+								product?.isFavorite
+									? isDarkMode
+										? "darkBrand.red100"
+										: "brand.red100"
+									: isDarkMode
+									? "darkBrand.secondaryColor2"
+									: "brand.secondaryColor2"
 							}`}
 							fontSize="1.5rem"
-							as={
-								// product?.isFavorite
-								// false ?
-								GoHeartFill
-								//   : GoHeart
-							}
+							as={product?.isFavorite ? GoHeartFill : GoHeart}
 						/>
 					</Circle>
 				</Flex>

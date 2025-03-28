@@ -1,17 +1,15 @@
 import { useGlobalContext } from "@/context/GlobalContext";
-import { useCallback, useEffect, useState } from "react";
-import { Tag, TagLabel, TagCloseButton, Wrap } from "@chakra-ui/react";
 import { capitalize } from "@/utils/functions";
+import { Tag, TagCloseButton, TagLabel, Wrap } from "@chakra-ui/react";
+import { useCallback, useEffect } from "react";
 
 interface Props {
 	allTags: string[] | undefined;
 }
 
 export const FilterTagsDisplayer = ({ allTags }: Props) => {
-	const { filter, setFilter } = useGlobalContext();
-	const [selectedTags, setSelectedTags] = useState<string[]>(
-		filter?.tags ?? []
-	);
+	const { filter, setFilter, selectedTags, setSelectedTags } =
+		useGlobalContext();
 
 	const applyFilterHandler = useCallback(
 		(newTags: string[]) => {
@@ -38,16 +36,33 @@ export const FilterTagsDisplayer = ({ allTags }: Props) => {
 		);
 	};
 
+	function sortedTags(): string[] {
+		if (allTags) {
+			return allTags.sort((a, b) => {
+				const inSelectedA = selectedTags.includes(a) ? 0 : 1;
+				const inSelectedB = selectedTags.includes(b) ? 0 : 1;
+
+				if (inSelectedA !== inSelectedB) {
+					return inSelectedA - inSelectedB;
+				}
+
+				return a.localeCompare(b);
+			});
+		} else {
+			return [];
+		}
+	}
+
 	return (
 		<Wrap spacing={2}>
 			{allTags &&
-				allTags.map((tag) => (
+				sortedTags().map((tag) => (
 					<Tag
 						key={tag}
 						size={"lg"}
 						cursor="pointer"
 						variant={selectedTags.includes(tag) ? "solid" : "outline"}
-						colorScheme={selectedTags.includes(tag) ? "green" : "gray"}
+						colorScheme={"orange"}
 						onClick={() => toggleTag(tag)}
 					>
 						<TagLabel>{capitalize(tag)}</TagLabel>

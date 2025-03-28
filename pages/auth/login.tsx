@@ -5,15 +5,17 @@ import { useShowToast } from "@/hooks/toast/useShowToast";
 import { IFormLoginInput } from "@/types/auth";
 import { Box, Image, Stack, Text } from "@chakra-ui/react";
 import axios from "axios";
-import Link from "next/link";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 // import { useRouter } from "next/router";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { useStoreState } from "@/hooks/state/storage";
 import { useRouter } from "next/router";
 
 const Login = () => {
+	const { isDarkMode } = useGlobalContext();
+
 	const [showPassword, setShowPassword] = useState(false);
 	// const router = useRouter();
 	const toast = useShowToast();
@@ -30,7 +32,6 @@ const Login = () => {
 
 	const onSubmit: SubmitHandler<IFormLoginInput> = async (data) => {
 		try {
-			console.log("a");
 			const res = await mutateAsync(data);
 			setToken(res?.data?.token);
 			localStorage.setItem(
@@ -61,16 +62,16 @@ const Login = () => {
 					h="100vh"
 					w={["100%", "100%", "50%"]}
 					p="2rem"
-					bg="brand.color1"
+					bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
 					pos="relative"
 					display={["none", "none", "flex"]}
 				>
-					<Box color="brand.white100">
-						<Link href="/">
+					<Box color={isDarkMode ? "darkBrand.white100" : "brand.white100"}>
+						<Box cursor={"pointer"} onClick={() => router.push("/")}>
 							<Text fontWeight="700" fontSize={["1.8rem", "2.5rem"]}>
 								Mateo Shoes
 							</Text>
-						</Link>
+						</Box>
 					</Box>
 					<Image
 						w="460px"
@@ -101,14 +102,18 @@ const Login = () => {
 					ms="0rem"
 				>
 					<Text
-						color="brand.secondaryColor1"
+						color={
+							isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
+						}
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 					>
 						Logueate
 					</Text>
 					<Text
-						color="brand.secondaryColor1"
+						color={
+							isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
+						}
 						fontWeight="500"
 						fontSize={["1.4rem", "1.15rem", "1.15rem", "1.4rem"]}
 						letterSpacing="0.05rem"
@@ -166,35 +171,49 @@ const Login = () => {
 							/>
 						</Box>
 
-						<Link href="/auth/forgot-password">
+						<Box
+							cursor="pointer"
+							onClick={() => router.push("/auth/forgot-password")}
+						>
 							<Text
 								textDecoration="underline"
 								mt=".5rem"
-								color="brand.secondaryColor2"
+								color={
+									isDarkMode
+										? "darkBrand.secondaryColor2"
+										: "brand.secondaryColor2"
+								}
 								fontWeight="500"
 								fontSize="1.2rem"
 								float="right"
 							>
 								Olvidate la contraseña?
 							</Text>
-						</Link>
+						</Box>
 
 						<CustomButton
 							{...{ text: "Loguear", isLoading, isValidData: true }}
 						/>
 
 						<Box>
-							<Link href="/auth/register">
+							<Box
+								cursor="pointer"
+								onClick={() => router.push("/auth/register")}
+							>
 								<Text
 									mt=".7rem"
-									color="brand.secondaryColor2"
+									color={
+										isDarkMode
+											? "darkBrand.secondaryColor2"
+											: "brand.secondaryColor2"
+									}
 									fontWeight="500"
 									fontSize="1.3rem"
 								>
 									No tienes cuenta?
 									<span style={{ color: "#00AF54" }}> Registrate</span>
 								</Text>
-							</Link>
+							</Box>
 						</Box>
 					</Box>
 				</Box>

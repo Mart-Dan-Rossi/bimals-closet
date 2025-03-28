@@ -8,18 +8,23 @@ import {
 	Text,
 	useBoolean,
 } from "@chakra-ui/react";
-import Link from "next/link";
 
+import { useGlobalContext } from "@/context/GlobalContext";
+import { useRouter } from "next/router";
 import { BiUserCircle } from "react-icons/bi";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { TiShoppingCart } from "react-icons/ti";
 import { AuthModal } from "../ui/modals";
+import DarkModeToggleButton from "./DarkModeToggleButton";
 interface Props {
 	name: string;
 	loggedIsAdmin: boolean;
 }
 
 export const DesktopUserInteraction = ({ name, loggedIsAdmin }: Props) => {
+	const router = useRouter();
+	const { isDarkMode } = useGlobalContext();
+
 	const cart = useHydratedCartState("cart");
 	const [openDropDown, setOpenDropDown] = useBoolean();
 
@@ -32,13 +37,17 @@ export const DesktopUserInteraction = ({ name, loggedIsAdmin }: Props) => {
 				fontSize="2rem"
 				fontWeight="500"
 			>
-				{loggedIsAdmin && <Link href="/adminPanel">Admin panel</Link>}
+				{loggedIsAdmin && (
+					<Text cursor="pointer" onClick={() => router.push("/adminPanel")}>
+						Admin panel
+					</Text>
+				)}
 
-				<Link href="/cart">
+				<Box cursor="pointer" onClick={() => router.push("/cart")}>
 					<Box as="span" pos="relative">
 						<Circle
-							bg="brand.gold100"
-							p=".3rem .6rem"
+							bg={isDarkMode ? "darkBrand.gold100" : "brand.gold100"}
+							p=".3rem .7rem"
 							pos="absolute"
 							left="1.1rem"
 							top="-.7rem"
@@ -49,7 +58,7 @@ export const DesktopUserInteraction = ({ name, loggedIsAdmin }: Props) => {
 						</Circle>
 						<Icon cursor="pointer" as={TiShoppingCart} />
 					</Box>
-				</Link>
+				</Box>
 
 				<Flex
 					onClick={setOpenDropDown.toggle}
@@ -77,6 +86,8 @@ export const DesktopUserInteraction = ({ name, loggedIsAdmin }: Props) => {
 						</Box>
 					</Flex>
 				</Flex>
+
+				<DarkModeToggleButton />
 			</Stack>
 			{openDropDown && <AuthModal />}
 		</Box>

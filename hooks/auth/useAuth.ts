@@ -3,13 +3,23 @@ import { useShowToast } from "../toast/useShowToast";
 import { onError } from "@/utils/error";
 import {
 	forgotPassword,
+	getUser,
 	loginUser,
 	registerUser,
 	resetPassword,
 	verifyEmailToken,
 } from "@/queries/auth";
-import { IFormLoginInput, IFormRegisterInput } from "@/types/auth";
+import { IFormLoginInput, IFormRegisterInput, UserData } from "@/types/auth";
 import { useRouter } from "next/router";
+
+export const useGetUser = (userId: string) => {
+	return useQuery<UserData>({
+		queryKey: ["getUser", userId],
+		queryFn: () => getUser(userId),
+		retry: 2,
+		enabled: !!userId,
+	});
+};
 
 export const useLoginUser = () => {
 	const queryClient = useQueryClient();

@@ -1,5 +1,5 @@
 import { ProductsFilter } from "@/types/filters";
-import { Product } from "@/types/product";
+import { Product, ReservedData } from "@/types/product";
 
 export function capitalize(string: string) {
 	return `${string[0].toUpperCase()}${string.slice(1)}`;
@@ -29,4 +29,46 @@ export function applyFilters(
 
 		return passSizeFilter && passTagFilter;
 	});
+}
+
+export function getAdminsIds() {
+	const allIds = process.env.NEXT_PUBLIC_ADMINS_IDS || "0";
+	return allIds?.split("/");
+}
+
+export function getReservedDataFromNameAndQtty(
+	name: string,
+	quantity: number,
+	userId: string | undefined
+): ReservedData {
+	const splitedName = name
+		.split("-")
+		.map((string) => string.replace(/\s+/g, ""));
+
+	const usSize = Number(splitedName[2].slice(0, -2));
+	const color = splitedName[1];
+	return { usSize, color, quantity, userId };
+}
+
+export function getAvailableQuantitiesBySizeAndColor(
+	product: Product,
+	color: string
+) {
+	const sizeMap: Record<number, number> = {};
+
+	product.sizeOptions
+		.filter((size) => size.color.toLowerCase() === color.toLowerCase())
+		.forEach((size) => {
+			sizeMap[size.usSize] = (sizeMap[size.usSize] || 0) + size.quantity;
+		});
+
+	product.reservedData
+		?.filter((reserved) => reserved.color.toLowerCase() === color.toLowerCase())
+		.forEach((reserved) => {
+			if (sizeMap[reserved.usSize]) {
+				sizeMap[reserved.usSize] -= reserved.quantity;
+			}
+		});
+
+	return sizeMap;
 }

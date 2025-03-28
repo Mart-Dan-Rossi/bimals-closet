@@ -1,7 +1,7 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Box, Center, Icon, Text } from "@chakra-ui/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { BiChevronLeft } from "react-icons/bi";
 import { MdOutlineDisabledByDefault } from "react-icons/md";
@@ -11,8 +11,15 @@ export const Wishlist = () => {
 	const router = useRouter();
 	const token = useHydratedStoreState("token");
 
+	const { isDarkMode } = useGlobalContext();
+
 	return (
-		<Box pt="15rem" pb="5rem">
+		<Box
+			pt="15rem"
+			pb="5rem"
+			bg={isDarkMode ? "darkBrand.white300" : "brand.white300"}
+			minHeight={"90vh"}
+		>
 			<Box maxW="880px" mx="auto" px="3rem">
 				<Box as="span" mb="2rem" onClick={() => router.back()}>
 					<Icon as={BiChevronLeft} fontSize="3rem" cursor="pointer" />
@@ -25,7 +32,7 @@ export const Wishlist = () => {
 						<Icon
 							as={MdOutlineDisabledByDefault}
 							fontSize="10rem"
-							color="brand.color1"
+							color={isDarkMode ? "darkBrand.color1" : "brand.color1"}
 							opacity="0.4"
 						/>
 						<Text mt="1rem" fontWeight="300" textAlign="center">
@@ -33,7 +40,7 @@ export const Wishlist = () => {
 							usar nuestra plataforma plenamente y disfrutar la experiencia de
 							compra aún más.
 						</Text>
-						<Link href="/auth/login">
+						<Box cursor="pointer" onClick={() => router.push("/auth/login")}>
 							<Box w="100%">
 								<CustomButton
 									{...{
@@ -45,7 +52,7 @@ export const Wishlist = () => {
 									}}
 								/>
 							</Box>
-						</Link>
+						</Box>
 					</Center>
 				)}
 			</Box>

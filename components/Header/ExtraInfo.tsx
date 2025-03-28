@@ -3,6 +3,7 @@ import { Box, Flex, Icon, Text, useBoolean } from "@chakra-ui/react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { CategoriesModal } from "../ui/modals";
 import { MobileNavbar } from "../ui/modals/MobileNavbar";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
 	subHeaderName: string | undefined;
@@ -15,11 +16,12 @@ export const ExtraInfo = ({
 	openModal,
 	loggedIsAdmin,
 }: Props) => {
+	const { isDarkMode } = useGlobalContext();
 	const token = useHydratedStoreState("token");
 	const [openCatgories, setOpenCatgories] = useBoolean();
 
 	return (
-		<Box bg="brand.white100" shadow="xs">
+		<Box bg={isDarkMode ? "darkBrand.white200" : "brand.white200"} shadow="xs">
 			<Box
 				maxW="1280px"
 				mx="auto"
@@ -31,14 +33,16 @@ export const ExtraInfo = ({
 				<Flex
 					onClick={setOpenCatgories.toggle}
 					align="center"
-					color="brand.color1"
+					color={isDarkMode ? "darkBrand" : "brand.color1"}
 					cursor="pointer"
 					w="max-content"
 				>
 					<Text
 						ml={["3rem", ".2rem"]}
 						fontSize="1.5rem"
-						color="brand.secondaryColor1"
+						color={
+							isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
+						}
 						fontWeight="600"
 					>
 						{subHeaderName}
@@ -46,9 +50,9 @@ export const ExtraInfo = ({
 					{subHeaderName === "Categories" && (
 						<Icon
 							fontSize="1.5rem"
-							color="brand.color1"
+							color={isDarkMode ? "darkBrand" : "brand.color1"}
 							_groupHover={{
-								color: "brand.white100",
+								color: isDarkMode ? "darkBrand.white100" : "brand.white100",
 							}}
 							as={openCatgories ? MdArrowDropUp : MdArrowDropDown}
 						/>

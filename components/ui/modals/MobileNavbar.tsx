@@ -1,8 +1,9 @@
+import DarkModeToggleButton from "@/components/Header/DarkModeToggleButton";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { AuthModalData } from "@/utils/modal";
 import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { Fragment } from "react";
 
 interface Props {
@@ -10,11 +11,15 @@ interface Props {
 }
 
 export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
-	const { handleLogout } = useGlobalContext();
+	const router = useRouter();
+
+	const { handleLogout, isDarkMode } = useGlobalContext();
 	const token = useHydratedStoreState("token");
+
 	return (
 		<Box
-			bg="brand.dark100"
+			bg={isDarkMode ? "darkBrand.dark100" : "brand.dark100"}
+			color={isDarkMode ? "darkBrand.white100" : "brand.secondaryColor1"}
 			h="100%"
 			pos="fixed"
 			top="7rem"
@@ -24,7 +29,7 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 			display={["block", "none", "none", "none"]}
 		>
 			<Box
-				bg="brand.white300"
+				bg={isDarkMode ? "darkBrand.dark200" : "brand.white300"}
 				mt="0rem"
 				p="1rem"
 				w="100%"
@@ -32,35 +37,50 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 				borderBottomRightRadius=".6rem"
 			>
 				<HStack
-					alignItems="left"
+					alignItems="flex-start"
 					display={["block", "block", "block", "none"]}
 					justifyContent="space-between"
 					fontSize="1.7rem"
 					fontWeight="500"
 					spacing={0}
 				>
-					{loggedIsAdmin && <Link href="/adminPanel">Admin panel</Link>}
+					{loggedIsAdmin && (
+						<Box cursor="pointer" onClick={() => router.push("/adminPanel")}>
+							Admin panel
+						</Box>
+					)}
 					{AuthModalData.map((item, idx) => {
 						return (
 							<Fragment key={idx}>
 								{item.link ? (
 									<Box w="max-content">
-										<Link href={item.link}>
+										<Box
+											cursor="pointer"
+											onClick={() => item.link && router.push(item.link)}
+										>
 											<Flex
 												alignItems="center"
 												role="group"
 												cursor="pointer"
 												p=".9rem 1.5rem"
 												_hover={{
-													bg: "brand.color1",
-													color: "brand.white100",
+													bg: isDarkMode
+														? "darkBrand.white100"
+														: "brand.color1",
+													color: isDarkMode
+														? "darkBrand.white100"
+														: "brand.white100",
 													borderRadius: ".4rem",
 												}}
 											>
 												<Icon
-													color="brand.color1"
+													color={
+														isDarkMode ? "darkBrand.white100" : "brand.color1"
+													}
 													_groupHover={{
-														color: "brand.white100",
+														color: isDarkMode
+															? "darkBrand.white100"
+															: "brand.white100",
 													}}
 													as={item.icon}
 												/>
@@ -76,7 +96,7 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 														: item.text}
 												</Text>
 											</Flex>
-										</Link>
+										</Box>
 									</Box>
 								) : (
 									<Box w="max-content">
@@ -87,9 +107,13 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 											onClick={handleLogout}
 										>
 											<Icon
-												color="brand.color1"
+												color={
+													isDarkMode ? "darkBrand.white100" : "brand.color1"
+												}
 												_groupHover={{
-													color: "brand.white100",
+													color: isDarkMode
+														? "darkBrand.white100"
+														: "brand.white100",
 												}}
 												as={item.icon}
 											/>
@@ -110,6 +134,8 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 							</Fragment>
 						);
 					})}
+
+					<DarkModeToggleButton />
 				</HStack>
 			</Box>
 		</Box>

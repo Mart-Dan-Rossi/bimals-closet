@@ -1,9 +1,8 @@
 import { Product } from "@/types/product";
-import { Box, Flex, Icon, Img, Stack, Tag, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, Img } from "@chakra-ui/react";
 import { SetStateAction } from "react";
 import { RiDeleteBinLine, RiPencilLine } from "react-icons/ri";
-import { DisplayColorSizesAndQuantityInputsContainer } from "../product/DisplayColorSizesAndQuantityInputsContainer";
-import { capitalize } from "@/utils/functions";
+import AdminProductDataDisplay from "./AdminProductDataDisplay";
 import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
@@ -23,11 +22,7 @@ export const AdminProductCard = ({
 	setProductToInteractWith,
 	setEditingProduct,
 }: Props) => {
-	// function handleAddSize() {
-	// 	console.log("Add size");
-	// }
-
-	const { onOpenFiltersDrawer } = useGlobalContext();
+	const { isDarkMode } = useGlobalContext();
 
 	function openDeleteProductModal() {
 		setProductToInteractWith(item);
@@ -43,7 +38,7 @@ export const AdminProductCard = ({
 
 	return (
 		<Flex
-			bg="brand.secondaryColor5"
+			bg={isDarkMode ? "darkBrand.dark200" : "brand.secondaryColor5"}
 			borderRadius="1rem"
 			p="1rem"
 			justify="space-between"
@@ -59,38 +54,15 @@ export const AdminProductCard = ({
 					/>
 				</Box>
 
-				<Stack ml="2rem" flexDir="column" spacing="1.2rem">
-					<Flex gap={"2rem"}>
-						<Text
-							fontSize="1.8rem"
-							fontWeight="600"
-							color="brand.secondaryColor1"
-						>
-							{item?.name} {item.brand && capitalize(item.brand)}
-						</Text>
-						{item.tags &&
-							item.tags.map((tag) => (
-								<Tag
-									key={`${item.slug}-${tag}-tag`}
-									cursor={"pointer"}
-									onClick={onOpenFiltersDrawer}
-								>
-									{capitalize(tag)}
-								</Tag>
-							))}
-					</Flex>
-					<Flex align="center">
-						<Text
-							fontSize="1.7rem"
-							fontWeight="600"
-							color="brand.secondaryColor1"
-						>
-							AR$ {item?.price?.toFixed(2)}
-						</Text>
-					</Flex>
-
-					<DisplayColorSizesAndQuantityInputsContainer item={item} />
-				</Stack>
+				<AdminProductDataDisplay
+					name={item.name}
+					sizeOptions={item.sizeOptions}
+					price={item.price}
+					brand={item.brand}
+					tags={item.tags}
+					slug={item.slug}
+					allowTagFiltering={true}
+				/>
 			</Flex>
 
 			<Flex>
@@ -99,14 +71,18 @@ export const AdminProductCard = ({
 					as={RiPencilLine}
 					fontSize="2rem"
 					cursor="pointer"
-					color="brand.secondaryColor2"
+					color={
+						isDarkMode ? "darkBrand.secondaryColor5" : "brand.secondaryColor2"
+					}
 				/>
 				<Icon
 					onClick={openDeleteProductModal}
 					as={RiDeleteBinLine}
 					fontSize="2rem"
 					cursor="pointer"
-					color="brand.secondaryColor2"
+					color={
+						isDarkMode ? "darkBrand.secondaryColor5" : "brand.secondaryColor2"
+					}
 				/>
 			</Flex>
 		</Flex>

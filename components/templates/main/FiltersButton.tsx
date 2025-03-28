@@ -8,7 +8,7 @@ import { MdClose } from "react-icons/md";
 export const FiltersButton = () => {
 	const btnRef = useRef();
 
-	const { onOpenFiltersDrawer, filter, handleClearFilters } =
+	const { onOpenFiltersDrawer, filter, handleClearFilters, isDarkMode } =
 		useGlobalContext();
 
 	return (
@@ -29,11 +29,17 @@ export const FiltersButton = () => {
 							<Text
 								fontSize={"lg"}
 								fontWeight="600"
-								color="brand.secondaryColor1"
+								color={
+									isDarkMode
+										? "darkBrand.secondaryColor1"
+										: "brand.secondaryColor1"
+								}
 							>
 								Filtros aplicados:
 							</Text>
-							<MdClose cursor={"pointer"} onClick={handleClearFilters} />
+							<Box padding={"0.5rem"} bg={"white"} borderRadius={"1rem"}>
+								<MdClose cursor={"pointer"} onClick={handleClearFilters} />
+							</Box>
 						</Flex>
 						{filter.sizeOptions &&
 							filter.sizeOptions.usSize.min &&
@@ -43,11 +49,22 @@ export const FiltersButton = () => {
 										<Text
 											fontSize={"lg"}
 											fontWeight="600"
-											color="brand.secondaryColor1"
+											color={
+												isDarkMode
+													? "darkBrand.secondaryColor1"
+													: "brand.secondaryColor1"
+											}
 										>
 											Talle min:{" "}
 										</Text>
-										<Text fontSize={"lg"}>
+										<Text
+											fontSize={"lg"}
+											color={
+												isDarkMode
+													? "darkBrand.secondaryColor4"
+													: "brand.white100"
+											}
+										>
 											{filter.sizeOptions.usSize.min}US
 										</Text>
 									</HStack>
@@ -56,11 +73,22 @@ export const FiltersButton = () => {
 										<Text
 											fontSize={"lg"}
 											fontWeight="600"
-											color="brand.secondaryColor1"
+											color={
+												isDarkMode
+													? "darkBrand.secondaryColor1"
+													: "brand.secondaryColor1"
+											}
 										>
 											Talle max:{" "}
 										</Text>
-										<Text fontSize={"lg"}>
+										<Text
+											fontSize={"lg"}
+											color={
+												isDarkMode
+													? "darkBrand.secondaryColor4"
+													: "brand.white100"
+											}
+										>
 											{filter.sizeOptions.usSize.max}US
 										</Text>
 									</HStack>
@@ -78,7 +106,7 @@ export const FiltersButton = () => {
 									<Tag
 										key={`adminHome-tag-filter-${tag}`}
 										variant={"solid"}
-										colorScheme="green"
+										colorScheme="orange"
 									>
 										{capitalize(tag)}
 									</Tag>

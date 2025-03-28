@@ -1,28 +1,45 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 import { Product } from "@/types/product";
+import { capitalize } from "@/utils/functions";
 import { Box, Circle, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
+import { ColorOptions } from "./ColorOptions";
 import { SizeOptions } from "./SizeOptions";
-import { capitalize } from "@/utils/functions";
+import { FilterTagsDisplayer } from "@/components/ui/modals/FilterTagsDisplayer";
 
 interface Props {
 	product: Product;
 }
 
 export const ProductCard = ({ product }: Props) => {
-	const { finalProductsData } = useGlobalContext();
+	const router = useRouter();
+	const { finalProductsData, isDarkMode } = useGlobalContext();
 
 	const { toggleProductChecked, isProductChecked } = useToggleFavorite(
 		finalProductsData ?? []
 	);
 
+	const [selectedColor, setSelectedColor] = useState<string>("");
+
+	useEffect(() => {
+		if (product?.sizeOptions[0].color)
+			setSelectedColor(() => {
+				return product?.sizeOptions[0].color;
+			});
+	}, [product]);
+
+	function handleOpenProductPage() {
+		router.push(`/product/${product?.slug}`);
+	}
+
 	return (
-		<Box key={product?._id} pos="relative" cursor="pointer">
+		<Box key={product?._id} pos="relative">
 			<Circle
-				bg="brand.white100"
+				bg={isDarkMode ? "darkBrand.white300" : "brand.white100"}
 				p=".5rem"
 				pos="absolute"
 				left="15px"
@@ -34,7 +51,11 @@ export const ProductCard = ({ product }: Props) => {
 					}}
 					color={`${
 						product._id && isProductChecked(product._id)
-							? "brand.red100"
+							? isDarkMode
+								? "darkBrand.red100"
+								: "brand.red100"
+							: isDarkMode
+							? "darkBrand.secondaryColor2"
 							: "brand.secondaryColor2"
 					}`}
 					fontSize="1.5rem"
@@ -43,20 +64,22 @@ export const ProductCard = ({ product }: Props) => {
 					}
 				/>
 			</Circle>
-			<Link href={`/product/${product?.slug}`}>
+			<Box>
 				<Box
-					bg="brand.white100"
+					bg={isDarkMode ? "darkBrand.white300" : "brand.white300"}
 					boxShadow="0px 4px 24px rgba(240, 240, 240, 0.6)"
 					borderRadius="1rem"
 					overflow="hidden"
 				>
-					<Image
-						src={`/assets/images/${product?.images[0]}`}
-						width={300}
-						height={200}
-						objectFit="cover"
-						alt="Imágen del producto"
-					/>
+					<Box onClick={handleOpenProductPage} cursor="pointer">
+						<Image
+							src={`/assets/images/${product?.images[0]}`}
+							width={300}
+							height={200}
+							objectFit="cover"
+							alt="Imágen del producto"
+						/>
+					</Box>
 
 					<Box p={["1rem", "2rem", "2rem", "2rem"]}>
 						<Flex
@@ -65,10 +88,20 @@ export const ProductCard = ({ product }: Props) => {
 							flexDir={"column"}
 							gap={2}
 						>
-							<Flex justify={"space-between"} width={"100%"}>
+							<Flex
+								onClick={handleOpenProductPage}
+								justify={"space-between"}
+								width={"100%"}
+								cursor="pointer"
+								wrap={"wrap"}
+							>
 								<HStack>
 									<Text
-										color="brand.secondaryColor1"
+										color={
+											isDarkMode
+												? "darkBrand.secondaryColor1"
+												: "brand.secondaryColor1"
+										}
 										textAlign="left"
 										maxW="200px"
 										fontSize={["1.4rem", "1.5rem"]}
@@ -78,7 +111,11 @@ export const ProductCard = ({ product }: Props) => {
 										{product?.name}
 									</Text>
 									<Text
-										color="brand.secondaryColor1"
+										color={
+											isDarkMode
+												? "darkBrand.secondaryColor1"
+												: "brand.secondaryColor1"
+										}
 										textAlign="left"
 										maxW="200px"
 										fontSize={["1.4rem", "1.5rem"]}
@@ -88,21 +125,35 @@ export const ProductCard = ({ product }: Props) => {
 										{capitalize(product.brand)}
 									</Text>
 								</HStack>
-								<Box>
-									<Text
-										fontSize={["1.2rem", "1.3rem"]}
-										fontWeight="500"
-										color="brand.blue100"
-									>
-										AR$ {product?.price}
-									</Text>
-								</Box>
+								<Text
+									fontSize={["1.2rem", "1.3rem"]}
+									fontWeight="500"
+									color={
+										isDarkMode ? "darkBrand.secondaryColor4" : "brand.color1"
+									}
+								>
+									AR$ {product?.price}
+								</Text>
 							</Flex>
-							<SizeOptions product={product} />
+							{product.tags && (
+								<Flex>
+									<FilterTagsDisplayer allTags={product.tags} />
+								</Flex>
+							)}
+							<Flex>
+								<ColorOptions
+									product={product}
+									selectedColor={selectedColor}
+									select={setSelectedColor}
+								/>
+							</Flex>
+							<Box onClick={handleOpenProductPage} cursor="pointer">
+								<SizeOptions selectedColor={selectedColor} product={product} />
+							</Box>
 						</Flex>
 					</Box>
 				</Box>
-			</Link>
+			</Box>
 		</Box>
 	);
 };

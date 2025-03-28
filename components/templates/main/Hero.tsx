@@ -1,9 +1,12 @@
+import { useGlobalContext } from "@/context/GlobalContext";
 import { Box, Flex, Img, Text } from "@chakra-ui/react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 
 export const Hero = () => {
+	const { isDarkMode } = useGlobalContext();
+
 	const sliderSettings = {
 		dots: false,
 		infinite: true,
@@ -36,7 +39,7 @@ export const Hero = () => {
 	];
 
 	return (
-		<Box bg="brand.white200">
+		<Box bg={isDarkMode ? "darkBrand.white200" : "brand.white300"}>
 			<Box px="3rem" maxW="1280px" mx="auto" textAlign="left" pt="16rem">
 				<Box pb="8rem">
 					<Slider {...sliderSettings}>
@@ -57,7 +60,7 @@ export const Hero = () => {
 									flexDir="column"
 									justify="center"
 									pos="absolute"
-									bg="brand.dark100"
+									bg={"brand.dark100"}
 									top="0"
 									left="0"
 									w="100%"

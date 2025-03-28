@@ -1,15 +1,20 @@
-import { Product, SizeOptions } from "@/types/product";
-import { getProperSizeEquivalencies } from "@/utils/sizesEquivalencies";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { SizeOptions } from "@/types/product";
+import { Brand, getProperSizeEquivalencies } from "@/utils/sizesEquivalencies";
 import { Box, Button, Text, Tooltip, VStack, Wrap } from "@chakra-ui/react";
 
 interface Props {
-	item: Product;
+	sizeOptions: SizeOptions;
+	brand?: Brand;
 }
 
 export const DisplayColorSizesAndQuantityInputsContainer = ({
-	item,
+	sizeOptions,
+	brand,
 }: Props) => {
-	const groupedSizeOptionsByColor = item.sizeOptions.reduce(
+	const { isDarkMode } = useGlobalContext();
+
+	const groupedSizeOptionsByColor = sizeOptions.reduce(
 		(acc, sizeOption) => {
 			const { color } = sizeOption;
 
@@ -36,7 +41,11 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 							<Text
 								fontSize="1.7rem"
 								fontWeight="600"
-								color="brand.secondaryColor1"
+								color={
+									isDarkMode
+										? "darkBrand.secondaryColor1"
+										: "brand.secondaryColor1"
+								}
 							>
 								Color {color}:
 							</Text>
@@ -51,33 +60,58 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 												ml={"2rem"}
 												fontSize="1.4rem"
 												fontWeight="600"
-												color="brand.secondaryColor1"
+												color={
+													isDarkMode
+														? "darkBrand.secondaryColor1"
+														: "brand.secondaryColor1"
+												}
 											>
 												Talle:{" "}
 												<Button
 													disabled={true}
 													fontSize="1.4rem"
 													fontWeight="600"
-													color="brand.secondaryColor1"
+													cursor={"auto"}
+													color={
+														isDarkMode
+															? "darkBrand.color1"
+															: "brand.secondaryColor1"
+													}
+													bg={
+														isDarkMode ? "darkBrand.white100" : "brand.color2"
+													}
+													_hover={{
+														backgroundColor: isDarkMode
+															? "darkBrand.white100"
+															: "brand.color2",
+													}}
 												>
-													<Tooltip
-														fontSize={"small"}
-														hasArrow
-														placement="top-start"
-														label={getProperSizeEquivalencies(
-															item.brand,
-															sizeOption
-														)}
-													>
+													{brand ? (
+														<Tooltip
+															fontSize={"small"}
+															hasArrow
+															placement="top-start"
+															label={getProperSizeEquivalencies(
+																brand,
+																sizeOption
+															)}
+														>
+															<Text>{sizeOption.usSize} (US)</Text>
+														</Tooltip>
+													) : (
 														<Text>{sizeOption.usSize} (US)</Text>
-													</Tooltip>
+													)}
 												</Button>
 											</Text>
 											<Text
 												ml={"2rem"}
 												fontSize="1.4rem"
 												fontWeight="600"
-												color="brand.secondaryColor1"
+												color={
+													isDarkMode
+														? "darkBrand.secondaryColor1"
+														: "brand.secondaryColor1"
+												}
 											>
 												Cantidad: {sizeOption.quantity}
 											</Text>

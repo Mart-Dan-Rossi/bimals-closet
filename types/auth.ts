@@ -12,3 +12,15 @@ export type IFormRegisterInput = {
 	fullName: string;
 	phoneNumber: string;
 };
+
+export type StoredUserData = {
+	email: string;
+	id: string;
+	name: string;
+};
+
+export type UserData = {
+	fullName: string;
+	email: string;
+	phoneNumber: number;
+};

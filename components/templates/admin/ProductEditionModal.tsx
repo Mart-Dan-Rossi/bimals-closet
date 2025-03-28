@@ -1,9 +1,12 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
+import { useGlobalContext } from "@/context/GlobalContext";
 import {
 	useCreateProduct,
 	useUpdateProduct,
 } from "@/hooks/products/useProduct";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product } from "@/types/product";
+import { getAdminsIds } from "@/utils/functions";
 import { Brand } from "@/utils/sizesEquivalencies";
 import {
 	Box,
@@ -27,7 +30,6 @@ import { PriceInput } from "./PriceInput";
 import { ProductStockEdited } from "./ProductStockEditer";
 import { SlugInput } from "./SlugInput";
 import { TagsInputs } from "./TagsInputs";
-import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
 	editingProduct: boolean;
@@ -57,6 +59,8 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 	const { finalProductsData, isAddNewProductOpen, onCloseAddNewProduct } =
 		useGlobalContext();
 
+	const token = useHydratedStoreState("token");
+
 	const defaultItem = useMemo(
 		() =>
 			item || {
@@ -76,7 +80,9 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 	const [slug, setSlug] = useState(defaultItem?.slug || "");
 	const [images, setImages] = useState(defaultItem?.images || [""]);
 	const [price, setPrice] = useState(defaultItem?.price || 0);
-	const [brand, setBrand] = useState(defaultItem?.brand || "other");
+	const [brand, setBrand] = useState<Brand | "other">(
+		defaultItem?.brand || "other"
+	);
 	const [sizeOptions, setSizeOptions] = useState(
 		defaultItem?.sizeOptions || [{}]
 	);
@@ -164,7 +170,10 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 
 	async function handleUploadProduct() {
 		try {
-			console.log("in hup");
+			const storedUser = localStorage.getItem("MateoShoesUser");
+			const user = storedUser && token ? JSON.parse(storedUser) : undefined;
+			const userId = user ? user.id : undefined;
+
 			const product: Product = {
 				name,
 				slug,
@@ -189,7 +198,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 				? await addMutateAsynceEditProduct(product)
 				: await addMutateAsyncCreateProduct(product);
 
-			if (res?.status === "success") {
+			if (res?.status === "success" && getAdminsIds().includes(userId)) {
 				toast({ status: "success", title: "Producto cargado correctamente" });
 			}
 		} catch (error) {
@@ -418,7 +427,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 
 						<CustomButton
 							{...{ text: "Cargar producto" }}
-							handleShowFormErrors={handleShowErrors}
+							onClickFunction={handleShowErrors}
 							isValidData={
 								isValidNameData &&
 								isValidSlugData &&

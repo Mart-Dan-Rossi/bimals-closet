@@ -1,4 +1,4 @@
-import { CartItem } from "@/hooks/state/storage";
+import { CartItemMPFormat } from "./order";
 
 export type TStoreState = {
 	user: Record<string, unknown>;
@@ -9,9 +9,13 @@ export type TStoreState = {
 
 export type TCartState = {
 	cartCount: number;
-	cart: CartItem[];
-	addToCart: (payload: CartItem) => void;
+	cart: CartItemMPFormat[];
+	addToCart: (payload: CartItemMPFormat) => void;
 	quantityCount: (id: string, type: "increament" | "decreament") => void;
-	removeFromCart: (id: string | string[], isMultiple?: boolean) => void;
+	removeFromCart: (
+		id: string | string[],
+		name: string,
+		isMultiple?: boolean
+	) => void;
 	emptyCart: () => void;
 };

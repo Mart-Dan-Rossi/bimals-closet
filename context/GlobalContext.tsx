@@ -1,10 +1,12 @@
 import { useGetMyFavorites } from "@/hooks/favorite/useFavorite";
+import { useGetAllBEOrders } from "@/hooks/orders/useBEOrders";
 import { useGetAllProducts } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { useStoreState } from "@/hooks/state/storage";
 import { ProductsFilter } from "@/types/filters";
+import { OrderDataBEFormat } from "@/types/order";
 import { Product } from "@/types/product";
-import { useDisclosure } from "@chakra-ui/react";
+import { useBoolean, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, {
 	ReactNode,
@@ -34,7 +36,13 @@ interface GlobalContextProps {
 	handleLogout: () => void;
 	finalProductsData: Product[] | undefined;
 	isLoadingProductData: boolean;
+	ordersData: OrderDataBEFormat[] | undefined;
+	isLoadingOrderData: boolean;
 	handleClearFilters: () => void;
+	isDarkMode: boolean;
+	toggleDarkMode: () => void;
+	selectedTags: string[];
+	setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const GlobalContext = React.createContext({} as GlobalContextProps);
@@ -59,16 +67,43 @@ export const GlobalContextProvider = ({
 	const { data: productsData, isLoading: isLoadingProductData } =
 		useGetAllProducts();
 
+	const { data: ordersData, isLoading: isLoadingOrderData } =
+		useGetAllBEOrders();
+
 	const { data: wishlistData } = useGetMyFavorites();
 
 	const [currentSizeType, setCurrentSizeType] = useState<"any" | "us" | "eu">(
 		"any"
 	);
+
 	const [token, setToken] = useState(useHydratedStoreState("token"));
 	const [filter, setFilter] = useState<ProductsFilter | undefined>();
+
+	const [selectedTags, setSelectedTags] = useState<string[]>(
+		filter?.tags ?? []
+	);
+
 	const [finalProductsData, setFinalProductsData] = useState<
 		Product[] | undefined
 	>();
+
+	const [isDarkMode, { on: darkModeOn, off: darkModeOff }] = useBoolean(false);
+
+	function toggleDarkMode() {
+		const localStorageDarkMode = localStorage.getItem("mateosShoes-darkmode");
+
+		if (localStorageDarkMode === "true") {
+			darkModeOff();
+			localStorage.removeItem("mateosShoes-darkmode");
+		} else {
+			darkModeOn();
+			localStorage.setItem("mateosShoes-darkmode", "true");
+		}
+	}
+
+	useEffect(() => {
+		toggleDarkMode();
+	}, []);
 
 	function handleClearFilters() {
 		localStorage.removeItem("mateosShoes-shoesSizeFilterRange");
@@ -161,7 +196,13 @@ export const GlobalContextProvider = ({
 				handleLogout,
 				finalProductsData,
 				isLoadingProductData,
+				ordersData,
+				isLoadingOrderData,
 				handleClearFilters,
+				isDarkMode,
+				toggleDarkMode,
+				selectedTags,
+				setSelectedTags,
 			}}
 		>
 			{children}

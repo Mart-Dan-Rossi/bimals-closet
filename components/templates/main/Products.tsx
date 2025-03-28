@@ -8,8 +8,13 @@ import { ProductCard } from "../product/ProductCard";
 import { FiltersButton } from "./FiltersButton";
 
 export const Products = () => {
-	const { currentSizeType, filter, finalProductsData, isLoadingProductData } =
-		useGlobalContext();
+	const {
+		currentSizeType,
+		filter,
+		finalProductsData,
+		isLoadingProductData,
+		isDarkMode,
+	} = useGlobalContext();
 
 	const [filteredProductsData, setFinalProductsData] =
 		useState(finalProductsData);
@@ -47,33 +52,42 @@ export const Products = () => {
 	return (
 		<Box
 			p="0"
-			bg="brand.white300"
+			bg={isDarkMode ? "darkBrand.color2" : "brand.color1"}
 			position="relative"
 			h="100%"
 			overflow="hidden"
 		>
 			<Box maxW="1280px" mx="auto" pb="4rem">
 				{/* Grid background decorative */}
-				<Box pos="absolute" top="310px" left="-100px">
-					<Image
-						width={200}
-						height={200}
-						src="/assets/images/product-bg.png"
-						alt="Fondo de productos"
-					/>
-				</Box>
+				{!isDarkMode && (
+					<Box pos="absolute" top="310px" left="-100px">
+						<Image
+							width={200}
+							height={200}
+							src="/assets/images/product-bg.png"
+							alt="Fondo de productos"
+						/>
+					</Box>
+				)}
 
 				<Box p="3rem" pos="relative" zIndex="">
 					<Flex justify={"space-between"}>
 						<Flex align="center">
-							<Image
+							{/* <Image
 								src="/assets/images/new-seal.svg"
 								height={30}
 								width={30}
 								alt="Indicativo de nuevo"
-							/>
-							<Text fontWeight="600" ml="1rem" userSelect={"none"}>
-								Nuevos productos!
+
+							/> */}
+							<Text
+								color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+								fontWeight="600"
+								ml="1rem"
+								userSelect={"none"}
+							>
+								{/* Nuevos productos! */}
+								Nuestros productos!
 							</Text>
 						</Flex>
 						<Flex>

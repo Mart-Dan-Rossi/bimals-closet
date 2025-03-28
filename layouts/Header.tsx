@@ -1,9 +1,10 @@
 import { BurguerIcon } from "@/components/Header/BurguerIcon";
 import { DesktopUserInteraction } from "@/components/Header/DesktopUserInteraction";
 import { ExtraInfo } from "@/components/Header/ExtraInfo";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 export const Header = ({
@@ -11,6 +12,9 @@ export const Header = ({
 }: {
 	subHeaderName: string | undefined;
 }) => {
+	const router = useRouter();
+	const { isDarkMode } = useGlobalContext();
+
 	const token = useHydratedStoreState("token");
 	const [openModal, setOpenModal] = useBoolean();
 	const [name, setName] = useState<string>("");
@@ -40,7 +44,12 @@ export const Header = ({
 	}, [name, token]);
 
 	return (
-		<Box bg="brand.color1" pos="fixed" w="100%" zIndex="99">
+		<Box
+			bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+			pos="fixed"
+			w="100%"
+			zIndex="99"
+		>
 			<Box maxW="1280px" mx="auto" p="2rem 0 0 0">
 				<Stack
 					spacing="0"
@@ -48,14 +57,14 @@ export const Header = ({
 					justifyContent="space-between"
 					alignItems="center"
 					p="1.5rem 3rem"
-					color="brand.white100"
+					color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
 				>
 					<Box>
-						<Link href="/">
+						<Box cursor="pointer" onClick={() => router.push("/")}>
 							<Text fontWeight="700" fontSize={["1.8rem", "2.5rem"]}>
 								Mateo Shoes
 							</Text>
-						</Link>
+						</Box>
 					</Box>
 
 					<BurguerIcon setOpenModal={setOpenModal} />
@@ -64,13 +73,11 @@ export const Header = ({
 				</Stack>
 			</Box>
 
-			{
-				<ExtraInfo
-					subHeaderName={subHeaderName}
-					openModal={openModal}
-					loggedIsAdmin={loggedIsAdmin}
-				/>
-			}
+			<ExtraInfo
+				subHeaderName={subHeaderName}
+				openModal={openModal}
+				loggedIsAdmin={loggedIsAdmin}
+			/>
 		</Box>
 	);
 };

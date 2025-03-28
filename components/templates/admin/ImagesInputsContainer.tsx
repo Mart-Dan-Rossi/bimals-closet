@@ -10,6 +10,7 @@ import {
 import { ChangeEvent } from "react";
 import { RiAddCircleLine } from "react-icons/ri";
 import { inputStyles } from "./ProductEditionModal";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
 	images: string[];
@@ -31,6 +32,8 @@ export const ImagesInputsContainer = ({
 	handleDeleteImageInput,
 	handleAddImageInput,
 }: Props) => {
+	const { isDarkMode } = useGlobalContext();
+
 	return (
 		<Box
 			my="2rem"
@@ -38,7 +41,13 @@ export const ImagesInputsContainer = ({
 			borderRadius={"10px"}
 			border={"1px solid black"}
 		>
-			<Text fontSize="1.7rem" fontWeight="600" color="brand.secondaryColor1">
+			<Text
+				fontSize="1.7rem"
+				fontWeight="600"
+				color={
+					isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
+				}
+			>
 				Imágenes:
 			</Text>
 			{images.map((__, index) => {

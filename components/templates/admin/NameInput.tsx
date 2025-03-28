@@ -1,6 +1,7 @@
 import { Box, Input, Text } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
 import { inputStyles } from "./ProductEditionModal";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
 	name: string;
@@ -15,9 +16,17 @@ export const NameInput = ({
 	showFormErrors,
 	isValidNameData,
 }: Props) => {
+	const { isDarkMode } = useGlobalContext();
+
 	return (
 		<Box my="2rem">
-			<Text fontSize="1.7rem" fontWeight="600" color="brand.secondaryColor1">
+			<Text
+				fontSize="1.7rem"
+				fontWeight="600"
+				color={
+					isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
+				}
+			>
 				Nombre:
 			</Text>
 			<Input

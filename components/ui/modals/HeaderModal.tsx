@@ -1,20 +1,24 @@
-import { Box, Flex, Icon, Stack, Text } from "@chakra-ui/react";
-import { AuthModalData } from "@/utils/modal";
-import { Fragment } from "react";
-import Link from "next/link";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
+import { AuthModalData } from "@/utils/modal";
+import { Box, Flex, Icon, Stack, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { Fragment } from "react";
 
 export const AuthModal = () => {
+	const router = useRouter();
 	const { handleLogout } = useGlobalContext();
 	const token = useHydratedStoreState("token");
+
+	const { isDarkMode } = useGlobalContext();
+
 	return (
 		<Box
 			position="absolute"
 			top="3rem"
 			border={"1px solid grey"}
 			borderRadius="1rem"
-			bg="brand.white100"
+			bg={isDarkMode ? "darkBrand.white200" : "brand.white200"}
 			zIndex="2"
 			display={["none", "block"]}
 			boxShadow="0px 12px 15px black"
@@ -25,7 +29,10 @@ export const AuthModal = () => {
 						<Fragment key={idx}>
 							{item.link ? (
 								<Box w={["max-content", "100%"]}>
-									<Link href={item.link}>
+									<Box
+										cursor="pointer"
+										onClick={() => item.link && router.push(item.link)}
+									>
 										<Flex
 											alignItems="center"
 											role="group"
@@ -33,20 +40,27 @@ export const AuthModal = () => {
 											p=".9rem 1.5rem"
 											color="black"
 											_hover={{
-												bg: "brand.color1",
-												color: "brand.white100",
+												bg: isDarkMode ? "darkBrand.color1" : "brand.color1",
+												color: isDarkMode
+													? "darkBrand.white100"
+													: "brand.white100",
 												borderRadius: ".4rem",
 											}}
 										>
 											<Icon
-												color="brand.color1"
+												color={
+													isDarkMode ? "darkBrand.white100" : "brand.color1"
+												}
 												_groupHover={{
-													color: "brand.white100",
+													color: isDarkMode
+														? "darkBrand.white100"
+														: "brand.white100",
 												}}
 												as={item.icon}
 											/>
 
 											<Text
+												color={isDarkMode ? "darkBrand.white100" : "black"}
 												ml=".8rem"
 												fontSize="1.4rem"
 												display="flex"
@@ -57,7 +71,7 @@ export const AuthModal = () => {
 													: item.text}
 											</Text>
 										</Flex>
-									</Link>
+									</Box>
 								</Box>
 							) : (
 								<Box w="max-content">
@@ -66,11 +80,20 @@ export const AuthModal = () => {
 										cursor="pointer"
 										p=".9rem 1.5rem"
 										onClick={handleLogout}
+										_hover={{
+											bg: isDarkMode ? "darkBrand.color1" : "brand.color1",
+											color: isDarkMode
+												? "darkBrand.white100"
+												: "brand.white100",
+											borderRadius: ".4rem",
+										}}
 									>
 										<Icon
-											color="brand.color1"
+											color={isDarkMode ? "darkBrand.white100" : "brand.color1"}
 											_groupHover={{
-												color: "brand.white100",
+												color: isDarkMode
+													? "darkBrand.white100"
+													: "brand.white100",
 											}}
 											as={item.icon}
 										/>
@@ -80,7 +103,7 @@ export const AuthModal = () => {
 											fontSize="1.4rem"
 											display="flex"
 											alignItems="center"
-											color="black"
+											color={isDarkMode ? "darkBrand.white100" : "black"}
 										>
 											{item.text === "Desconectar" &&
 											(token === null || token === undefined)

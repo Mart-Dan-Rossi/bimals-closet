@@ -1,3 +1,4 @@
+import { useGlobalContext } from "@/context/GlobalContext";
 import { CustomButtonProps } from "@/types/button";
 import { Box, Button, Icon } from "@chakra-ui/react";
 
@@ -9,6 +10,7 @@ export const CustomButton = ({
 	color,
 	bg,
 	bgHover,
+	colorHover,
 	boxShadow,
 	border,
 	borderColor,
@@ -19,8 +21,10 @@ export const CustomButton = ({
 	isDisabled,
 	isBtnIcon,
 	isValidData,
-	handleShowFormErrors,
+	onClickFunction,
 }: CustomButtonProps) => {
+	const { isDarkMode } = useGlobalContext();
+
 	return (
 		<Box>
 			<Button
@@ -29,9 +33,9 @@ export const CustomButton = ({
 				py={py || "2rem"}
 				px={px}
 				color={color || "#fff"}
-				bg={bg || "brand.color1"}
+				bg={bg || isDarkMode ? "darkBrand.secondaryColor3" : "brand.color1"}
 				borderRadius="10px"
-				boxShadow={boxShadow || "0px 4px 20px rgba(0, 175, 84, 0.25)"}
+				boxShadow={boxShadow || "0px 4px 20px brand.color3"}
 				border={border}
 				borderColor={borderColor}
 				type={isValidData ? "submit" : "button"}
@@ -40,24 +44,27 @@ export const CustomButton = ({
 						? () => {
 								console.log("Upload data");
 						  }
-						: handleShowFormErrors
+						: onClickFunction
 				}
 				cursor="pointer"
 				fontSize={fontSize || "1.42rem"}
 				isLoading={isLoading}
 				isDisabled={isDisabled}
 				_hover={{
-					bg: bgHover || "brand.color2",
+					boxShadow: "none",
+					color:
+						colorHover || isDarkMode ? "darkBrand.white100" : "brand.color2",
+					bg: bgHover || isDarkMode ? "darkBrand.color3" : "brand.color3",
 				}}
 				_focus={{
+					boxShadow: "2px 2px 5px 0px rgba(0,0,0,0.75) inset",
 					borderColor: "none",
-					boxShadow: "none",
 				}}
 			>
 				{isBtnIcon && (
 					<Icon
 						cursor="pointer"
-						color="brand.color1"
+						color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
 						fontSize="2.5rem"
 						mr={["1rem", "3rem", "1rem", "3rem"]}
 						as={btnIcon}

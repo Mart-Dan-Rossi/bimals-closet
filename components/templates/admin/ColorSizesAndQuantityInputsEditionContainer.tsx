@@ -1,4 +1,5 @@
 import { SizeOptions } from "@/types/product";
+import { Brand } from "@/utils/sizesEquivalencies";
 import { Box, CloseButton, Input, Text } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 
@@ -18,7 +19,7 @@ interface Props {
 			boxShadow: string;
 		};
 	};
-	brand: "puma" | "nike" | "adidas" | "underArmour" | "other";
+	brand: Brand | "other";
 	sizeOptions: SizeOptions;
 	index1: number;
 	setSizeOptions: Dispatch<SetStateAction<SizeOptions>>;

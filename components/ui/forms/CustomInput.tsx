@@ -1,3 +1,4 @@
+import { useGlobalContext } from "@/context/GlobalContext";
 import { CustomInputProps } from "@/types/form";
 import { Box, Input, Text } from "@chakra-ui/react";
 
@@ -14,6 +15,8 @@ export const CustomInput = ({
 	maxWidth,
 	display,
 }: CustomInputProps) => {
+	const { isDarkMode } = useGlobalContext();
+
 	return (
 		<Box maxWidth={maxWidth || "unset"} display={display || "block"}>
 			<Box pos="relative">
@@ -30,10 +33,12 @@ export const CustomInput = ({
 					_placeholder={{
 						fontWeight: 500,
 						fontSize: "1.3rem",
-						color: "brand.secondaryColor1",
+						color: isDarkMode
+							? "darkBrand.secondaryColor1"
+							: "brand.secondaryColor1",
 					}}
 					_focus={{
-						borderColor: "brand.color1",
+						borderColor: isDarkMode ? "darkBrand.color1" : "brand.color1",
 						boxShadow: "none",
 					}}
 					_hover={{
@@ -54,7 +59,12 @@ export const CustomInput = ({
 					{passwordIcon}
 				</Box>
 			</Box>
-			<Text color="brand.red100" fontSize="1.1rem" fontWeight="300" mt=".5rem">
+			<Text
+				color={isDarkMode ? "darkBrand.red100" : "brand.red100"}
+				fontSize="1.1rem"
+				fontWeight="300"
+				mt=".5rem"
+			>
 				{errorMessage}
 			</Text>
 		</Box>

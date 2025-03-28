@@ -10,7 +10,8 @@ export const SimilarProduct = () => {
 	const router = useRouter();
 	const { slug } = router.query;
 
-	const { finalProductsData, isLoadingProductData } = useGlobalContext();
+	const { finalProductsData, isLoadingProductData, isDarkMode } =
+		useGlobalContext();
 
 	const [shuffledProducts, setShuffledProducts] = useState<Product[]>([]);
 
@@ -62,31 +63,49 @@ export const SimilarProduct = () => {
 					});
 			});
 
-			return (tagsFiltering && sizeFiltering) || sizeFiltering;
+			return (
+				((tagsFiltering && sizeFiltering) || sizeFiltering) &&
+				product.slug !== slug
+			);
 		});
 
 		return filteredProducts;
 	}
 
 	return (
-		<Box maxW="1280px" mx="auto" px="3rem" pb="8rem" pt="3rem">
-			<Text fontWeight="600" fontSize="2.5rem">
-				Podrían interesarte
-			</Text>
+		<Box
+			maxW="1280px"
+			mx="auto"
+			px="3rem"
+			pb="8rem"
+			pt="3rem"
+			bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+		>
+			{shuffledProducts.length > 0 && (
+				<>
+					<Text
+						fontWeight="600"
+						fontSize="2.5rem"
+						color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+					>
+						Podrían interesarte
+					</Text>
 
-			<SimpleGrid columns={[2, 3, 3, 4]} gap="2rem" mt="2rem">
-				{shuffledProducts
-					?.slice(0, 4)
-					.map((product: Product) => (
-						<Fragment key={product?._id}>
-							{isLoadingProductData ? (
-								<BoxCardLoader rounded=".6rem" h={["230px", "300px"]} />
-							) : (
-								<ProductCard product={product} />
-							)}
-						</Fragment>
-					))}
-			</SimpleGrid>
+					<SimpleGrid columns={[2, 3, 3, 4]} gap="2rem" mt="2rem">
+						{shuffledProducts
+							?.slice(0, 4)
+							.map((product: Product) => (
+								<Fragment key={product?._id}>
+									{isLoadingProductData ? (
+										<BoxCardLoader rounded=".6rem" h={["230px", "300px"]} />
+									) : (
+										<ProductCard product={product} />
+									)}
+								</Fragment>
+							))}
+					</SimpleGrid>
+				</>
+			)}
 		</Box>
 	);
 };

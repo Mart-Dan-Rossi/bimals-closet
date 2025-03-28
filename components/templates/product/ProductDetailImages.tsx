@@ -1,4 +1,5 @@
 import { BoxCardLoader } from "@/components/animations/CustomLoader";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import Image from "next/image";
@@ -13,6 +14,8 @@ export const ProductDetailImages = ({
 	isLoadingParticulaProductData,
 	product,
 }: Props) => {
+	const { isDarkMode } = useGlobalContext();
+
 	const [selectedImage, setSelectedImage] = useState<string>("");
 
 	return (
@@ -57,7 +60,9 @@ export const ProductDetailImages = ({
 								borderColor={
 									product &&
 									(selectedImage === item || (!selectedImage && idx === 0))
-										? "brand.secondaryColor1"
+										? isDarkMode
+											? "darkBrand.secondaryColor4"
+											: "brand.secondaryColor1"
 										: "transparent"
 								}
 								borderRadius=".5rem"
