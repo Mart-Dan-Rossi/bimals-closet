@@ -10,10 +10,9 @@ import {
 
 interface Props {
 	product: Product;
-	wishlistData: Product[];
 }
 
-export const WishlistProductCard = ({ product, wishlistData }: Props) => {
+export const WishlistProductCard = ({ product }: Props) => {
 	const router = useRouter();
 	const { isDarkMode } = useGlobalContext();
 

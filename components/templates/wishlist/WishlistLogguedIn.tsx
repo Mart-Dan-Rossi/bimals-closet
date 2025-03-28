@@ -47,11 +47,7 @@ export const WishlistLogguedIn = () => {
 				) : (
 					<Fragment>
 						{wishlistData?.map((product: Product) => (
-							<WishlistProductCard
-								key={product?._id}
-								product={product}
-								wishlistData={wishlistData}
-							/>
+							<WishlistProductCard key={product?._id} product={product} />
 						))}
 					</Fragment>
 				)}
