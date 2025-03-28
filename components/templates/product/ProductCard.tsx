@@ -23,7 +23,7 @@ export const ProductCard = ({ product }: Props) => {
 		finalProductsData ?? []
 	);
 
-	const [selectedColor, setSelectedColor] = useState<string>("");
+	const [selectedColor, setSelectedColor] = useState<string | undefined>("");
 
 	useEffect(() => {
 		if (product?.sizeOptions[0].color)
