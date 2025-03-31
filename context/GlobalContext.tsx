@@ -151,23 +151,27 @@ export const GlobalContextProvider = ({
 	}, [token]);
 
 	useEffect(() => {
-		if (productsData && wishlistData && wishlistData !== null) {
-			const mapProducts: Product[] = productsData.map((item) => {
-				const isFavorite = wishlistData?.some((wishlistItem) => {
-					if (wishlistItem) {
-						return wishlistItem._id === item._id;
-					} else {
-						return false;
-					}
+		if (productsData) {
+			if (wishlistData && wishlistData !== null) {
+				const mapProducts: Product[] = productsData.map((item) => {
+					const isFavorite = wishlistData?.some((wishlistItem) => {
+						if (wishlistItem) {
+							return wishlistItem._id === item._id;
+						} else {
+							return false;
+						}
+					});
+					const itemCopy = {
+						...item,
+					};
+					itemCopy.isFavorite = !!isFavorite;
+					return itemCopy;
 				});
-				const itemCopy = {
-					...item,
-				};
-				itemCopy.isFavorite = !!isFavorite;
-				return itemCopy;
-			});
 
-			setFinalProductsData(mapProducts);
+				setFinalProductsData(mapProducts);
+			} else {
+				setFinalProductsData(productsData);
+			}
 		}
 	}, [productsData, wishlistData]);
 

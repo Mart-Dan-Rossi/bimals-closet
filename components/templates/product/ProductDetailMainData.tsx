@@ -23,10 +23,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { GoHeart, GoHeartFill } from "react-icons/go";
-import { MdAttachMoney } from "react-icons/md";
 import { ColorOptions } from "./ColorOptions";
 import { SizeOptions } from "./SizeOptions";
 import SizeTableComparation from "./SizeTableComparation";
+import { FaArrowRight } from "react-icons/fa";
 
 interface Props {
 	isLoadingParticulaProductData: boolean;
@@ -100,17 +100,6 @@ export const ProductDetailMainData = ({
 			setSelectedSize("");
 		}
 	};
-
-	function handlePurchaseButton() {
-		if (!selectedSize) {
-			return toast({
-				status: "error",
-				title: "Selecciona un talle antes de agregarlo al carrito",
-			});
-		}
-		handleAddToCart();
-		router.push("/cart");
-	}
 
 	const { toggleProductChecked, isProductChecked } = useToggleFavorite(
 		finalProductsData ?? []
@@ -283,11 +272,11 @@ export const ProductDetailMainData = ({
 												}}
 											/>
 										</Box>
-										<Box w="100%" onClick={handlePurchaseButton}>
+										<Box w="100%" onClick={() => router.push("/cart")}>
 											<CustomButton
 												{...{
-													text: "Comprar",
-													btnIcon: MdAttachMoney,
+													text: "Ir al carrito",
+													btnIcon: FaArrowRight,
 													py: ["2rem", "2.5rem"],
 													bg: "transparent",
 													color: isDarkMode
