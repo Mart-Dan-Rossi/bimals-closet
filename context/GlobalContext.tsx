@@ -108,6 +108,7 @@ export const GlobalContextProvider = ({
 	function handleClearFilters() {
 		localStorage.removeItem("mateosShoes-shoesSizeFilterRange");
 		setFilter(undefined);
+		setSelectedTags([]);
 	}
 
 	function useSetCurrentSizeType(sizeType: "any" | "us" | "eu") {
