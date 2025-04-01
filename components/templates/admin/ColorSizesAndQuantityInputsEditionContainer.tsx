@@ -1,6 +1,16 @@
 import { SizeOptions } from "@/types/product";
 import { Brand } from "@/utils/sizesEquivalencies";
-import { Box, CloseButton, Input, Text } from "@chakra-ui/react";
+import {
+	Box,
+	CloseButton,
+	Input,
+	NumberDecrementStepper,
+	NumberIncrementStepper,
+	NumberInput,
+	NumberInputField,
+	NumberInputStepper,
+	Text,
+} from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 
 interface Props {
@@ -54,10 +64,19 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 		sizeType?: "arg" | "eu" | "cm"
 	) => {
 		setSizeOptions((prevSizeOptions) => {
-			const newSize = size ? parseInt(size) : 0;
+			const newSize = size ? Number(size) : 0;
 			return prevSizeOptions.map((sizeOption, idx) => {
 				return idx === index
-					? { ...sizeOption, [sizeType ?? "usSize"]: newSize }
+					? {
+							...sizeOption,
+							[sizeType ?? "usSize"]:
+								sizeOption[sizeType ?? "usSize"] === 0 ||
+								sizeOption[sizeType ?? "usSize"] === undefined
+									? sizeType
+										? 40
+										: 8
+									: newSize,
+					  }
 					: sizeOption;
 			});
 		});
@@ -95,14 +114,21 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 
 			<Box margin={"0 1rem"}>
 				<Text>Talle(US):</Text>
-				<Input
+				<NumberInput
 					id={`productSizeOptionSize${index1}`}
 					value={sizeOptions[index1].usSize || ""}
-					onChange={(e) => handleSizeChange(index1, e.target.value)}
-					placeholder={"Talle en US"}
-					type="number"
-					{...inputStyles}
-				/>
+					step={0.5}
+					onChange={(e) => handleSizeChange(index1, e)}
+					border="1px solid #EAEAEA"
+					borderRadius="1rem"
+					fontSize="1.6rem"
+				>
+					<NumberInputField />
+					<NumberInputStepper>
+						<NumberIncrementStepper />
+						<NumberDecrementStepper />
+					</NumberInputStepper>
+				</NumberInput>
 				{showFormErrors &&
 					!isValidsizeOptionsData &&
 					sizeOptions[index1].usSize === 0 && (
@@ -118,16 +144,21 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 									key={`edition-optionalSizes-add-${optionalSize}-${index1}`}
 								>
 									<Text>Talle({optionalSize.toUpperCase()}):</Text>
-									<Input
+									<NumberInput
 										id={`productSizeOptionSize${index2}-${optionalSize}`}
 										value={sizeOptions[index1][optionalSize] || ""}
-										placeholder={`Talle en ${optionalSize.toUpperCase()}`}
-										onChange={(e) =>
-											handleSizeChange(index1, e.target.value, optionalSize)
-										}
-										type="number"
-										{...inputStyles}
-									/>
+										step={0.5}
+										onChange={(e) => handleSizeChange(index1, e, optionalSize)}
+										border="1px solid #EAEAEA"
+										borderRadius="1rem"
+										fontSize="1.6rem"
+									>
+										<NumberInputField />
+										<NumberInputStepper>
+											<NumberIncrementStepper />
+											<NumberDecrementStepper />
+										</NumberInputStepper>
+									</NumberInput>
 									{showFormErrors &&
 										!isValidsizeOptionsData &&
 										sizeOptions[index1][optionalSize] === 0 && (
@@ -144,14 +175,21 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 
 			<Box>
 				<Text>Cantidad:</Text>
-				<Input
+				<NumberInput
 					id={`productSizeOptionQuantity${index1}`}
 					value={sizeOptions[index1].quantity || ""}
-					placeholder={"Cantidad"}
-					onChange={(e) => handleQuantityChange(index1, e.target.value)}
-					type="number"
-					{...inputStyles}
-				/>
+					step={1}
+					onChange={(e) => handleQuantityChange(index1, e)}
+					border="1px solid #EAEAEA"
+					borderRadius="1rem"
+					fontSize="1.6rem"
+				>
+					<NumberInputField />
+					<NumberInputStepper>
+						<NumberIncrementStepper />
+						<NumberDecrementStepper />
+					</NumberInputStepper>
+				</NumberInput>
 				{showFormErrors &&
 					!isValidsizeOptionsData &&
 					sizeOptions[index1].quantity === 0 && (
