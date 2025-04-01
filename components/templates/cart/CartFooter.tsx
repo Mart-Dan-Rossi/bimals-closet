@@ -1,0 +1,274 @@
+import { CustomButton } from "@/components/ui/buttons/CustomButton";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { useCreateMPOrder } from "@/hooks/orders/useMPOrders";
+import { useReserveMultipleProducts } from "@/hooks/products/useProduct";
+import {
+	useHydratedCartState,
+	useHydratedStoreState,
+} from "@/hooks/state/hydrated";
+import { useCartState } from "@/hooks/state/storage";
+import { StoredUserData } from "@/types/auth";
+import { CartItemMPFormat } from "@/types/order";
+import { ReserveProductData } from "@/types/product";
+import { getReservedDataFromNameAndQtty } from "@/utils/functions";
+import {
+	Box,
+	Flex,
+	Text,
+	useBoolean,
+	useDisclosure,
+	useToast,
+} from "@chakra-ui/react";
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
+import { ConfirmDeleteModal } from "../admin/ConfirmDeleteModal";
+
+interface Props {
+	userReservedProductsMPFormated: CartItemMPFormat[];
+}
+
+const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
+	const { isDarkMode } = useGlobalContext();
+
+	const { emptyCart } = useCartState((state) => state);
+
+	const cart = useHydratedCartState("cart");
+
+	const { mutateAsync: addMutateAsyncCreateOrder } = useCreateMPOrder();
+	const { mutateAsync: addMutateAsyncReserveMultipleProducts } =
+		useReserveMultipleProducts();
+
+	const toast = useToast();
+	const [preferenceId, setPreferenceId] = useState(null);
+	const [
+		isLoadingPurchaseRequest,
+		{ on: processingPurchaseRequest, off: purchaseRequestLoaded },
+	] = useBoolean();
+
+	if (process.env.NEXT_PUBLIC_MERCADOPAGO_LIVE_KEY) {
+		initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_LIVE_KEY, {
+			locale: "es-AR",
+		});
+	}
+
+	const {
+		isOpen: isConfirmEmptyCartModalOpen,
+		onOpen: onOpenConfirmEmptyCartModal,
+		onClose: onCloseConfirmEmptyCartModal,
+	} = useDisclosure();
+
+	const token = useHydratedStoreState("token");
+
+	const [userEmail, setUserEmail] = useState("");
+	const [userName, setUserName] = useState<string>("");
+	const [localStoredUser, setLocalStoredUser] = useState<
+		StoredUserData | undefined
+	>();
+
+	const queryClient = useQueryClient();
+
+	const refreshProducts = () => {
+		queryClient.invalidateQueries({ queryKey: ["getAllProducts"] });
+	};
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem("MateoShoesUser");
+		const user = storedUser && token ? JSON.parse(storedUser) : null;
+		const email = user ? user.email : null;
+
+		if (userEmail !== email) {
+			setUserEmail(email);
+		}
+		if (userName !== user) {
+			setUserName(user?.name.split(" ")[0]);
+		}
+		if (JSON.stringify(localStoredUser) !== JSON.stringify(user)) {
+			setLocalStoredUser(user);
+		}
+	}, [userEmail, userName, token]);
+
+	function getTotalCartPrice() {
+		const totalCartPrice =
+			cart?.reduce((total, item) => {
+				const itemTotal = Number(item.unit_price) * Number(item.quantity);
+				return total + itemTotal;
+			}, 0) ?? 0;
+
+		const totalReservedPrice =
+			userReservedProductsMPFormated?.reduce((total, item) => {
+				const itemTotal = Number(item.unit_price) * Number(item.quantity);
+				return total + itemTotal;
+			}, 0) ?? 0;
+
+		return (
+			Number(totalCartPrice.toFixed(2)) + Number(totalReservedPrice.toFixed(2))
+		);
+	}
+
+	function getTotalItemsAmount() {
+		const totalCartItemsAmount = cart?.length ?? 0;
+
+		const totalReservedProductsAmount =
+			userReservedProductsMPFormated.reduce((total, item) => {
+				return item.quantity;
+			}, 0) ?? 0;
+
+		return totalCartItemsAmount + totalReservedProductsAmount;
+	}
+
+	const handleReserveProducts = async (
+		productsDataToReserve: ReserveProductData[]
+	) => {
+		try {
+			const results = await addMutateAsyncReserveMultipleProducts(
+				productsDataToReserve
+			);
+
+			if (productsDataToReserve) {
+				toast({
+					isClosable: true,
+					status: "success",
+					title: "Puedes ver tus reservas en la pestaña 'Reservas'.",
+				});
+			}
+
+			toast({
+				isClosable: true,
+				status: "success",
+				title: "Reservas completadas exitosamente.",
+				description:
+					"Por favor completa el pago o comunicate con nosotros por nuestras redes sociales (Al pie de página).",
+			});
+
+			return { successfulReserves: results, failedReserves: [] };
+		} catch (error) {
+			console.error("Error reservando productos:", error);
+			toast({
+				status: "error",
+				title: "Error en la reserva",
+				description: `Error: ${error}`,
+			});
+
+			return { successfulReserves: [], failedReserves: [{ error }] };
+		}
+	};
+
+	async function handleConfirmPay() {
+		if (!cart) {
+			toast({
+				status: "error",
+				title: "No puedes efectuar pago, carrito vacío",
+			});
+			return;
+		}
+
+		processingPurchaseRequest();
+
+		const createMPOrderRes = await addMutateAsyncCreateOrder({
+			cartItems: [...cart, ...userReservedProductsMPFormated],
+			metadata: { userId: localStoredUser?.id },
+		});
+
+		const id = createMPOrderRes.id;
+
+		const productsDataToReserve = cart.map((item) => {
+			return {
+				id: item.id,
+				userId: localStoredUser?.id,
+				reservedData: getReservedDataFromNameAndQtty(
+					item.name,
+					item.quantity,
+					localStoredUser?.id
+				),
+			};
+		});
+
+		await handleReserveProducts(productsDataToReserve).then((res) => {
+			if (res?.failedReserves.length !== 0) {
+				purchaseRequestLoaded();
+			} else if (id) {
+				purchaseRequestLoaded();
+				setPreferenceId(id);
+
+				refreshProducts();
+				emptyCart();
+			}
+		});
+	}
+
+	return (
+		<>
+			{cart && (
+				<Flex
+					bg={isDarkMode ? "darkBrand.color2" : "brand.color2"}
+					borderRadius="1rem"
+					p="2rem"
+					justify="space-between"
+					mt="5rem"
+				>
+					<Box overflow="hidden" borderRadius="1rem">
+						<Text
+							fontWeight="600"
+							color={isDarkMode ? "darkBrand.white100" : ""}
+						>
+							Total de Items
+						</Text>
+						<Text
+							textAlign="center"
+							color={isDarkMode ? "darkBrand.white100" : ""}
+						>
+							{getTotalItemsAmount()}
+						</Text>
+						<CustomButton
+							{...{
+								text: isLoadingPurchaseRequest ? "Procesando..." : "Comprar",
+								py: ["2rem", "2rem"],
+								isDisabled:
+									isLoadingPurchaseRequest ||
+									(cart?.length === 0 &&
+										userReservedProductsMPFormated.length === 0),
+								onClickFunction: handleConfirmPay,
+								boxShadow: "2px 2px 5px 0px rgba(0,0,0,0.75)",
+							}}
+						/>
+						{preferenceId && <Wallet initialization={{ preferenceId }} />}
+					</Box>
+
+					<Box overflow="hidden" borderRadius="1rem">
+						<Text
+							fontWeight="600"
+							color={isDarkMode ? "darkBrand.white100" : ""}
+						>
+							Precio Total
+						</Text>
+						<Text
+							textAlign="center"
+							color={isDarkMode ? "darkBrand.secondaryColor4" : "brand.color3"}
+						>
+							AR$ {getTotalCartPrice()}
+						</Text>
+						<Box onClick={onOpenConfirmEmptyCartModal}>
+							<CustomButton
+								{...{
+									text: "Vaciar Carrito",
+									py: ["2rem", "2rem"],
+									isDisabled: cart?.length === 0,
+									boxShadow: "2px 2px 5px 0px rgba(0,0,0,0.75)",
+								}}
+							/>
+						</Box>
+					</Box>
+				</Flex>
+			)}
+			<ConfirmDeleteModal
+				isOpen={isConfirmEmptyCartModalOpen}
+				onClose={onCloseConfirmEmptyCartModal}
+				handler={emptyCart}
+				text={"Desea vaciar el carrito?"}
+			/>
+		</>
+	);
+};
+
+export default CartFooter;

@@ -1,164 +1,100 @@
-import { CustomButton } from "@/components/ui/buttons/CustomButton";
+import PreviousPageButton from "@/components/ui/buttons/PreviousPageButton";
 import { useGlobalContext } from "@/context/GlobalContext";
-import { useCreateMPOrder } from "@/hooks/orders/useMPOrders";
-import { useReserveMultipleProducts } from "@/hooks/products/useProduct";
-import {
-	useHydratedCartState,
-	useHydratedStoreState,
-} from "@/hooks/state/hydrated";
-import { useCartState } from "@/hooks/state/storage";
-import { StoredUserData } from "@/types/auth";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { CartItemMPFormat } from "@/types/order";
-import { ReserveProductData } from "@/types/product";
-import { getReservedDataFromNameAndQtty } from "@/utils/functions";
+import { Product, SizeOptions } from "@/types/product";
 import {
 	Box,
-	Center,
 	Flex,
-	Icon,
-	Text,
-	useBoolean,
-	useDisclosure,
-	useToast,
+	Tab,
+	TabList,
+	TabPanel,
+	TabPanels,
+	Tabs,
 } from "@chakra-ui/react";
-import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { BiChevronLeft } from "react-icons/bi";
-import { FaGhost } from "react-icons/fa";
-import { ConfirmDeleteModal } from "../admin/ConfirmDeleteModal";
-import { CartProductCard } from "./CartProductCard";
+import CartContent from "./CartContent";
+import CartFooter from "./CartFooter";
+import EmptyCartMessage from "./EmptyCartMessage";
+import ReservedProductsTab from "./ReservedProductsTab";
 
 export const CartItems = () => {
-	const cart = useHydratedCartState("cart");
+	const { isDarkMode, finalProductsData } = useGlobalContext();
+
+	const [userReservedProducts, setUserReserverdProducts] = useState<Product[]>(
+		[]
+	);
+	const [userReservedProductsMPFormated, setUserReservedProductsMPFormated] =
+		useState<CartItemMPFormat[]>([]);
+
 	const token = useHydratedStoreState("token");
-
-	const { isDarkMode } = useGlobalContext();
-
-	const { mutateAsync: addMutateAsyncCreateOrder } = useCreateMPOrder();
-	const { mutateAsync: addMutateAsyncReserveMultipleProducts } =
-		useReserveMultipleProducts();
-
-	const { removeFromCart, emptyCart } = useCartState((state) => state);
-
-	const router = useRouter();
-	const toast = useToast();
-
-	const [userEmail, setUserEmail] = useState("");
-	const [userName, setUserName] = useState<string>("");
-	const [localStoredUser, setLocalStoredUser] = useState<
-		StoredUserData | undefined
-	>();
-
-	const [preferenceId, setPreferenceId] = useState(null);
-	const [
-		isLoadingPurchaseRequest,
-		{ on: processingPurchaseRequest, off: purchaseRequestLoaded },
-	] = useBoolean();
-
-	if (process.env.NEXT_PUBLIC_MERCADOPAGO_LIVE_KEY) {
-		initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_LIVE_KEY, {
-			locale: "es-AR",
-		});
-	}
-
-	const {
-		isOpen: isConfirmEmptyCartModalOpen,
-		onOpen: onOpenConfirmEmptyCartModal,
-		onClose: onCloseConfirmEmptyCartModal,
-	} = useDisclosure();
-
-	const totalCartPrice =
-		cart?.reduce((total, item) => {
-			const itemTotal = Number(item.unit_price) * Number(item.quantity);
-			return total + itemTotal;
-		}, 0) ?? 0;
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
 		const user = storedUser && token ? JSON.parse(storedUser) : null;
-		const email = user ? user.email : null;
 
-		if (userEmail !== email) {
-			setUserEmail(email);
-		}
-		if (userName !== user) {
-			setUserName(user?.name.split(" ")[0]);
-		}
-		if (JSON.stringify(localStoredUser) !== JSON.stringify(user)) {
-			setLocalStoredUser(user);
-		}
-	}, [userEmail, userName, token]);
+		if (user) {
+			const URP: Product[] = finalProductsData
+				?.map((product) => {
+					const userReservations =
+						product.reservedData?.filter(
+							(reserve) => reserve.userId === user.id
+						) || [];
 
-	const handleReserveProducts = async (
-		productsDataToReserve: ReserveProductData[]
-	) => {
-		try {
-			const results = await addMutateAsyncReserveMultipleProducts(
-				productsDataToReserve
+					if (userReservations.length === 0) return null;
+
+					const filteredSizeOptions = product.sizeOptions
+						.map((sizeOption) => {
+							const matchingReservation = userReservations.find(
+								(reserve) =>
+									reserve.usSize === sizeOption.usSize &&
+									reserve.color === sizeOption.color
+							);
+
+							return matchingReservation
+								? { ...sizeOption, quantity: matchingReservation.quantity }
+								: null;
+						})
+						.filter(Boolean) as SizeOptions;
+
+					return {
+						...product,
+						sizeOptions: filteredSizeOptions,
+						reservedData: product.reservedData,
+					};
+				})
+				.filter(Boolean) as Product[];
+
+			const URPCartItemMPFormat: CartItemMPFormat[] | undefined = URP?.reduce(
+				(acc: CartItemMPFormat[], product) => {
+					if (!product?._id) return acc;
+
+					const thisUserReservedData = product.reservedData?.filter(
+						(reservedData) => reservedData.userId === user.id
+					);
+
+					const totalUserReservations = thisUserReservedData?.reduce(
+						(sum, reservation) => sum + reservation.quantity,
+						0
+					);
+
+					acc.push({
+						id: product._id,
+						name: product.name,
+						unit_price: product.price,
+						quantity: totalUserReservations ?? 0,
+						image: product.images[0],
+					});
+
+					return acc;
+				},
+				[]
 			);
 
-			toast({
-				duration: 120000,
-				isClosable: true,
-				status: "success",
-				title: "Reservas completadas exitosamente.",
-				description:
-					"Por favor completa el pago o comunicate con nosotros por nuestras redes sociales (Al pie de página).",
-			});
-
-			return { successfulReserves: results, failedReserves: [] };
-		} catch (error) {
-			console.error("Error reservando productos:", error);
-			toast({
-				status: "error",
-				title: "Error en la reserva",
-				description: `Error: ${error}`,
-			});
-
-			return { successfulReserves: [], failedReserves: [{ error }] };
+			setUserReserverdProducts(URP || []);
+			setUserReservedProductsMPFormated(URPCartItemMPFormat || []);
 		}
-	};
-
-	async function handleConfirmPay() {
-		if (!cart || cart.length === 0) {
-			toast({
-				status: "error",
-				title: "No puedes efectuar pago, carrito vacío",
-			});
-			return;
-		}
-
-		processingPurchaseRequest();
-
-		const createMPOrderRes = await addMutateAsyncCreateOrder({
-			cartItems: cart,
-			metadata: { userId: localStoredUser?.id },
-		});
-
-		const id = createMPOrderRes.id;
-
-		const productsDataToReserve = cart.map((item) => {
-			return {
-				id: item.id,
-				userId: localStoredUser?.id,
-				reservedData: getReservedDataFromNameAndQtty(
-					item.name,
-					item.quantity,
-					localStoredUser?.id
-				),
-			};
-		});
-
-		await handleReserveProducts(productsDataToReserve).then((res) => {
-			if (res?.failedReserves.length !== 0) {
-				purchaseRequestLoaded();
-			} else if (id) {
-				purchaseRequestLoaded();
-				setPreferenceId(id);
-			}
-		});
-	}
+	}, [finalProductsData, token]);
 
 	return (
 		<Box
@@ -167,109 +103,44 @@ export const CartItems = () => {
 			bg={isDarkMode ? "darkBrand.white300" : "brand.white300"}
 			minHeight={"90vh"}
 		>
-			<Box maxW="880px" mx="auto" px="3rem">
-				<Box as="span" mb="2rem" onClick={() => router.back()}>
-					<Icon
-						as={BiChevronLeft}
-						fontSize="3rem"
-						cursor="pointer"
-						color={isDarkMode ? "darkBrand.white100" : "black"}
-					/>
+			<Flex alignItems={"center"} flexDirection={"column"}>
+				<Box ml={"9%"} alignSelf={"flex-start"}>
+					<PreviousPageButton />
 				</Box>
 
-				{cart?.length === 0 && (
-					<Center flexDir="column">
-						<Icon
-							as={FaGhost}
-							fontSize="10rem"
-							color={isDarkMode ? "darkBrand.white100" : "brand.color1"}
-							opacity="0.4"
-						/>
-						<Text mt="1rem" fontWeight="300" textAlign="center">
-							Tu carrito está vacío! Comienza a llenarlo ahora!
-						</Text>
-					</Center>
-				)}
-
-				{cart?.map((item: CartItemMPFormat, index) => {
-					return (
-						<CartProductCard
-							key={`cart-item-${index}-key`}
-							item={item}
-							color={item.name.split("-")[1]}
-							// quantityCount={quantityCount}
-							removeFromCart={removeFromCart}
-						/>
-					);
-				})}
-				{cart && (
-					<Flex
-						bg={isDarkMode ? "darkBrand.color2" : "brand.color2"}
-						borderRadius="1rem"
-						p="2rem"
-						justify="space-between"
-						mt="5rem"
-					>
-						<Box overflow="hidden" borderRadius="1rem">
-							<Text
-								fontWeight="600"
-								color={isDarkMode ? "darkBrand.white100" : ""}
-							>
-								Total de Items
-							</Text>
-							<Text
-								textAlign="center"
-								color={isDarkMode ? "darkBrand.white100" : ""}
-							>
-								{cart?.length}
-							</Text>
-							<CustomButton
-								{...{
-									text: isLoadingPurchaseRequest ? "Procesando..." : "Pagar",
-									py: ["2rem", "2rem"],
-									isDisabled: isLoadingPurchaseRequest || cart?.length < 1,
-									onClickFunction: handleConfirmPay,
-									boxShadow: "2px 2px 5px 0px rgba(0,0,0,0.75)",
-								}}
+				<Tabs
+					defaultIndex={0}
+					variant={"enclosed-colored"}
+					colorScheme={isDarkMode ? "blackAlpha" : ""}
+				>
+					<TabList>
+						<Tab fontSize={"large"} value="products">
+							Carrito
+						</Tab>
+						{userReservedProducts.length > 0 && (
+							<Tab fontSize={"large"} value="orders">
+								Reservas
+							</Tab>
+						)}
+					</TabList>
+					<TabPanels>
+						<TabPanel minW={"80vw"}>
+							<EmptyCartMessage />
+							<CartContent />
+						</TabPanel>
+						<TabPanel minW={"80vw"}>
+							<ReservedProductsTab
+								userReservedProducts={userReservedProducts}
 							/>
-							{preferenceId && <Wallet initialization={{ preferenceId }} />}
-						</Box>
-
-						<Box overflow="hidden" borderRadius="1rem">
-							<Text
-								fontWeight="600"
-								color={isDarkMode ? "darkBrand.white100" : ""}
-							>
-								Precio Total
-							</Text>
-							<Text
-								textAlign="center"
-								color={
-									isDarkMode ? "darkBrand.secondaryColor4" : "brand.color3"
-								}
-							>
-								AR$ {totalCartPrice?.toFixed(2)}
-							</Text>
-							<Box onClick={onOpenConfirmEmptyCartModal}>
-								<CustomButton
-									{...{
-										text: "Vaciar Carrito",
-										py: ["2rem", "2rem"],
-										isDisabled: cart?.length < 1,
-										boxShadow: "2px 2px 5px 0px rgba(0,0,0,0.75)",
-									}}
-								/>
-							</Box>
-						</Box>
-					</Flex>
-				)}
-			</Box>
-			<ConfirmDeleteModal
-				isOpen={isConfirmEmptyCartModalOpen}
-				onClose={onCloseConfirmEmptyCartModal}
-				handler={emptyCart}
-				text={"Desea vaciar el carrito?"}
-			/>
+						</TabPanel>
+					</TabPanels>
+				</Tabs>
+				<Box minW={"80vw"}>
+					<CartFooter
+						userReservedProductsMPFormated={userReservedProductsMPFormated}
+					/>
+				</Box>
+			</Flex>
 		</Box>
 	);
 };

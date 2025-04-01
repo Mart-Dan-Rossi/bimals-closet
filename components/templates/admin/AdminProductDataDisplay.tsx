@@ -52,7 +52,7 @@ const AdminProductDataDisplay = ({
 					tags.map((tag) => (
 						<Tag
 							key={`${slug}-${tag}-tag`}
-							cursor={"pointer"}
+							cursor={allowTagFiltering ? "pointer" : "auto"}
 							onClick={getPropperTagOnclickFunction()}
 						>
 							{capitalize(tag)}

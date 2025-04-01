@@ -68,7 +68,7 @@ export const ProductDetailMainData = ({
 			(item) => item.usSize === Number(selectedSize)
 		);
 
-		if (selectedSizeIndex) {
+		if (selectedSizeIndex || typeof selectedSizeIndex === "number") {
 			const sizeOption = product?.sizeOptions[selectedSizeIndex];
 			const image = product?.images[0];
 
