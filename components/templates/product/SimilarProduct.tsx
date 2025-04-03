@@ -1,7 +1,7 @@
 import { BoxCardLoader } from "@/components/animations/CustomLoader";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
-import { Box, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
 import { ProductCard } from "./ProductCard";
@@ -73,8 +73,8 @@ export const SimilarProduct = () => {
 	}
 
 	return (
-		<Box
-			maxW="1280px"
+		<Flex
+			justifyContent="center"
 			mx="auto"
 			px="3rem"
 			pb="8rem"
@@ -82,7 +82,7 @@ export const SimilarProduct = () => {
 			bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
 		>
 			{shuffledProducts.length > 0 && (
-				<>
+				<Box maxW="1280px">
 					<Text
 						fontWeight="600"
 						fontSize="2.5rem"
@@ -104,8 +104,8 @@ export const SimilarProduct = () => {
 								</Fragment>
 							))}
 					</SimpleGrid>
-				</>
+				</Box>
 			)}
-		</Box>
+		</Flex>
 	);
 };

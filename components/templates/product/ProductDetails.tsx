@@ -1,10 +1,10 @@
+import PreviousPageButton from "@/components/ui/buttons/PreviousPageButton";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { useParticularProduct } from "@/hooks/products/useProduct";
-import { Box, Icon, SimpleGrid } from "@chakra-ui/react";
+import { Box, SimpleGrid } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { BiChevronLeft } from "react-icons/bi";
 import { ProductDetailImages } from "./ProductDetailImages";
 import { ProductDetailMainData } from "./ProductDetailMainData";
-import { useGlobalContext } from "@/context/GlobalContext";
 
 export const ProductDetails = () => {
 	const router = useRouter();
@@ -18,14 +18,7 @@ export const ProductDetails = () => {
 	return (
 		<Box pt="15rem" bg={isDarkMode ? "darkBrand.white300" : "brand.white300"}>
 			<Box maxW="1280px" mx="auto" px="3rem">
-				<Box as="span" mb="2rem" onClick={() => router.back()}>
-					<Icon
-						as={BiChevronLeft}
-						fontSize="3rem"
-						cursor="pointer"
-						color={isDarkMode ? "darkBrand.white100" : ""}
-					/>
-				</Box>
+				<PreviousPageButton />
 
 				<SimpleGrid
 					columns={[1, 2, 2, 2]}

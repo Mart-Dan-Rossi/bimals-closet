@@ -1,9 +1,9 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
+import PreviousPageButton from "@/components/ui/buttons/PreviousPageButton";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Box, Center, Icon, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { BiChevronLeft } from "react-icons/bi";
 import { MdOutlineDisabledByDefault } from "react-icons/md";
 import { WishlistLogguedIn } from "./WishlistLogguedIn";
 
@@ -21,9 +21,7 @@ export const Wishlist = () => {
 			minHeight={"90vh"}
 		>
 			<Box maxW="880px" mx="auto" px="3rem">
-				<Box as="span" mb="2rem" onClick={() => router.back()}>
-					<Icon as={BiChevronLeft} fontSize="3rem" cursor="pointer" />
-				</Box>
+				<PreviousPageButton />
 
 				{token ? (
 					<WishlistLogguedIn />

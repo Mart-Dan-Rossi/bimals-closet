@@ -3,15 +3,17 @@ import { CustomInput } from "@/components/ui/forms/CustomInput";
 import { useLoginUser } from "@/hooks/auth/useAuth";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 import { IFormLoginInput } from "@/types/auth";
-import { Box, Image, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Stack, Text, VStack } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 // import { useRouter } from "next/router";
+import PreviousPageButton from "@/components/ui/buttons/PreviousPageButton";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useStoreState } from "@/hooks/state/storage";
 import { useRouter } from "next/router";
+import { BasketBall } from "../../public/assets/images/BasketBall";
 
 const Login = () => {
 	const { isDarkMode } = useGlobalContext();
@@ -58,13 +60,15 @@ const Login = () => {
 	return (
 		<Box>
 			<Stack spacing="0" direction={["column", "column", "row"]}>
-				<Box
+				<VStack
 					h="100vh"
 					w={["100%", "100%", "50%"]}
 					p="2rem"
 					bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
 					pos="relative"
 					display={["none", "none", "flex"]}
+					alignItems={"flex-start"}
+					justifyContent={"flex-start"}
 				>
 					<Box color={isDarkMode ? "darkBrand.white100" : "brand.white100"}>
 						<Box cursor={"pointer"} onClick={() => router.push("/")}>
@@ -73,23 +77,22 @@ const Login = () => {
 							</Text>
 						</Box>
 					</Box>
-					<Image
-						w="460px"
-						pos="absolute"
-						right="-14px"
-						top="102px"
-						src="/assets/images/login-bg-one.png"
-						alt="Fondo del Login"
-					/>
+
+					<PreviousPageButton />
+
+					<Flex justify={"flex-end"} w={"90%"}>
+						<BasketBall />
+					</Flex>
+
 					<Image
 						w="300px"
 						pos="absolute"
 						left="0"
 						bottom="0"
 						src="/assets/images/login-bg-two.png"
-						alt="Fondo del Login"
+						alt="Fondo del Login 2"
 					/>
-				</Box>
+				</VStack>
 
 				<Box
 					h={["90vh", "100vh"]}
