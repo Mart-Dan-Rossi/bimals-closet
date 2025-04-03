@@ -148,7 +148,7 @@ export const ProductDetailMainData = ({
 												? "darkBrand.red100"
 												: "brand.red100"
 											: isDarkMode
-											? "darkBrand.secondaryColor2"
+											? "darkBrand.white100"
 											: "brand.secondaryColor2"
 									}
 									fontSize="2rem"
@@ -243,7 +243,14 @@ export const ProductDetailMainData = ({
 											>
 												Descripción:
 											</Text>
-											<Text fontSize={["1.5rem", "1.5rem", "1.3rem", "1.5rem"]}>
+											<Text
+												color={
+													isDarkMode
+														? "darkBrand.secondaryColor1"
+														: "brand.secondaryColor1"
+												}
+												fontSize={["1.5rem", "1.5rem", "1.3rem", "1.5rem"]}
+											>
 												{product?.desc}
 											</Text>
 										</>

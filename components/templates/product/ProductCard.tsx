@@ -39,7 +39,7 @@ export const ProductCard = ({ product }: Props) => {
 	return (
 		<Box key={product?._id} pos="relative">
 			<Circle
-				bg={isDarkMode ? "darkBrand.white300" : "brand.white100"}
+				bg={isDarkMode ? "darkBrand.white100" : "brand.white100"}
 				p=".5rem"
 				pos="absolute"
 				left="15px"
