@@ -6,15 +6,11 @@ import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { ProductCard } from "../product/ProductCard";
 import { FiltersButton } from "./FiltersButton";
+import { applyFilters } from "@/utils/functions";
 
 export const Products = () => {
-	const {
-		currentSizeType,
-		filter,
-		finalProductsData,
-		isLoadingProductData,
-		isDarkMode,
-	} = useGlobalContext();
+	const { filter, finalProductsData, isLoadingProductData, isDarkMode } =
+		useGlobalContext();
 
 	const [filteredProductsData, setFinalProductsData] =
 		useState(finalProductsData);
@@ -45,9 +41,9 @@ export const Products = () => {
 				return passAllFilters;
 			});
 
-			setFinalProductsData(filteredProducts);
+			setFinalProductsData(applyFilters(filteredProducts, filter));
 		}
-	}, [finalProductsData, filter, currentSizeType]);
+	}, [finalProductsData, filter]);
 
 	return (
 		<Box

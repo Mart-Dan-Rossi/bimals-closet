@@ -64,6 +64,7 @@ export const FilterTagsDisplayer = ({ allTags }: Props) => {
 						variant={selectedTags.includes(tag) ? "solid" : "outline"}
 						colorScheme={"orange"}
 						onClick={() => toggleTag(tag)}
+						userSelect={"none"}
 					>
 						<TagLabel>{capitalize(tag)}</TagLabel>
 						{selectedTags.includes(tag) && <TagCloseButton />}

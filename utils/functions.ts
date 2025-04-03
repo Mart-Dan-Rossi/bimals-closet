@@ -24,7 +24,9 @@ export function applyFilters(
 		const passTagFilter = (() => {
 			if (!filter.tags || filter.tags.length === 0) return true;
 
-			return filter.tags.every((tag) => product.tags?.includes(tag));
+			return filter.tags.every((tag) => {
+				return product.tags?.includes(tag);
+			});
 		})();
 
 		return passSizeFilter && passTagFilter;

@@ -13,8 +13,7 @@ interface Props {
 }
 
 export const FilterSizeDisplayer = ({ allSizes }: Props) => {
-	const { sizeTypes, filter, setFilter, currentSizeType, isDarkMode } =
-		useGlobalContext();
+	const { filter, setFilter, isDarkMode } = useGlobalContext();
 
 	const storedRange = useRef(
 		localStorage.getItem("mateosShoes-shoesSizeFilterRange")
@@ -22,6 +21,9 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 
 	const [sortedSizes, setSortedSizes] = useState<number[]>([]);
 	const [range, setRange] = useState<[number, number]>([0, 9999]);
+	const [currentValue, setCurrentValue] = useState<
+		{ min: number; max: number } | undefined
+	>();
 	const [debouncedRange, setDebouncedRange] = useState<[number, number]>([
 		0, 9999,
 	]);
@@ -44,7 +46,7 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 
 			setFilter(newFilter);
 		},
-		[filter, currentSizeType, sizeTypes, setFilter]
+		[filter, setFilter]
 	);
 
 	const handleRangeChange = useCallback(
@@ -70,7 +72,10 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 		if (allSizes && allSizes.length > 0) {
 			const sorted = [...allSizes].sort((a, b) => a - b);
 			setSortedSizes(sorted);
-			setRange([sorted[0], sorted[sorted.length - 1]]);
+			setRange([
+				filter?.sizeOptions?.usSize.min ?? sorted[0],
+				filter?.sizeOptions?.usSize.max ?? sorted[sorted.length - 1],
+			]);
 		}
 	}, [allSizes]);
 
@@ -80,6 +85,7 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 				<RangeSlider
 					onChange={(newRange) => {
 						setHasInteracted(true);
+						setCurrentValue({ min: newRange[0], max: newRange[1] });
 						handleRangeChange(newRange as [number, number]);
 						localStorage.setItem(
 							"mateosShoes-shoesSizeFilterRange",
@@ -101,10 +107,10 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 						<RangeSliderFilledTrack />
 					</RangeSliderTrack>
 					<RangeSliderThumb boxSize={12} index={0}>
-						<Text fontSize={"smaller"}>{range[0]}</Text>
+						<Text fontSize={"smaller"}>{currentValue?.min ?? range[0]}</Text>
 					</RangeSliderThumb>
 					<RangeSliderThumb boxSize={12} index={1}>
-						<Text fontSize={"smaller"}>{range[1]}</Text>
+						<Text fontSize={"smaller"}>{currentValue?.max ?? range[1]}</Text>
 					</RangeSliderThumb>
 				</RangeSlider>
 			)}

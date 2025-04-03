@@ -8,23 +8,9 @@ import { OrderDataBEFormat } from "@/types/order";
 import { Product } from "@/types/product";
 import { useBoolean, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, {
-	ReactNode,
-	useContext,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
-
-export type ValidSizeOptions = {
-	us?: number[];
-	eu?: number[];
-};
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 
 interface GlobalContextProps {
-	currentSizeType: "any" | "us" | "eu";
-	useSetCurrentSizeType: (sizeType: "any" | "us" | "eu") => void;
-	sizeTypes: ("any" | "us" | "eu")[];
 	isFiltersDrawerOpen: boolean;
 	onOpenFiltersDrawer: () => void;
 	onCloseFiltersDrawer: () => void;
@@ -72,10 +58,6 @@ export const GlobalContextProvider = ({
 
 	const { data: wishlistData } = useGetMyFavorites();
 
-	const [currentSizeType, setCurrentSizeType] = useState<"any" | "us" | "eu">(
-		"any"
-	);
-
 	const [token, setToken] = useState(useHydratedStoreState("token"));
 	const [filter, setFilter] = useState<ProductsFilter | undefined>();
 
@@ -110,30 +92,6 @@ export const GlobalContextProvider = ({
 		setFilter(undefined);
 		setSelectedTags([]);
 	}
-
-	function useSetCurrentSizeType(sizeType: "any" | "us" | "eu") {
-		localStorage.setItem("mateoShooes-sizeType-stored", sizeType);
-		setCurrentSizeType(sizeType);
-	}
-
-	const sizeTypes = useRef(["any", "us", "eu"]).current as (
-		| "any"
-		| "us"
-		| "eu"
-	)[];
-
-	useEffect(() => {
-		const storedSizeType = localStorage.getItem("mateoShooes-sizeType-stored");
-
-		if (
-			storedSizeType &&
-			(storedSizeType === "any" ||
-				storedSizeType === "us" ||
-				storedSizeType === "eu")
-		) {
-			setCurrentSizeType(storedSizeType);
-		}
-	}, []);
 
 	useEffect(() => {
 		if (token) {
@@ -173,7 +131,7 @@ export const GlobalContextProvider = ({
 				setFinalProductsData(productsData);
 			}
 		}
-	}, [productsData, wishlistData]);
+	}, [productsData, wishlistData, filter]);
 
 	const { removeToken } = useStoreState((state) => state);
 	const router = useRouter();
@@ -187,9 +145,6 @@ export const GlobalContextProvider = ({
 	return (
 		<GlobalContext.Provider
 			value={{
-				currentSizeType,
-				useSetCurrentSizeType,
-				sizeTypes,
 				isFiltersDrawerOpen,
 				onOpenFiltersDrawer,
 				onCloseFiltersDrawer,
