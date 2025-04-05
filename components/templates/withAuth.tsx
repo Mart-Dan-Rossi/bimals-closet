@@ -1,8 +1,7 @@
-import { ComponentType, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/router";
-import { Center } from "@chakra-ui/react";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
-import { useGlobalContext } from "@/context/GlobalContext";
+import { Center } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { ComponentType, useEffect, useMemo, useState } from "react";
 
 export const withAuth = <T extends object>(
 	WrappedComponent: ComponentType<T>

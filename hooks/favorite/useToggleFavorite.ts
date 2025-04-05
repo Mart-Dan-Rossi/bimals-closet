@@ -1,11 +1,10 @@
-import { useShowToast } from "../toast/useShowToast";
-import { useRouter } from "next/router";
-import { useHydratedStoreState } from "../state/hydrated";
 import { ErrorResponse } from "@/types/error";
-import { useAddFavorite, useRemoveFavorite } from "./useFavorite";
-import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
-import { useGlobalContext } from "@/context/GlobalContext";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useHydratedStoreState } from "../state/hydrated";
+import { useShowToast } from "../toast/useShowToast";
+import { useAddFavorite, useRemoveFavorite } from "./useFavorite";
 
 export const useToggleFavorite = (mapProducts: Product[] | Product) => {
 	const token = useHydratedStoreState("token");

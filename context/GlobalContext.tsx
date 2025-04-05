@@ -188,7 +188,7 @@ export const GlobalContextProvider = ({
 
 			if (typeof user.id === "string" && queryData.payment_id) {
 				console.log("hiding");
-				handleHideUserReservations(user.id).then((res) => {
+				handleHideUserReservations(user.id).then(() => {
 					refreshProducts();
 					setQueryData(() => {
 						return undefined;
