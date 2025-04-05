@@ -21,13 +21,13 @@ import ReservedProductsTab from "./ReservedProductsTab";
 export const CartItems = () => {
 	const { isDarkMode, finalProductsData } = useGlobalContext();
 
+	const token = useHydratedStoreState("token");
+
 	const [userReservedProducts, setUserReserverdProducts] = useState<Product[]>(
 		[]
 	);
 	const [userReservedProductsMPFormated, setUserReservedProductsMPFormated] =
 		useState<CartItemMPFormat[]>([]);
-
-	const token = useHydratedStoreState("token");
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
@@ -37,9 +37,12 @@ export const CartItems = () => {
 			const URP: Product[] = finalProductsData
 				?.map((product) => {
 					const userReservations =
-						product.reservedData?.filter(
-							(reserve) => reserve.userId === user.id
-						) || [];
+						product.reservedData?.filter((reserve) => {
+							const sameUserId = reserve.userId === user.id;
+							const isHidden = reserve.hide;
+
+							return sameUserId && !isHidden;
+						}) || [];
 
 					if (userReservations.length === 0) return null;
 

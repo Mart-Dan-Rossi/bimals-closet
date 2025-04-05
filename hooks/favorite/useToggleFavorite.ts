@@ -5,6 +5,7 @@ import { ErrorResponse } from "@/types/error";
 import { useAddFavorite, useRemoveFavorite } from "./useFavorite";
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 export const useToggleFavorite = (mapProducts: Product[] | Product) => {
 	const token = useHydratedStoreState("token");

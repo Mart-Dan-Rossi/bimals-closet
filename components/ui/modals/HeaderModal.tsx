@@ -8,6 +8,7 @@ import { Fragment } from "react";
 export const AuthModal = () => {
 	const router = useRouter();
 	const { handleLogout } = useGlobalContext();
+
 	const token = useHydratedStoreState("token");
 
 	const { isDarkMode } = useGlobalContext();

@@ -14,6 +14,7 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 	const router = useRouter();
 
 	const { handleLogout, isDarkMode } = useGlobalContext();
+
 	const token = useHydratedStoreState("token");
 
 	return (

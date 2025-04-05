@@ -1,47 +1,26 @@
 import { useGlobalContext } from "@/context/GlobalContext";
-import { useCartState } from "@/hooks/state/storage";
-import { Box, Image, Stack, Text } from "@chakra-ui/react";
+import { Footer } from "@/layouts/Footer";
+import { BasketBall } from "@/public/assets/images/BasketBall";
+import { QueryData } from "@/types/Query";
+import { Box, Flex, Image, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 const PaySuccess = () => {
 	const router = useRouter();
-	const { isDarkMode } = useGlobalContext();
 
-	const { emptyCart } = useCartState((state) => state);
+	const { isDarkMode, setQueryData } = useGlobalContext();
 
-	// const router = useRouter();
-	// const { payment_id, status, merchant_order_id } = router.query;
-	// const [metadata, setMetadata] = useState(null);
-
-	// useEffect(() => {
-	// 	if (payment_id) {
-	// 		const fetchPaymentDetails = async () => {
-	// 			try {
-	// 				const { data } = await axios.get(
-	// 					`/api/mercadopago/payment/${payment_id}`
-	// 				);
-	// 				setMetadata(data.metadata);
-	// 			} catch (error) {
-	// 				console.error("Error al obtener detalles del pago", error);
-	// 			}
-	// 		};
-
-	// 		fetchPaymentDetails();
-	// 	}
-
-	// 	console.log("metadata: ", metadata);
-	// }, [payment_id]);
+	const { payment_id } = router.query;
 
 	useEffect(() => {
-		emptyCart();
-	}, []);
+		setQueryData(router.query as QueryData);
+	}, [payment_id]);
 
 	return (
 		<Box>
-			<Stack spacing="0" direction={["column", "column", "row"]}>
+			<Stack h="92vh" spacing="0" direction={["column", "column", "row"]}>
 				<Box
-					h="100vh"
 					w={["100%", "100%", "50%"]}
 					p="2rem"
 					bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
@@ -50,19 +29,19 @@ const PaySuccess = () => {
 				>
 					<Box color={isDarkMode ? "darkBrand.white100" : "brand.white100"}>
 						<Box onClick={() => router.push("/")}>
-							<Text fontWeight="700" fontSize={["1.8rem", "2.5rem"]}>
+							<Text
+								cursor={"pointer"}
+								userSelect={"none"}
+								fontWeight="700"
+								fontSize={["1.8rem", "2.5rem"]}
+							>
 								Mateo Shoes
 							</Text>
 						</Box>
 					</Box>
-					<Image
-						w="460px"
-						pos="absolute"
-						right="-14px"
-						top="102px"
-						src="/assets/images/login-bg-one.png"
-						alt="Fondo del Login"
-					/>
+					<Flex justify={"flex-end"} w={"90%"}>
+						<BasketBall />
+					</Flex>
 					<Image
 						w="300px"
 						pos="absolute"
@@ -98,6 +77,7 @@ const PaySuccess = () => {
 					</Text>
 				</Box>
 			</Stack>
+			<Footer />
 		</Box>
 	);
 };

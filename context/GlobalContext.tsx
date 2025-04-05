@@ -1,14 +1,19 @@
 import { useGetMyFavorites } from "@/hooks/favorite/useFavorite";
 import { useGetAllBEOrders } from "@/hooks/orders/useBEOrders";
-import { useGetAllProducts } from "@/hooks/products/useProduct";
+import {
+	useGetAllProducts,
+	useHideUserReservations,
+} from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { useStoreState } from "@/hooks/state/storage";
 import { ProductsFilter } from "@/types/filters";
 import { OrderDataBEFormat } from "@/types/order";
 import { Product } from "@/types/product";
-import { useBoolean, useDisclosure } from "@chakra-ui/react";
+import { QueryData } from "@/types/Query";
+import { useBoolean, useDisclosure, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
 
 interface GlobalContextProps {
 	isFiltersDrawerOpen: boolean;
@@ -29,6 +34,8 @@ interface GlobalContextProps {
 	toggleDarkMode: () => void;
 	selectedTags: string[];
 	setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
+	queryData: QueryData | undefined;
+	setQueryData: React.Dispatch<React.SetStateAction<QueryData | undefined>>;
 }
 
 const GlobalContext = React.createContext({} as GlobalContextProps);
@@ -38,6 +45,9 @@ export const GlobalContextProvider = ({
 }: {
 	children: ReactNode;
 }) => {
+	const toast = useToast();
+	const queryClient = useQueryClient();
+
 	const {
 		isOpen: isFiltersDrawerOpen,
 		onOpen: onOpenFiltersDrawer,
@@ -58,7 +68,11 @@ export const GlobalContextProvider = ({
 
 	const { data: wishlistData } = useGetMyFavorites();
 
+	const [queryData, setQueryData] = useState<QueryData | undefined>();
+
 	const [token, setToken] = useState(useHydratedStoreState("token"));
+
+	const [userId, setUserId] = useState<string | undefined>();
 	const [filter, setFilter] = useState<ProductsFilter | undefined>();
 
 	const [selectedTags, setSelectedTags] = useState<string[]>(
@@ -136,6 +150,54 @@ export const GlobalContextProvider = ({
 	const { removeToken } = useStoreState((state) => state);
 	const router = useRouter();
 
+	const { mutateAsync: addMutateAsyncHideUserReservations } =
+		useHideUserReservations();
+
+	const refreshProducts = () => {
+		queryClient.invalidateQueries({ queryKey: ["getAllProducts"] });
+	};
+
+	const handleHideUserReservations = async (userId: string) => {
+		if (userId) {
+			try {
+				const result = await addMutateAsyncHideUserReservations(userId);
+
+				return result;
+			} catch (error) {
+				console.error("Error ocultando reservaciones:", error);
+				toast({
+					title: "Error actualizando lista de reservados",
+					description:
+						"Hubo un error al ocultar de tu lista de reservados tus productos. Por favor informa a nuestro stuff.",
+					status: "error",
+					isClosable: true,
+					duration: 120000,
+				});
+			}
+		}
+	};
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem("MateoShoesUser");
+		const user = storedUser ? JSON.parse(storedUser) : null;
+
+		if (user && queryData) {
+			if (user.id !== userId) {
+				setUserId(user.id);
+			}
+
+			if (typeof user.id === "string" && queryData.payment_id) {
+				console.log("hiding");
+				handleHideUserReservations(user.id).then((res) => {
+					refreshProducts();
+					setQueryData(() => {
+						return undefined;
+					});
+				});
+			}
+		}
+	}, [token, userId, queryData]);
+
 	const handleLogout = () => {
 		removeToken();
 
@@ -163,6 +225,8 @@ export const GlobalContextProvider = ({
 				toggleDarkMode,
 				selectedTags,
 				setSelectedTags,
+				queryData,
+				setQueryData,
 			}}
 		>
 			{children}

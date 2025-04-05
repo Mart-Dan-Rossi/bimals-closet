@@ -4,6 +4,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { customTheme } from "@/styles/themes";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { useState } from "react";
+import { GlobalContextProvider } from "@/context/GlobalContext";
 
 const App = ({ Component, pageProps }: AppProps) => {
 	const [queryClient] = useState(() => new QueryClient());
@@ -12,7 +13,9 @@ const App = ({ Component, pageProps }: AppProps) => {
 		<QueryClientProvider client={queryClient}>
 			<Hydrate state={pageProps?.dehydratedState}>
 				<ChakraProvider theme={customTheme}>
-					<Component {...pageProps} />
+					<GlobalContextProvider>
+						<Component {...pageProps} />
+					</GlobalContextProvider>
 				</ChakraProvider>
 			</Hydrate>
 		</QueryClientProvider>

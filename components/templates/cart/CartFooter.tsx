@@ -31,6 +31,8 @@ interface Props {
 const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
 	const { isDarkMode } = useGlobalContext();
 
+	const token = useHydratedStoreState("token");
+
 	const { emptyCart } = useCartState((state) => state);
 
 	const cart = useHydratedCartState("cart");
@@ -57,8 +59,6 @@ const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
 		onOpen: onOpenConfirmEmptyCartModal,
 		onClose: onCloseConfirmEmptyCartModal,
 	} = useDisclosure();
-
-	const token = useHydratedStoreState("token");
 
 	const [userEmail, setUserEmail] = useState("");
 	const [userName, setUserName] = useState<string>("");

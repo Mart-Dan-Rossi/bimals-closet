@@ -17,6 +17,7 @@ export const ExtraInfo = ({
 	loggedIsAdmin,
 }: Props) => {
 	const { isDarkMode } = useGlobalContext();
+
 	const token = useHydratedStoreState("token");
 	const [openCatgories, setOpenCatgories] = useBoolean();
 

@@ -26,9 +26,10 @@ const AdminOrderCard = ({ orderData }: Props) => {
 
 	const { isDarkMode } = useGlobalContext();
 
+	const token = useHydratedStoreState("token");
+
 	const { mutateAsync: addMutateAsynceEditBEOrder, isLoading } =
 		useUpdateBEOrder();
-	const token = useHydratedStoreState("token");
 
 	const toast = useToast();
 	const [

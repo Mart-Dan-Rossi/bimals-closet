@@ -2,15 +2,17 @@ import { ComponentType, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { Center } from "@chakra-ui/react";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 export const withAuth = <T extends object>(
 	WrappedComponent: ComponentType<T>
 ) => {
 	const AuthenticatedComponent = (props: T) => {
 		const router = useRouter();
-		const token = useHydratedStoreState("token");
 		const [authChecked, setAuthChecked] = useState(false);
 		const [renderLoading, setRenderLoading] = useState(true);
+
+		const token = useHydratedStoreState("token");
 
 		useEffect(() => {
 			const checkAuthentication = async () => {

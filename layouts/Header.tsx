@@ -16,6 +16,7 @@ export const Header = ({
 	const { isDarkMode } = useGlobalContext();
 
 	const token = useHydratedStoreState("token");
+
 	const [openModal, setOpenModal] = useBoolean();
 	const [name, setName] = useState<string>("");
 

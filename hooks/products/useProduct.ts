@@ -3,6 +3,7 @@ import {
 	deleteProduct,
 	getAllProducts,
 	getParticularProduct,
+	hideUserReservations,
 	reserveProducts,
 	updateMultipleProducts,
 	updateProduct,
@@ -78,6 +79,17 @@ export const useReserveMultipleProducts = () => {
 				status: "success",
 				title: "Producto modificado exitosamente.",
 			});
+		},
+		onError,
+	});
+};
+
+export const useHideUserReservations = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (userId: string) => hideUserReservations(userId),
+		onSuccess: () => {
+			queryClient.invalidateQueries();
 		},
 		onError,
 	});

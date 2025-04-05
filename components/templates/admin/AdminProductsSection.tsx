@@ -15,6 +15,8 @@ const AdminProductsSection = () => {
 	const { finalProductsData, filter, onOpenAddNewProduct, isDarkMode } =
 		useGlobalContext();
 
+	const token = useHydratedStoreState("token");
+
 	const {
 		isOpen: isConfirmDeleteModalOpen,
 		onOpen: onOpenConfirmDeleteModal,
@@ -34,7 +36,6 @@ const AdminProductsSection = () => {
 	const { mutateAsync: removeMutateAsync } = useDeleteProduct();
 
 	const router = useRouter();
-	const token = useHydratedStoreState("token");
 
 	const adminIds = useRef(getAdminsIds()).current as string[];
 

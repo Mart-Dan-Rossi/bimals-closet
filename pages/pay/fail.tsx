@@ -1,6 +1,7 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
 import { useGlobalContext } from "@/context/GlobalContext";
-import { Box, Image, Stack, Text } from "@chakra-ui/react";
+import { BasketBall } from "@/public/assets/images/BasketBall";
+import { Box, Flex, Image, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
 export const PayFailed = () => {
@@ -26,14 +27,9 @@ export const PayFailed = () => {
 							</Text>
 						</Box>
 					</Box>
-					<Image
-						w="460px"
-						pos="absolute"
-						right="-14px"
-						top="102px"
-						src="/assets/images/login-bg-one.png"
-						alt="Fondo del Login"
-					/>
+					<Flex justify={"flex-end"} w={"90%"}>
+						<BasketBall />
+					</Flex>
 					<Image
 						w="300px"
 						pos="absolute"

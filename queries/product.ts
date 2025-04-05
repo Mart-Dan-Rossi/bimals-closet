@@ -34,6 +34,15 @@ export const reserveProducts = async (payload: ReserveProductData[]) => {
 	return data;
 };
 
+export const hideUserReservations = async (userId: string) => {
+	const { data } = await AxiosInstance.post(
+		"/api/products/hideUserReservations",
+		{ userId }
+	);
+
+	return data;
+};
+
 export const updateMultipleProducts = async (products: Product[]) => {
 	const { data } = await AxiosInstance.post("/api/products/update-multiple", {
 		products,

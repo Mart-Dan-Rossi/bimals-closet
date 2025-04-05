@@ -9,9 +9,10 @@ import { WishlistLogguedIn } from "./WishlistLogguedIn";
 
 export const Wishlist = () => {
 	const router = useRouter();
-	const token = useHydratedStoreState("token");
 
 	const { isDarkMode } = useGlobalContext();
+
+	const token = useHydratedStoreState("token");
 
 	return (
 		<Box

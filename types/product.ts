@@ -22,6 +22,7 @@ export type ReservedData = {
 	color: string;
 	quantity: number;
 	userId: string | undefined;
+	hide?: boolean;
 };
 
 export type Product = {
