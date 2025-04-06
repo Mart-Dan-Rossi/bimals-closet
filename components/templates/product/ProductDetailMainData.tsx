@@ -27,6 +27,8 @@ import { ColorOptions } from "./ColorOptions";
 import { SizeOptions } from "./SizeOptions";
 import SizeTableComparation from "./SizeTableComparation";
 import { FaArrowRight } from "react-icons/fa";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
+import { getUser } from "@/queries/auth";
 
 interface Props {
 	isLoadingParticulaProductData: boolean;
@@ -60,7 +62,20 @@ export const ProductDetailMainData = ({
 			});
 	}, [product]);
 
+	const token = useHydratedStoreState("token");
+
 	const handleAddToCart = () => {
+		const storedUser = localStorage.getItem("MateoShoesUser");
+		const user = storedUser && token ? JSON.parse(storedUser) : undefined;
+		const userId = user ? user.id : undefined;
+
+		if (!userId) {
+			return toast({
+				status: "error",
+				title: "Debes estar logueado para agregar un producto al carrito",
+			});
+		}
+
 		const id = product?._id;
 		const name = product?.name;
 		const price = product?.price;
