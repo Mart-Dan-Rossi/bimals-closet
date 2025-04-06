@@ -1,5 +1,5 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
-import { Box, Button, Flex, Image, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Image, Text, VStack } from "@chakra-ui/react";
 
 const SitePresentation = () => {
 	return (
