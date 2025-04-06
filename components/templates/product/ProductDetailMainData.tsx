@@ -6,6 +6,7 @@ import { CustomButton } from "@/components/ui/buttons/CustomButton";
 import { FilterTagsDisplayer } from "@/components/ui/modals/FilterTagsDisplayer";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { useCartState } from "@/hooks/state/storage";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 import { CartItemMPFormat } from "@/types/order";
@@ -22,13 +23,11 @@ import {
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { FaArrowRight } from "react-icons/fa";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { ColorOptions } from "./ColorOptions";
 import { SizeOptions } from "./SizeOptions";
 import SizeTableComparation from "./SizeTableComparation";
-import { FaArrowRight } from "react-icons/fa";
-import { useHydratedStoreState } from "@/hooks/state/hydrated";
-import { getUser } from "@/queries/auth";
 
 interface Props {
 	isLoadingParticulaProductData: boolean;
