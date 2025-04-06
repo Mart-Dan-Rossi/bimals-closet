@@ -1,13 +1,11 @@
-import { Box, Flex, Icon, Stack, Text } from "@chakra-ui/react";
 import { CategoriesModalData } from "@/utils/modal";
-import { useGlobalContext } from "@/context/GlobalContext";
+import { Box, Flex, Icon, Stack, Text } from "@chakra-ui/react";
 
 export const CategoriesModal = () => {
-	const { isDarkMode } = useGlobalContext();
 	return (
 		<Box>
 			<Stack
-				bg={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+				bg={"brand.white100"}
 				w="13rem"
 				justifyContent="center"
 				borderRadius="1rem"
@@ -25,16 +23,14 @@ export const CategoriesModal = () => {
 						cursor="pointer"
 						p=".9rem 1.5rem"
 						_hover={{
-							bg: isDarkMode ? "darkBrand.color1" : "brand.color1",
-							color: isDarkMode ? "darkBrand.white100" : "brand.white100",
+							bg: "brand.color1",
+							color: "brand.white100",
 							borderRadius: ".4rem",
 						}}
 					>
 						<Icon
-							color={isDarkMode ? "darkBrand.color1" : "brand.color1"}
-							_groupHover={{
-								color: isDarkMode ? "darkBrand.white100" : "brand.white100",
-							}}
+							color={"brand.color1"}
+							_groupHover={{ color: "brand.white100" }}
 							as={item.icon}
 						/>
 

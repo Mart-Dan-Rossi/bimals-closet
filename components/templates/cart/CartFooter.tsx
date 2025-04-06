@@ -1,5 +1,4 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useCreateMPOrder } from "@/hooks/orders/useMPOrders";
 import { useReserveMultipleProducts } from "@/hooks/products/useProduct";
 import {
@@ -29,8 +28,6 @@ interface Props {
 }
 
 const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
-	const { isDarkMode } = useGlobalContext();
-
 	const token = useHydratedStoreState("token");
 
 	const { emptyCart } = useCartState((state) => state);
@@ -201,25 +198,15 @@ const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
 		<>
 			{cart && (
 				<Flex
-					bg={isDarkMode ? "darkBrand.color2" : "brand.color2"}
+					bg={"brand.color2"}
 					borderRadius="1rem"
 					p="2rem"
 					justify="space-between"
 					mt="5rem"
 				>
 					<Box overflow="hidden" borderRadius="1rem">
-						<Text
-							fontWeight="600"
-							color={isDarkMode ? "darkBrand.white100" : ""}
-						>
-							Total de Items
-						</Text>
-						<Text
-							textAlign="center"
-							color={isDarkMode ? "darkBrand.white100" : ""}
-						>
-							{getTotalItemsAmount()}
-						</Text>
+						<Text fontWeight="600">Total de Items</Text>
+						<Text textAlign="center">{getTotalItemsAmount()}</Text>
 						<CustomButton
 							{...{
 								text: isLoadingPurchaseRequest ? "Procesando..." : "Comprar",
@@ -236,18 +223,8 @@ const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
 					</Box>
 
 					<Box overflow="hidden" borderRadius="1rem">
-						<Text
-							fontWeight="600"
-							color={isDarkMode ? "darkBrand.white100" : ""}
-						>
-							Precio Total
-						</Text>
-						<Text
-							textAlign="center"
-							color={isDarkMode ? "darkBrand.secondaryColor4" : "brand.color3"}
-						>
-							AR$ {getTotalCartPrice()}
-						</Text>
+						<Text fontWeight="600">Precio Total</Text>
+						<Text textAlign="center">AR$ {getTotalCartPrice()}</Text>
 						<Box onClick={onOpenConfirmEmptyCartModal}>
 							<CustomButton
 								{...{

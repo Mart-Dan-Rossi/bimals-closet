@@ -1,10 +1,6 @@
-export type Brand = "puma" | "nike" | "adidas" | "underArmour";
+export type Brand = "puma" | "nike" | "adidas" | "underarmour";
 
-export type SizeEquivalency = {
-	arg: number;
-	eu: number;
-	cm: number;
-};
+export type SizeEquivalency = { arg: number; eu: number; cm: number };
 
 export type SizeEquivalencies = Record<string, SizeEquivalency>;
 
@@ -49,7 +45,7 @@ export const sizeEquivalencies: Record<Brand, SizeEquivalencies> = {
 		"12.5": { arg: 45.5, eu: 47.5, cm: 30.5 },
 		"13": { arg: 46, eu: 48, cm: 31 },
 	},
-	underArmour: {
+	underarmour: {
 		"7": { arg: 39, eu: 40, cm: 25 },
 		"7.5": { arg: 39.5, eu: 40.5, cm: 25.5 },
 		"8": { arg: 40, eu: 41, cm: 26 },

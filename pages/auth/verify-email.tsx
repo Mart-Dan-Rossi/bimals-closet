@@ -1,5 +1,4 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useVerifyEmailToken } from "@/hooks/auth/useAuth";
 import {
 	Box,
@@ -17,8 +16,6 @@ import { IoMdCheckmarkCircle } from "react-icons/io";
 import { withAuth } from "../../components/templates/withAuth";
 
 const VerifyEmail = () => {
-	const { isDarkMode } = useGlobalContext();
-
 	const router = useRouter();
 	const { email, token } = router.query;
 	const [status, setStatus] = useBoolean();
@@ -32,7 +29,7 @@ const VerifyEmail = () => {
 	}, [tokenData]);
 
 	return (
-		<Box bg={isDarkMode ? "darkBrand.white100" : "brand.white100"}>
+		<Box bg={"brand.white100"}>
 			<Flex
 				maxW="1280px"
 				mx="auto"
@@ -43,7 +40,7 @@ const VerifyEmail = () => {
 			>
 				<Box>
 					<Box
-						bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+						bg={"brand.color1"}
 						borderRadius="50%"
 						pos="absolute"
 						h={["150px", "150px", "200px", "250px", "300px"]}
@@ -53,9 +50,7 @@ const VerifyEmail = () => {
 					/>
 					<Heading
 						py="4rem"
-						color={
-							isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
-						}
+						color={"brand.secondaryColor1"}
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 						textAlign="center"
@@ -89,7 +84,7 @@ const VerifyEmail = () => {
 							<Box>
 								<Center fontSize="4rem" maxW="330px" mx="auto" mt="2rem">
 									<Icon
-										color={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+										color={"brand.color1"}
 										fontSize="3rem"
 										as={IoMdCheckmarkCircle}
 									/>
@@ -120,7 +115,7 @@ const VerifyEmail = () => {
 				<Box>
 					<Text
 						textAlign="left"
-						color={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+						color={"brand.color1"}
 						fontWeight="600"
 						fontSize="1.5rem"
 					>

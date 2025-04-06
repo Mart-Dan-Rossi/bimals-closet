@@ -19,15 +19,8 @@ interface Props {
 		borderRadius: string;
 		py: string;
 		fontSize: string;
-		_placeholder: {
-			fontWeight: number;
-			fontSize: string;
-			color: string;
-		};
-		_focus: {
-			borderColor: string;
-			boxShadow: string;
-		};
+		_placeholder: { fontWeight: number; fontSize: string; color: string };
+		_focus: { borderColor: string; boxShadow: string };
 	};
 	brand: Brand | "other";
 	sizeOptions: SizeOptions;
@@ -76,7 +69,7 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 										? 40
 										: 8
 									: newSize,
-					  }
+						}
 					: sizeOption;
 			});
 		});

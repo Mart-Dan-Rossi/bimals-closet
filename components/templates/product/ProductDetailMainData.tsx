@@ -38,7 +38,7 @@ export const ProductDetailMainData = ({
 	isLoadingParticulaProductData,
 	product,
 }: Props) => {
-	const { finalProductsData, isDarkMode } = useGlobalContext();
+	const { finalProductsData } = useGlobalContext();
 	const toast = useShowToast();
 
 	const router = useRouter();
@@ -138,17 +138,14 @@ export const ProductDetailMainData = ({
 							<Text
 								fontSize={["2.5rem", "3.2rem", "2.5rem", "3.2rem"]}
 								fontWeight="600"
-								color={isDarkMode ? "darkBrand.white100" : ""}
 							>
-								{product.name}
+								{product.name.toUpperCase()}
 							</Text>
 							<Flex
 								align="center"
 								justify="space-between"
 								borderBottom="1px solid"
-								borderColor={
-									isDarkMode ? "darkBrand.white600" : "brand.white600"
-								}
+								borderColor={"brand.white600"}
 								pb="2rem"
 								onClick={() => {
 									if (product._id) toggleProductChecked(product?._id);
@@ -158,11 +155,7 @@ export const ProductDetailMainData = ({
 									cursor="pointer"
 									color={
 										product?.isFavorite
-											? isDarkMode
-												? "darkBrand.red100"
-												: "brand.red100"
-											: isDarkMode
-											? "darkBrand.white100"
+											? "brand.red100"
 											: "brand.secondaryColor2"
 									}
 									fontSize="2rem"
@@ -176,10 +169,7 @@ export const ProductDetailMainData = ({
 
 							<Box>
 								<Text
-									color={
-										isDarkMode ? "darkBrand.secondaryColor4" : "brand.color1"
-									}
-									fontSize={["2.5rem", "4.2rem", "2.5rem", "4.2rem"]}
+									fontSize={["1.2rem", "2.2rem", "1.2rem", "2.2rem"]}
 									fontWeight="600"
 								>
 									AR$ {product.price}
@@ -196,11 +186,6 @@ export const ProductDetailMainData = ({
 										<Text
 											fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
 											fontWeight="600"
-											color={
-												isDarkMode
-													? "darkBrand.secondaryColor1"
-													: "brand.secondaryColor1"
-											}
 										>
 											Color:
 										</Text>
@@ -217,11 +202,6 @@ export const ProductDetailMainData = ({
 										<Text
 											fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
 											fontWeight="600"
-											color={
-												isDarkMode
-													? "darkBrand.secondaryColor1"
-													: "brand.secondaryColor1"
-											}
 										>
 											Talles (US)
 										</Text>
@@ -229,7 +209,7 @@ export const ProductDetailMainData = ({
 											<Button
 												onClick={showSizeTable}
 												boxShadow="2px 2px 5px 0px rgba(0,0,0,0.75)"
-												colorScheme="orange"
+												colorScheme="red"
 											>
 												Tabla de talles
 											</Button>
@@ -249,22 +229,10 @@ export const ProductDetailMainData = ({
 											<Text
 												fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
 												fontWeight="600"
-												color={
-													isDarkMode
-														? "darkBrand.secondaryColor1"
-														: "brand.secondaryColor1"
-												}
 											>
 												Descripción:
 											</Text>
-											<Text
-												color={
-													isDarkMode
-														? "darkBrand.secondaryColor1"
-														: "brand.secondaryColor1"
-												}
-												fontSize={["1.5rem", "1.5rem", "1.3rem", "1.5rem"]}
-											>
+											<Text fontSize={["1.5rem", "1.5rem", "1.3rem", "1.5rem"]}>
 												{product?.desc}
 											</Text>
 										</>
@@ -275,20 +243,6 @@ export const ProductDetailMainData = ({
 												{...{
 													text: "Agregar al carrito",
 													btnIcon: AiOutlineShoppingCart,
-													py: ["2rem", "2.5rem"],
-													bg: "transparent",
-													color: isDarkMode
-														? "darkBrand.white100"
-														: "brand.white100",
-													boxShadow: "2px 2px 5px 0px rgba(0,0,0,0.75)",
-													border: ".2rem solid",
-													borderColor: isDarkMode
-														? "darkBrand.color2"
-														: "brand.color2",
-													fontSize: ["1.5rem", "1.8rem", "1.6rem", "1.8rem"],
-													bgHover: isDarkMode
-														? "darkBrand.white300"
-														: "brand.white300",
 													isBtnIcon: true,
 												}}
 											/>
@@ -298,20 +252,6 @@ export const ProductDetailMainData = ({
 												{...{
 													text: "Ir al carrito",
 													btnIcon: FaArrowRight,
-													py: ["2rem", "2.5rem"],
-													bg: "transparent",
-													color: isDarkMode
-														? "darkBrand.white100"
-														: "brand.white100",
-													boxShadow: "2px 2px 5px 0px rgba(0,0,0,0.75)",
-													border: ".2rem solid",
-													borderColor: isDarkMode
-														? "darkBrand.color2"
-														: "brand.color2",
-													fontSize: ["1.5rem", "1.8rem", "1.6rem", "1.8rem"],
-													bgHover: isDarkMode
-														? "darkBrand.white300"
-														: "brand.white300",
 													isBtnIcon: true,
 												}}
 											/>

@@ -8,7 +8,7 @@ import { MdClose } from "react-icons/md";
 export const FiltersButton = () => {
 	const btnRef = useRef();
 
-	const { onOpenFiltersDrawer, filter, handleClearFilters, isDarkMode } =
+	const { onOpenFiltersDrawer, filter, handleClearFilters } =
 		useGlobalContext();
 
 	return (
@@ -29,11 +29,7 @@ export const FiltersButton = () => {
 							<Text
 								fontSize={"lg"}
 								fontWeight="600"
-								color={
-									isDarkMode
-										? "darkBrand.secondaryColor1"
-										: "brand.secondaryColor1"
-								}
+								color={"brand.secondaryColor1"}
 							>
 								Filtros aplicados:
 							</Text>
@@ -49,22 +45,11 @@ export const FiltersButton = () => {
 										<Text
 											fontSize={"lg"}
 											fontWeight="600"
-											color={
-												isDarkMode
-													? "darkBrand.secondaryColor1"
-													: "brand.secondaryColor1"
-											}
+											color={"brand.secondaryColor1"}
 										>
 											Talle min:{" "}
 										</Text>
-										<Text
-											fontSize={"lg"}
-											color={
-												isDarkMode
-													? "darkBrand.secondaryColor4"
-													: "brand.white100"
-											}
-										>
+										<Text fontSize={"lg"} color={"brand.white100"}>
 											{filter.sizeOptions.usSize.min}US
 										</Text>
 									</HStack>
@@ -73,22 +58,11 @@ export const FiltersButton = () => {
 										<Text
 											fontSize={"lg"}
 											fontWeight="600"
-											color={
-												isDarkMode
-													? "darkBrand.secondaryColor1"
-													: "brand.secondaryColor1"
-											}
+											color={"brand.secondaryColor1"}
 										>
 											Talle max:{" "}
 										</Text>
-										<Text
-											fontSize={"lg"}
-											color={
-												isDarkMode
-													? "darkBrand.secondaryColor4"
-													: "brand.white100"
-											}
-										>
+										<Text fontSize={"lg"} color={"brand.white100"}>
 											{filter.sizeOptions.usSize.max}US
 										</Text>
 									</HStack>
@@ -106,7 +80,7 @@ export const FiltersButton = () => {
 									<Tag
 										key={`adminHome-tag-filter-${tag}`}
 										variant={"solid"}
-										colorScheme="orange"
+										colorScheme="red"
 									>
 										{capitalize(tag)}
 									</Tag>

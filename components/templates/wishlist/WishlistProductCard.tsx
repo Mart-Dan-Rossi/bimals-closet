@@ -1,4 +1,3 @@
-import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
 import { Box, Circle, Flex, Icon, Img, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -14,7 +13,6 @@ interface Props {
 
 export const WishlistProductCard = ({ product }: Props) => {
 	const router = useRouter();
-	const { isDarkMode } = useGlobalContext();
 
 	// const mapProducts = wishlistData?.map((item: Product) => {
 	// 	const res = {
@@ -26,7 +24,7 @@ export const WishlistProductCard = ({ product }: Props) => {
 
 	return (
 		<Flex
-			bg={isDarkMode ? "darkBrand.color2" : "brand.color2"}
+			bg={"brand.color2"}
 			borderRadius="1rem"
 			p="1rem"
 			justify="space-between"
@@ -61,29 +59,21 @@ export const WishlistProductCard = ({ product }: Props) => {
 							<Text
 								fontSize="1.8rem"
 								fontWeight="300"
-								color={
-									isDarkMode
-										? "darkBrand.secondaryColor1"
-										: "brand.secondaryColor1"
-								}
+								color={"brand.secondaryColor1"}
 							>
 								{product?.name}
 							</Text>
 						</Box>
 
 						<Flex align="center">
-							<Text
-								fontSize="1.7rem"
-								fontWeight="600"
-								color={isDarkMode ? "darkBrand.color3" : "brand.color3"}
-							>
+							<Text fontSize="1.7rem" fontWeight="600">
 								AR$ {product?.price?.toFixed(2)}{" "}
 							</Text>
 						</Flex>
 					</Stack>
 
 					<Circle
-						bg={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+						bg={"brand.white100"}
 						p=".5rem"
 						pos="absolute"
 						right="0"
@@ -91,13 +81,7 @@ export const WishlistProductCard = ({ product }: Props) => {
 					>
 						<Icon
 							color={`${
-								product?.isFavorite
-									? isDarkMode
-										? "darkBrand.red100"
-										: "brand.red100"
-									: isDarkMode
-									? "darkBrand.secondaryColor2"
-									: "brand.secondaryColor2"
+								product?.isFavorite ? "brand.red100" : "brand.secondaryColor2"
 							}`}
 							fontSize="1.5rem"
 							as={product?.isFavorite ? GoHeartFill : GoHeart}

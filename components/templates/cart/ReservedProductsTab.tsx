@@ -1,22 +1,19 @@
-import { useGlobalContext } from "@/context/GlobalContext";
+import { Product } from "@/types/product";
 import { Box, Flex, Img } from "@chakra-ui/react";
 import AdminProductDataDisplay from "../admin/AdminProductDataDisplay";
-import { Product } from "@/types/product";
 
 interface Props {
 	userReservedProducts: Product[];
 }
 
 const ReservedProductsTab = ({ userReservedProducts }: Props) => {
-	const { isDarkMode } = useGlobalContext();
-
 	return (
 		<>
 			{userReservedProducts.map((item) => {
 				return (
 					<Flex
 						key={`reservedProductsTab-${item._id}`}
-						bg={isDarkMode ? "darkBrand.dark200" : "brand.secondaryColor5"}
+						bg={"brand.secondaryColor5"}
 						borderRadius="1rem"
 						p="1rem"
 						justify="space-between"

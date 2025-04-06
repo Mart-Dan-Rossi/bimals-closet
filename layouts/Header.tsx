@@ -1,9 +1,8 @@
 import { BurguerIcon } from "@/components/Header/BurguerIcon";
 import { DesktopUserInteraction } from "@/components/Header/DesktopUserInteraction";
 import { ExtraInfo } from "@/components/Header/ExtraInfo";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
-import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text, useBoolean } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
@@ -13,7 +12,6 @@ export const Header = ({
 	subHeaderName: string | undefined;
 }) => {
 	const router = useRouter();
-	const { isDarkMode } = useGlobalContext();
 
 	const token = useHydratedStoreState("token");
 
@@ -45,12 +43,7 @@ export const Header = ({
 	}, [name, token]);
 
 	return (
-		<Box
-			bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
-			pos="fixed"
-			w="100%"
-			zIndex="99"
-		>
+		<Box bg={"brand.headerBG"} pos="fixed" w="100%" zIndex="99">
 			<Box maxW="1280px" mx="auto" p="2rem 0 0 0">
 				<Stack
 					spacing="0"
@@ -58,15 +51,30 @@ export const Header = ({
 					justifyContent="space-between"
 					alignItems="center"
 					p="1.5rem 3rem"
-					color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+					color={"brand.white100"}
 				>
 					<Box>
 						<Box cursor="pointer" onClick={() => router.push("/")}>
 							<Text fontWeight="700" fontSize={["1.8rem", "2.5rem"]}>
-								Mateo Shoes
+								SHOES2JUMP
 							</Text>
 						</Box>
 					</Box>
+
+					<Flex gap="2rem">
+						<Text fontWeight="bold" fontSize="large" cursor="pointer">
+							Calzado
+						</Text>
+						<Text fontWeight="bold" fontSize="large" cursor="pointer">
+							Indumentaria
+						</Text>
+						<Text fontWeight="bold" fontSize="large" cursor="pointer">
+							Sale
+						</Text>
+						<Text fontWeight="bold" fontSize="large" cursor="pointer">
+							Todo
+						</Text>
+					</Flex>
 
 					<BurguerIcon setOpenModal={setOpenModal} />
 

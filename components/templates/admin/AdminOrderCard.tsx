@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import AdminProductDataDisplay from "./AdminProductDataDisplay";
-import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
 	orderData: OrderDataBEFormat;
@@ -23,8 +22,6 @@ interface Props {
 
 const AdminOrderCard = ({ orderData }: Props) => {
 	const { _id, user, name, phone, mail, products, isDelivered } = orderData;
-
-	const { isDarkMode } = useGlobalContext();
 
 	const token = useHydratedStoreState("token");
 
@@ -74,7 +71,7 @@ const AdminOrderCard = ({ orderData }: Props) => {
 
 	return (
 		<Flex
-			bg={isDarkMode ? "darkBrand.secondaryColor5" : "brand.secondaryColor5"}
+			bg={"brand.secondaryColor5"}
 			borderRadius="1rem"
 			p="1rem"
 			justify="space-between"

@@ -1,5 +1,4 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { SetStateAction, useState } from "react";
@@ -9,14 +8,13 @@ import { withAuth } from "../../components/templates/withAuth";
 const VerifyPhone = () => {
 	const router = useRouter();
 	const [otp, setOtp] = useState("");
-	const { isDarkMode } = useGlobalContext();
 
 	const handleChange = (e: SetStateAction<string>) => {
 		setOtp(e);
 	};
 
 	return (
-		<Box bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}>
+		<Box bg={"brand.color1"}>
 			<Flex
 				maxW="1280px"
 				mx="auto"
@@ -62,7 +60,7 @@ const VerifyPhone = () => {
 							fontSize={["1.5rem", "1.5rem", "1.8rem", "2rem"]}
 							fontWeight="400"
 							letterSpacing="0.02rem"
-							color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+							color={"brand.white100"}
 						>
 							Por favor introduce el código de 4 caracteres que te enviamos a tu
 							teléfono.
@@ -76,9 +74,7 @@ const VerifyPhone = () => {
 							renderInput={(props) => <input {...props} />}
 							// isInputNum
 							// hasErrored
-							containerStyle={{
-								justifyContent: "center",
-							}}
+							containerStyle={{ justifyContent: "center" }}
 							// focusStyle={{
 							// 	outline: "none",
 							// }}
@@ -100,7 +96,7 @@ const VerifyPhone = () => {
 									w: "auto",
 									px: "5rem",
 									bg: "brand.white100",
-									color: isDarkMode ? "darkBrand.color1" : "brand.color1",
+									color: "brand.color1",
 									text: "Verify Phone",
 								}}
 							/>
@@ -109,7 +105,7 @@ const VerifyPhone = () => {
 							<Text
 								mt="1.5rem"
 								textDecoration="underline"
-								color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+								color={"brand.white100"}
 								fontWeight="600"
 								fontSize="1.5rem"
 							>
@@ -122,7 +118,7 @@ const VerifyPhone = () => {
 				<Box>
 					<Text
 						textAlign="left"
-						color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+						color={"brand.white100"}
 						fontWeight="600"
 						fontSize="1.5rem"
 					>

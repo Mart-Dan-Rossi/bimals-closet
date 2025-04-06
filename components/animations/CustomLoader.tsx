@@ -1,10 +1,8 @@
-import { useGlobalContext } from "@/context/GlobalContext";
 import { Box, Center, Skeleton, SkeletonText } from "@chakra-ui/react";
 
 export const CustomLoader = () => {
-	const { isDarkMode } = useGlobalContext();
 	return (
-		<Center bg={isDarkMode ? "darkBrand.gold300" : "brand.gold300"} h="100vh">
+		<Center bg={"brand.gold300"} h="100vh">
 			<Box
 				className="custom-loader"
 				w={["50px", "50px", "50px", "70px"]}
@@ -36,7 +34,6 @@ export const TextLoader = ({
 	mt?: string;
 	noOfLines: number;
 }) => {
-	const { isDarkMode } = useGlobalContext();
 	return (
 		<SkeletonText
 			startColor="#A0AEC0"
@@ -46,7 +43,7 @@ export const TextLoader = ({
 			noOfLines={noOfLines}
 			spacing="4"
 			skeletonHeight="4"
-			color={isDarkMode ? "darkBrand.gray200" : "brand.gray200"}
+			color={"brand.gray200"}
 		/>
 	);
 };

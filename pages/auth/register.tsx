@@ -9,7 +9,6 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
 import { CustomInput } from "@/components/ui/forms/CustomInput";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useRegisterUser } from "@/hooks/auth/useAuth";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 import { IFormRegisterInput } from "@/types/auth";
@@ -23,8 +22,6 @@ const Register = () => {
 	const toast = useShowToast();
 	const { mutateAsync, isLoading } = useRegisterUser();
 	const router = useRouter();
-
-	const { isDarkMode } = useGlobalContext();
 
 	const {
 		register,
@@ -62,7 +59,7 @@ const Register = () => {
 			<Stack spacing="0" direction={["column", "column", "row"]}>
 				<Box
 					w={["100%", "100%", "50%"]}
-					bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+					bg={"brand.color1"}
 					p="2rem"
 					display={["none", "none", "flex"]}
 					flexDir="column"
@@ -98,9 +95,7 @@ const Register = () => {
 					flexDir="column"
 				>
 					<Text
-						color={
-							isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
-						}
+						color={"brand.secondaryColor1"}
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 					>
@@ -180,7 +175,7 @@ const Register = () => {
 							/>
 							{errors.phoneNumber && (
 								<Text
-									color={isDarkMode ? "darkBrand.red100" : "brand.red100"}
+									color={"brand.red100"}
 									fontSize="1.1rem"
 									fontWeight="300"
 									mt=".5rem"
@@ -227,11 +222,7 @@ const Register = () => {
 							<Box cursor="pointer" onClick={() => router.push("/auth/login")}>
 								<Text
 									mt=".7rem"
-									color={
-										isDarkMode
-											? "darkBrand.secondaryColor2"
-											: "brand.secondaryColor2"
-									}
+									color={"brand.secondaryColor2"}
 									fontWeight="500"
 									fontSize="1.3rem"
 								>
@@ -248,7 +239,7 @@ const Register = () => {
 							display={["block", "none"]}
 						>
 							<Text
-								color={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+								color={"brand.color1"}
 								fontWeight="600"
 								textAlign="left"
 								fontSize="1.5rem"

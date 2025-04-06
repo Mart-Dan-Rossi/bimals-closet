@@ -1,6 +1,5 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
 import PreviousPageButton from "@/components/ui/buttons/PreviousPageButton";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Box, Center, Icon, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -10,17 +9,10 @@ import { WishlistLogguedIn } from "./WishlistLogguedIn";
 export const Wishlist = () => {
 	const router = useRouter();
 
-	const { isDarkMode } = useGlobalContext();
-
 	const token = useHydratedStoreState("token");
 
 	return (
-		<Box
-			pt="15rem"
-			pb="5rem"
-			bg={isDarkMode ? "darkBrand.white300" : "brand.white300"}
-			minHeight={"90vh"}
-		>
+		<Box pt="15rem" pb="5rem" bg={"brand.lightGrey"} minHeight={"90vh"}>
 			<Box maxW="880px" mx="auto" px="3rem">
 				<PreviousPageButton />
 
@@ -31,7 +23,7 @@ export const Wishlist = () => {
 						<Icon
 							as={MdOutlineDisabledByDefault}
 							fontSize="10rem"
-							color={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+							color={"brand.color1"}
 							opacity="0.4"
 						/>
 						<Text mt="1rem" fontWeight="300" textAlign="center">

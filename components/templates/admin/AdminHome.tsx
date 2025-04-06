@@ -1,24 +1,13 @@
-import { Box, Tab, TabList, TabPanels, Tabs } from "@chakra-ui/react";
-import AdminProductsSection from "./AdminProductsSection";
-import AdminOrdersSection from "./AdminOrdersSection";
-import { useGlobalContext } from "@/context/GlobalContext";
 import PreviousPageButton from "@/components/ui/buttons/PreviousPageButton";
+import { Box, Tab, TabList, TabPanels, Tabs } from "@chakra-ui/react";
+import AdminOrdersSection from "./AdminOrdersSection";
+import AdminProductsSection from "./AdminProductsSection";
 
 export const AdminHome = () => {
-	const { isDarkMode } = useGlobalContext();
-
 	return (
-		<Box
-			position="relative"
-			pt="15rem"
-			bg={isDarkMode ? "darkBrand.white200" : "brand.white100"}
-		>
+		<Box position="relative" pt="15rem" bg={"brand.white100"}>
 			<PreviousPageButton />
-			<Tabs
-				defaultIndex={0}
-				variant={"enclosed-colored"}
-				colorScheme={isDarkMode ? "blackAlpha" : ""}
-			>
+			<Tabs defaultIndex={0} variant={"enclosed-colored"}>
 				<TabList>
 					<Tab fontSize={"large"} value="products">
 						Productos

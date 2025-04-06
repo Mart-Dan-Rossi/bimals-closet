@@ -10,14 +10,11 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 // import { useRouter } from "next/router";
 import PreviousPageButton from "@/components/ui/buttons/PreviousPageButton";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useStoreState } from "@/hooks/state/storage";
 import { useRouter } from "next/router";
 import { BasketBall } from "../../public/assets/images/BasketBall";
 
 const Login = () => {
-	const { isDarkMode } = useGlobalContext();
-
 	const [showPassword, setShowPassword] = useState(false);
 	// const router = useRouter();
 	const toast = useShowToast();
@@ -64,13 +61,13 @@ const Login = () => {
 					h="100vh"
 					w={["100%", "100%", "50%"]}
 					p="2rem"
-					bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+					bg={"brand.dark200"}
 					pos="relative"
 					display={["none", "none", "flex"]}
 					alignItems={"flex-start"}
 					justifyContent={"flex-start"}
 				>
-					<Box color={isDarkMode ? "darkBrand.white100" : "brand.white100"}>
+					<Box color={"brand.white100"}>
 						<Box cursor={"pointer"} onClick={() => router.push("/")}>
 							<Text fontWeight="700" fontSize={["1.8rem", "2.5rem"]}>
 								Mateo Shoes
@@ -78,7 +75,7 @@ const Login = () => {
 						</Box>
 					</Box>
 
-					<PreviousPageButton />
+					<PreviousPageButton color="brand.white100" />
 
 					<Flex justify={"flex-end"} w={"90%"}>
 						<BasketBall />
@@ -105,18 +102,12 @@ const Login = () => {
 					ms="0rem"
 				>
 					<Text
-						color={
-							isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
-						}
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 					>
 						Logueate
 					</Text>
 					<Text
-						color={
-							isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
-						}
 						fontWeight="500"
 						fontSize={["1.4rem", "1.15rem", "1.15rem", "1.4rem"]}
 						letterSpacing="0.05rem"
@@ -181,11 +172,7 @@ const Login = () => {
 							<Text
 								textDecoration="underline"
 								mt=".5rem"
-								color={
-									isDarkMode
-										? "darkBrand.secondaryColor2"
-										: "brand.secondaryColor2"
-								}
+								color={"brand.secondaryColor2"}
 								fontWeight="500"
 								fontSize="1.2rem"
 								float="right"
@@ -205,11 +192,7 @@ const Login = () => {
 							>
 								<Text
 									mt=".7rem"
-									color={
-										isDarkMode
-											? "darkBrand.secondaryColor2"
-											: "brand.secondaryColor2"
-									}
+									color={"brand.secondaryColor2"}
 									fontWeight="500"
 									fontSize="1.3rem"
 								>

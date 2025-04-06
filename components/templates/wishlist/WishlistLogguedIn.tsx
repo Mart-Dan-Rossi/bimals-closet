@@ -5,13 +5,10 @@ import { Center, Icon, Text } from "@chakra-ui/react";
 import { Fragment } from "react";
 import { FaGhost } from "react-icons/fa";
 import { WishlistProductCard } from "./WishlistProductCard";
-import { useGlobalContext } from "@/context/GlobalContext";
 
 export const WishlistLogguedIn = () => {
 	const { data: wishlistData, isLoading: isLoadingWishlistData } =
 		useGetMyFavorites();
-
-	const { isDarkMode } = useGlobalContext();
 
 	return (
 		<>
@@ -21,7 +18,7 @@ export const WishlistLogguedIn = () => {
 						<Icon
 							as={FaGhost}
 							fontSize="10rem"
-							color={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+							color={"brand.color1"}
 							opacity="0.4"
 						/>
 						<Text mt="1rem" fontWeight="300" textAlign="center">

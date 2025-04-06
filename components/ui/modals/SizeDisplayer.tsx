@@ -1,5 +1,4 @@
 // import { useGlobalContext } from "@/context/GlobalContext";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
 import { getProperSizeEquivalencies } from "@/utils/sizesEquivalencies";
 import { Box, Flex, Text, Tooltip } from "@chakra-ui/react";
@@ -11,7 +10,6 @@ interface Props {
 }
 
 export const SizeDisplayer = ({ keyHelper, allSizes, product }: Props) => {
-	const { isDarkMode } = useGlobalContext();
 	return (
 		<Flex
 			border={"1px solid black"}
@@ -40,15 +38,7 @@ export const SizeDisplayer = ({ keyHelper, allSizes, product }: Props) => {
 								gap={2}
 								cursor={"pointer"}
 							>
-								<Text
-									color={
-										isDarkMode
-											? "darkBrand.secondaryColor1"
-											: "brand.secondaryColor1"
-									}
-								>
-									{sizeOption}
-								</Text>
+								<Text color={"brand.secondaryColor1"}>{sizeOption}</Text>
 								{allSizes.length !== index + 1 && (
 									<Box
 										height="auto"

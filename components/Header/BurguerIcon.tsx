@@ -1,17 +1,10 @@
-import { useGlobalContext } from "@/context/GlobalContext";
 import { Box, Flex, useBoolean } from "@chakra-ui/react";
 
 interface Props {
-	setOpenModal: {
-		on: () => void;
-		off: () => void;
-		toggle: () => void;
-	};
+	setOpenModal: { on: () => void; off: () => void; toggle: () => void };
 }
 
 export const BurguerIcon = ({ setOpenModal }: Props) => {
-	const { isDarkMode } = useGlobalContext();
-
 	const [active, setActive] = useBoolean();
 
 	const handleToggle = () => {
@@ -29,19 +22,17 @@ export const BurguerIcon = ({ setOpenModal }: Props) => {
 				as="span"
 				w="2.5rem"
 				h=".3rem"
-				bg={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+				bg={"brand.white100"}
 				transition="all 0.3s ease-in-out"
 				borderRadius="12rem"
 				display="block"
-				_odd={{
-					transform: active ? "translateY(0.375rem) rotate(45deg)" : "",
-				}}
+				_odd={{ transform: active ? "translateY(0.375rem) rotate(45deg)" : "" }}
 			/>
 			<Box
 				as="span"
 				w="1.25rem"
 				h=".3rem"
-				bg={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+				bg={"brand.white100"}
 				borderRadius="12rem"
 				my={active ? "0" : ".5rem"}
 				ml="1.25rem"
@@ -52,7 +43,7 @@ export const BurguerIcon = ({ setOpenModal }: Props) => {
 				as="span"
 				w="2.5rem"
 				h=".3rem"
-				bg={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+				bg={"brand.white100"}
 				transition="all 0.3s ease-in-out"
 				borderRadius="12rem"
 				display="block"

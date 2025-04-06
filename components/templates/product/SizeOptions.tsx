@@ -1,5 +1,4 @@
 import { SizeDisplayer } from "@/components/ui/modals/SizeDisplayer";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedCartState } from "@/hooks/state/hydrated";
 import { CartItemMPFormat } from "@/types/order";
 import { Product } from "@/types/product";
@@ -22,7 +21,6 @@ export const SizeOptions = ({
 	selectedSize,
 }: Props) => {
 	const cart = useHydratedCartState("cart");
-	const { isDarkMode } = useGlobalContext();
 
 	const [finalProductSizes, setFinalProductSizes] = useState<number[]>([]);
 
@@ -120,9 +118,7 @@ export const SizeOptions = ({
 								fontWeight="500"
 								bg={
 									selectedSize === size.toString()
-										? isDarkMode
-											? "darkBrand.secondaryColor4"
-											: "brand.secondaryColor4"
+										? "brand.secondaryColor4"
 										: "transparent"
 								}
 								border={
@@ -130,20 +126,11 @@ export const SizeOptions = ({
 								}
 								borderColor={
 									selectedSize === size.toString()
-										? isDarkMode
-											? "darkBrand.white100"
-											: "brand.secondaryColor1"
-										: isDarkMode
-										? "darkBrand.dark100"
+										? "brand.secondaryColor1"
 										: "brand.dark100"
 								}
 								borderRadius=".5rem"
-								_hover={{
-									borderColor: isDarkMode
-										? "darkBrand.secondaryColor4"
-										: "brand.secondaryColor1",
-								}}
-								color={isDarkMode ? "darkBrand.white100" : ""}
+								_hover={{ borderColor: "brand.secondaryColor1" }}
 							>
 								{size.toString()}
 							</Tag>
@@ -155,9 +142,7 @@ export const SizeOptions = ({
 					<Text
 						margin={"0"}
 						fontWeight={"bold"}
-						color={
-							isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
-						}
+						color={"brand.secondaryColor1"}
 					>
 						Talles (US):
 					</Text>

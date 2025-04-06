@@ -3,7 +3,6 @@ import { Box, Flex, Icon, Img } from "@chakra-ui/react";
 import { SetStateAction } from "react";
 import { RiDeleteBinLine, RiPencilLine } from "react-icons/ri";
 import AdminProductDataDisplay from "./AdminProductDataDisplay";
-import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
 	item: Product;
@@ -22,8 +21,6 @@ export const AdminProductCard = ({
 	setProductToInteractWith,
 	setEditingProduct,
 }: Props) => {
-	const { isDarkMode } = useGlobalContext();
-
 	function openDeleteProductModal() {
 		setProductToInteractWith(item);
 		setIsDeleteProduct(true);
@@ -38,7 +35,7 @@ export const AdminProductCard = ({
 
 	return (
 		<Flex
-			bg={isDarkMode ? "darkBrand.dark200" : "brand.secondaryColor5"}
+			bg={"brand.secondaryColor5"}
 			borderRadius="1rem"
 			p="1rem"
 			justify="space-between"
@@ -71,18 +68,14 @@ export const AdminProductCard = ({
 					as={RiPencilLine}
 					fontSize="2rem"
 					cursor="pointer"
-					color={
-						isDarkMode ? "darkBrand.secondaryColor5" : "brand.secondaryColor2"
-					}
+					color={"brand.secondaryColor2"}
 				/>
 				<Icon
 					onClick={openDeleteProductModal}
 					as={RiDeleteBinLine}
 					fontSize="2rem"
 					cursor="pointer"
-					color={
-						isDarkMode ? "darkBrand.secondaryColor5" : "brand.secondaryColor2"
-					}
+					color={"brand.secondaryColor2"}
 				/>
 			</Flex>
 		</Flex>

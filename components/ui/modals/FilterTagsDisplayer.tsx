@@ -62,7 +62,7 @@ export const FilterTagsDisplayer = ({ allTags }: Props) => {
 						size={"lg"}
 						cursor="pointer"
 						variant={selectedTags.includes(tag) ? "solid" : "outline"}
-						colorScheme={"orange"}
+						colorScheme={"red"}
 						onClick={() => toggleTag(tag)}
 						userSelect={"none"}
 					>

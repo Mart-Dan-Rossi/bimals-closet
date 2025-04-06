@@ -1,4 +1,3 @@
-import { useGlobalContext } from "@/context/GlobalContext";
 import { SizeOption, SizeOptions } from "@/types/product";
 import { Brand, sizeEquivalencies } from "@/utils/sizesEquivalencies";
 import {
@@ -31,8 +30,6 @@ const SizeTableComparation = ({
 	onClose,
 	sizeOptions,
 }: Props) => {
-	const { isDarkMode } = useGlobalContext();
-
 	const brandSizeEquivalencies = useMemo(
 		() =>
 			brand === "other"
@@ -47,7 +44,7 @@ const SizeTableComparation = ({
 								string,
 								Omit<SizeOption, "usSize" | "color" | "quantity">
 							>
-					  )
+						)
 					: {}
 				: sizeEquivalencies[brand],
 		[brand]
@@ -59,9 +56,9 @@ const SizeTableComparation = ({
 			<ModalContent
 				borderRadius={"1rem"}
 				border={"3px double"}
-				borderColor={isDarkMode ? "darkBrand.white100" : "black"}
-				bg={isDarkMode ? "darkBrand.white300" : "brand.color1"}
-				color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+				borderColor={"black"}
+				bg={"brand.color1"}
+				color={"brand.white100"}
 			>
 				<ModalHeader>Talles {brand.toUpperCase()}:</ModalHeader>
 				<ModalCloseButton />
@@ -70,32 +67,16 @@ const SizeTableComparation = ({
 						<Table variant="simple">
 							<Thead>
 								<Tr>
-									<Th
-										color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
-										isNumeric
-										fontSize={"medium"}
-									>
+									<Th color={"brand.white100"} isNumeric fontSize={"medium"}>
 										US
 									</Th>
-									<Th
-										color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
-										isNumeric
-										fontSize={"medium"}
-									>
+									<Th color={"brand.white100"} isNumeric fontSize={"medium"}>
 										Arg
 									</Th>
-									<Th
-										color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
-										isNumeric
-										fontSize={"medium"}
-									>
+									<Th color={"brand.white100"} isNumeric fontSize={"medium"}>
 										EU
 									</Th>
-									<Th
-										color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
-										isNumeric
-										fontSize={"medium"}
-									>
+									<Th color={"brand.white100"} isNumeric fontSize={"medium"}>
 										Cm
 									</Th>
 								</Tr>

@@ -1,4 +1,3 @@
-import DarkModeToggleButton from "@/components/Header/DarkModeToggleButton";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { AuthModalData } from "@/utils/modal";
@@ -13,14 +12,14 @@ interface Props {
 export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 	const router = useRouter();
 
-	const { handleLogout, isDarkMode } = useGlobalContext();
+	const { handleLogout } = useGlobalContext();
 
 	const token = useHydratedStoreState("token");
 
 	return (
 		<Box
-			bg={isDarkMode ? "darkBrand.dark100" : "brand.dark100"}
-			color={isDarkMode ? "darkBrand.white100" : "brand.secondaryColor1"}
+			bg={"brand.dark100"}
+			color={"brand.secondaryColor1"}
 			h="100%"
 			pos="fixed"
 			top="7rem"
@@ -30,7 +29,7 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 			display={["block", "none", "none", "none"]}
 		>
 			<Box
-				bg={isDarkMode ? "darkBrand.dark200" : "brand.white300"}
+				bg={"brand.lightGrey"}
 				mt="0rem"
 				p="1rem"
 				w="100%"
@@ -65,24 +64,14 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 												cursor="pointer"
 												p=".9rem 1.5rem"
 												_hover={{
-													bg: isDarkMode
-														? "darkBrand.white100"
-														: "brand.color1",
-													color: isDarkMode
-														? "darkBrand.white100"
-														: "brand.white100",
+													bg: "brand.color1",
+													color: "brand.white100",
 													borderRadius: ".4rem",
 												}}
 											>
 												<Icon
-													color={
-														isDarkMode ? "darkBrand.white100" : "brand.color1"
-													}
-													_groupHover={{
-														color: isDarkMode
-															? "darkBrand.white100"
-															: "brand.white100",
-													}}
+													color={"brand.color1"}
+													_groupHover={{ color: "brand.white100" }}
 													as={item.icon}
 												/>
 
@@ -108,14 +97,8 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 											onClick={handleLogout}
 										>
 											<Icon
-												color={
-													isDarkMode ? "darkBrand.white100" : "brand.color1"
-												}
-												_groupHover={{
-													color: isDarkMode
-														? "darkBrand.white100"
-														: "brand.white100",
-												}}
+												color={"brand.color1"}
+												_groupHover={{ color: "brand.white100" }}
 												as={item.icon}
 											/>
 
@@ -135,8 +118,6 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 							</Fragment>
 						);
 					})}
-
-					<DarkModeToggleButton />
 				</HStack>
 			</Box>
 		</Box>

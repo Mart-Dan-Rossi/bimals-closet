@@ -5,16 +5,12 @@ import axios from "axios";
 
 export const AxiosInstance = axios.create({
 	baseURL: getBaseUrl(),
-	headers: {
-		"Content-Type": "application/json",
-	},
+	headers: { "Content-Type": "application/json" },
 });
 
 export const AuthAxiosInstance = axios.create({
 	baseURL: getBaseUrl(),
-	headers: {
-		"Content-Type": "application/json",
-	},
+	headers: { "Content-Type": "application/json" },
 });
 
 AuthAxiosInstance.interceptors.request.use(
@@ -22,9 +18,8 @@ AuthAxiosInstance.interceptors.request.use(
 		const token = getLocalStorage("__mateo_shoes_store_data__");
 
 		if ((token as ConfigResponse)?.state?.token) {
-			(request.headers as Record<string, unknown>)[
-				"authorization"
-			] = `Bearer ${(token as ConfigResponse)?.state?.token}`;
+			(request.headers as Record<string, unknown>)["authorization"] =
+				`Bearer ${(token as ConfigResponse)?.state?.token}`;
 		}
 		return request;
 	},

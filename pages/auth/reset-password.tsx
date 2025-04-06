@@ -1,6 +1,5 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
 import { CustomInput } from "@/components/ui/forms/CustomInput";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useResetPassword } from "@/hooks/auth/useAuth";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 import { IFormLoginInput } from "@/types/auth";
@@ -14,8 +13,6 @@ import { IoMdCheckmarkCircle } from "react-icons/io";
 import { withAuth } from "../../components/templates/withAuth";
 
 const ResetPassword = () => {
-	const { isDarkMode } = useGlobalContext();
-
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [status, setStatus] = useBoolean();
@@ -41,10 +38,7 @@ const ResetPassword = () => {
 			});
 		}
 
-		const payload = {
-			newPassword,
-			resetToken: code,
-		};
+		const payload = { newPassword, resetToken: code };
 
 		try {
 			const res = await mutateAsync(payload);
@@ -70,7 +64,7 @@ const ResetPassword = () => {
 					h="100vh"
 					w={["100%", "100%", "50%"]}
 					p="2rem"
-					bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+					bg={"brand.color1"}
 					pos="relative"
 					display={["none", "none", "flex"]}
 				>
@@ -105,15 +99,13 @@ const ResetPassword = () => {
 					{status && (
 						<Icon
 							fontSize="4rem"
-							color={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+							color={"brand.color1"}
 							as={IoMdCheckmarkCircle}
 							mb="1rem"
 						/>
 					)}
 					<Text
-						color={
-							isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
-						}
+						color={"brand.secondaryColor1"}
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 						textAlign="center"
@@ -122,9 +114,7 @@ const ResetPassword = () => {
 						{!status ? "Reset Password" : "Password Reset Successful"}
 					</Text>
 					<Text
-						color={
-							isDarkMode ? "darkBrand.secondaryColor1" : "brand.secondaryColor1"
-						}
+						color={"brand.secondaryColor1"}
 						fontWeight="500"
 						fontSize={["1.4rem", "1.15rem", "1.15rem", "1.4rem"]}
 						letterSpacing="0.05rem"

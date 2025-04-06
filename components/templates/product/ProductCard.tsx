@@ -1,3 +1,4 @@
+import { FilterTagsDisplayer } from "@/components/ui/modals/FilterTagsDisplayer";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 import { Product } from "@/types/product";
@@ -9,7 +10,6 @@ import { useEffect, useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { ColorOptions } from "./ColorOptions";
 import { SizeOptions } from "./SizeOptions";
-import { FilterTagsDisplayer } from "@/components/ui/modals/FilterTagsDisplayer";
 
 interface Props {
 	product: Product;
@@ -17,7 +17,7 @@ interface Props {
 
 export const ProductCard = ({ product }: Props) => {
 	const router = useRouter();
-	const { finalProductsData, isDarkMode } = useGlobalContext();
+	const { finalProductsData } = useGlobalContext();
 
 	const { toggleProductChecked, isProductChecked } = useToggleFavorite(
 		finalProductsData ?? []
@@ -39,7 +39,7 @@ export const ProductCard = ({ product }: Props) => {
 	return (
 		<Box key={product?._id} pos="relative">
 			<Circle
-				bg={isDarkMode ? "darkBrand.white100" : "brand.white100"}
+				bg={"brand.white100"}
 				p=".5rem"
 				pos="absolute"
 				left="15px"
@@ -51,11 +51,7 @@ export const ProductCard = ({ product }: Props) => {
 					}}
 					color={`${
 						product._id && isProductChecked(product._id)
-							? isDarkMode
-								? "darkBrand.red100"
-								: "brand.red100"
-							: isDarkMode
-							? "darkBrand.secondaryColor2"
+							? "brand.red100"
 							: "brand.secondaryColor2"
 					}`}
 					fontSize="1.5rem"
@@ -66,7 +62,7 @@ export const ProductCard = ({ product }: Props) => {
 			</Circle>
 			<Box>
 				<Box
-					bg={isDarkMode ? "darkBrand.white300" : "brand.white300"}
+					bg={"brand.lightGrey"}
 					boxShadow="0px 4px 24px rgba(240, 240, 240, 0.6)"
 					borderRadius="1rem"
 					overflow="hidden"
@@ -97,11 +93,7 @@ export const ProductCard = ({ product }: Props) => {
 							>
 								<HStack>
 									<Text
-										color={
-											isDarkMode
-												? "darkBrand.secondaryColor1"
-												: "brand.secondaryColor1"
-										}
+										color={"brand.secondaryColor1"}
 										textAlign="left"
 										maxW="200px"
 										fontSize={["1.4rem", "1.5rem"]}
@@ -111,11 +103,7 @@ export const ProductCard = ({ product }: Props) => {
 										{product?.name}
 									</Text>
 									<Text
-										color={
-											isDarkMode
-												? "darkBrand.secondaryColor1"
-												: "brand.secondaryColor1"
-										}
+										color={"brand.secondaryColor1"}
 										textAlign="left"
 										maxW="200px"
 										fontSize={["1.4rem", "1.5rem"]}
@@ -125,13 +113,7 @@ export const ProductCard = ({ product }: Props) => {
 										{capitalize(product.brand)}
 									</Text>
 								</HStack>
-								<Text
-									fontSize={["1.2rem", "1.3rem"]}
-									fontWeight="500"
-									color={
-										isDarkMode ? "darkBrand.secondaryColor4" : "brand.color1"
-									}
-								>
+								<Text fontSize={["1.2rem", "1.3rem"]} fontWeight="500">
 									AR$ {product?.price}
 								</Text>
 							</Flex>

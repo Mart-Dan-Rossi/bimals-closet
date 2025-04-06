@@ -1,19 +1,18 @@
+import { useGlobalContext } from "@/context/GlobalContext";
+import { useDeleteProduct } from "@/hooks/products/useProduct";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
+import { Product } from "@/types/product";
+import { applyFilters, getAdminsIds } from "@/utils/functions";
 import { Button, Flex, TabPanel, useDisclosure } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
 import { FiltersButton } from "../main/FiltersButton";
 import { AdminProductCard } from "./AdminProductCard";
-import { ProductEditionModal } from "./ProductEditionModal";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
-import { useGlobalContext } from "@/context/GlobalContext";
-import { useEffect, useRef, useState } from "react";
-import { Product } from "@/types/product";
-import { useDeleteProduct } from "@/hooks/products/useProduct";
-import { useRouter } from "next/router";
-import { useHydratedStoreState } from "@/hooks/state/hydrated";
-import { applyFilters, getAdminsIds } from "@/utils/functions";
+import { ProductEditionModal } from "./ProductEditionModal";
 
 const AdminProductsSection = () => {
-	const { finalProductsData, filter, onOpenAddNewProduct, isDarkMode } =
-		useGlobalContext();
+	const { finalProductsData, filter, onOpenAddNewProduct } = useGlobalContext();
 
 	const token = useHydratedStoreState("token");
 
@@ -68,10 +67,7 @@ const AdminProductsSection = () => {
 	}
 
 	return (
-		<TabPanel
-			bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
-			minH={"70vh"}
-		>
+		<TabPanel bg={"brand.color1"} minH={"70vh"}>
 			<FiltersButton />
 			{filteredProductsData?.map((item, index) => (
 				<AdminProductCard
@@ -86,16 +82,11 @@ const AdminProductsSection = () => {
 			))}
 			<Flex justifyContent={"center"} mb={"2rem"}>
 				<Button
-					bg={isDarkMode ? "darkBrand.white200" : "brand.color2"}
+					bg={"brand.color2"}
 					padding={"2rem"}
 					onClick={handleOpenCreateProduct}
-					color={isDarkMode ? "white" : "black"}
-					_hover={{
-						backgroundColor: isDarkMode
-							? "darkBrand.white100"
-							: "brand.secondaryColor4",
-						color: "black",
-					}}
+					color={"brand.black"}
+					_hover={{ backgroundColor: "brand.secondaryColor4", color: "black" }}
 				>
 					Agregar producto +
 				</Button>

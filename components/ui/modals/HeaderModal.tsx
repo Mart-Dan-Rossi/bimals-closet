@@ -11,15 +11,13 @@ export const AuthModal = () => {
 
 	const token = useHydratedStoreState("token");
 
-	const { isDarkMode } = useGlobalContext();
-
 	return (
 		<Box
 			position="absolute"
 			top="3rem"
 			border={"1px solid grey"}
 			borderRadius="1rem"
-			bg={isDarkMode ? "darkBrand.white200" : "brand.white200"}
+			bg={"brand.white200"}
 			zIndex="2"
 			display={["none", "block"]}
 			boxShadow="0px 12px 15px black"
@@ -41,27 +39,19 @@ export const AuthModal = () => {
 											p=".9rem 1.5rem"
 											color="black"
 											_hover={{
-												bg: isDarkMode ? "darkBrand.color1" : "brand.color1",
-												color: isDarkMode
-													? "darkBrand.white100"
-													: "brand.white100",
+												bg: "brand.color1",
+												color: "brand.white100",
 												borderRadius: ".4rem",
 											}}
 										>
 											<Icon
-												color={
-													isDarkMode ? "darkBrand.white100" : "brand.color1"
-												}
-												_groupHover={{
-													color: isDarkMode
-														? "darkBrand.white100"
-														: "brand.white100",
-												}}
+												color={"brand.color1"}
+												_groupHover={{ color: "brand.white100" }}
 												as={item.icon}
 											/>
 
 											<Text
-												color={isDarkMode ? "darkBrand.white100" : "black"}
+												color={"black"}
 												ml=".8rem"
 												fontSize="1.4rem"
 												display="flex"
@@ -82,20 +72,14 @@ export const AuthModal = () => {
 										p=".9rem 1.5rem"
 										onClick={handleLogout}
 										_hover={{
-											bg: isDarkMode ? "darkBrand.color1" : "brand.color1",
-											color: isDarkMode
-												? "darkBrand.white100"
-												: "brand.white100",
+											bg: "brand.color1",
+											color: "brand.white100",
 											borderRadius: ".4rem",
 										}}
 									>
 										<Icon
-											color={isDarkMode ? "darkBrand.white100" : "brand.color1"}
-											_groupHover={{
-												color: isDarkMode
-													? "darkBrand.white100"
-													: "brand.white100",
-											}}
+											color={"brand.color1"}
+											_groupHover={{ color: "brand.white100" }}
 											as={item.icon}
 										/>
 
@@ -104,7 +88,7 @@ export const AuthModal = () => {
 											fontSize="1.4rem"
 											display="flex"
 											alignItems="center"
-											color={isDarkMode ? "darkBrand.white100" : "black"}
+											color={"black"}
 										>
 											{item.text === "Desconectar" &&
 											(token === null || token === undefined)

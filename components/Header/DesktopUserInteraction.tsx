@@ -9,13 +9,11 @@ import {
 	useBoolean,
 } from "@chakra-ui/react";
 
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useRouter } from "next/router";
 import { BiUserCircle } from "react-icons/bi";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { TiShoppingCart } from "react-icons/ti";
 import { AuthModal } from "../ui/modals";
-import DarkModeToggleButton from "./DarkModeToggleButton";
 interface Props {
 	name: string;
 	loggedIsAdmin: boolean;
@@ -23,7 +21,6 @@ interface Props {
 
 export const DesktopUserInteraction = ({ name, loggedIsAdmin }: Props) => {
 	const router = useRouter();
-	const { isDarkMode } = useGlobalContext();
 
 	const cart = useHydratedCartState("cart");
 	const [openDropDown, setOpenDropDown] = useBoolean();
@@ -46,7 +43,7 @@ export const DesktopUserInteraction = ({ name, loggedIsAdmin }: Props) => {
 				<Box cursor="pointer" onClick={() => router.push("/cart")}>
 					<Box as="span" pos="relative">
 						<Circle
-							bg={isDarkMode ? "darkBrand.gold100" : "brand.gold100"}
+							bg={"brand.gold100"}
 							p=".3rem .7rem"
 							pos="absolute"
 							left="1.1rem"
@@ -86,8 +83,6 @@ export const DesktopUserInteraction = ({ name, loggedIsAdmin }: Props) => {
 						</Box>
 					</Flex>
 				</Flex>
-
-				<DarkModeToggleButton />
 			</Stack>
 			{openDropDown && <AuthModal />}
 		</Box>

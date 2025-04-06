@@ -1,4 +1,3 @@
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 // import { IFormRegisterInput } from "@/types/auth";
 import { Box, Flex, Icon } from "@chakra-ui/react";
@@ -21,8 +20,6 @@ export const Footer = () => {
 
 	const router = useRouter();
 
-	const { isDarkMode } = useGlobalContext();
-
 	const toast = useShowToast();
 
 	const phoneNumber = "+54 11 64551800";
@@ -31,27 +28,20 @@ export const Footer = () => {
 		navigator.clipboard
 			.writeText(phoneNumber)
 			.then(() => {
-				toast({
-					status: "success",
-					title: `Copiado: ${phoneNumber}`,
-				});
+				toast({ status: "success", title: `Copiado: ${phoneNumber}` });
 			})
 			.catch((err) => {
-				toast({
-					status: "error",
-					title: "Error al copiar:",
-					description: err,
-				});
+				toast({ status: "error", title: "Error al copiar:", description: err });
 			});
 	}
 
 	return (
-		<Box bg={isDarkMode ? "darkBrand.white200" : "brand.dark200"}>
+		<Box bg={"brand.footerBG"}>
 			<Box maxW="1280px" mx="auto" p="1.5rem 3rem">
 				<Flex
 					mt="1rem"
 					w="100%"
-					color={isDarkMode ? "darkBrand.white400" : "brand.white400"}
+					color={"brand.white400"}
 					fontSize="2.5rem"
 					justifyContent="center"
 					gap="2rem"

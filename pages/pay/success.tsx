@@ -9,7 +9,7 @@ import { useEffect } from "react";
 const PaySuccess = () => {
 	const router = useRouter();
 
-	const { isDarkMode, setQueryData } = useGlobalContext();
+	const { setQueryData } = useGlobalContext();
 
 	const { payment_id } = router.query;
 
@@ -23,11 +23,11 @@ const PaySuccess = () => {
 				<Box
 					w={["100%", "100%", "50%"]}
 					p="2rem"
-					bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+					bg={"brand.color1"}
 					pos="relative"
 					display={["none", "none", "flex"]}
 				>
-					<Box color={isDarkMode ? "darkBrand.white100" : "brand.white100"}>
+					<Box color={"brand.white100"}>
 						<Box onClick={() => router.push("/")}>
 							<Text
 								cursor={"pointer"}

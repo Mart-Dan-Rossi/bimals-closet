@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const FilterSizeDisplayer = ({ allSizes }: Props) => {
-	const { filter, setFilter, isDarkMode } = useGlobalContext();
+	const { filter, setFilter } = useGlobalContext();
 
 	const storedRange = useRef(
 		localStorage.getItem("mateosShoes-shoesSizeFilterRange")
@@ -37,9 +37,7 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 			const sizeOptionMax = newRange[1];
 
 			const filterToAdd = {
-				sizeOptions: {
-					usSize: { min: sizeOptionMin, max: sizeOptionMax },
-				},
+				sizeOptions: { usSize: { min: sizeOptionMin, max: sizeOptionMax } },
 			};
 
 			const newFilter = { ...filter, ...filterToAdd };
@@ -101,7 +99,7 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 							? [JSON.parse(storedRange)[0], JSON.parse(storedRange)[1]]
 							: [sortedSizes[0], sortedSizes[sortedSizes.length - 1]]
 					}
-					colorScheme={isDarkMode ? "white" : "orange"}
+					colorScheme={"red"}
 				>
 					<RangeSliderTrack>
 						<RangeSliderFilledTrack />

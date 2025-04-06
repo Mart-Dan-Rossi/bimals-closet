@@ -1,7 +1,7 @@
-import Head from "next/head";
-import { Box } from "@chakra-ui/react";
+import HomeSection from "@/components/templates/main/HomeSection";
 import MainLayout from "@/layouts/MainLayout";
-import { Hero, Products } from "@/components/templates/main";
+import { Box } from "@chakra-ui/react";
+import Head from "next/head";
 
 const Home = () => {
 	return (
@@ -14,8 +14,7 @@ const Home = () => {
 			</Head>
 			<Box>
 				<MainLayout>
-					<Hero />
-					<Products />
+					<HomeSection />
 				</MainLayout>
 			</Box>
 		</>

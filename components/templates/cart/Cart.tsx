@@ -19,7 +19,7 @@ import EmptyCartMessage from "./EmptyCartMessage";
 import ReservedProductsTab from "./ReservedProductsTab";
 
 export const CartItems = () => {
-	const { isDarkMode, finalProductsData } = useGlobalContext();
+	const { finalProductsData } = useGlobalContext();
 
 	const token = useHydratedStoreState("token");
 
@@ -100,22 +100,13 @@ export const CartItems = () => {
 	}, [finalProductsData, token]);
 
 	return (
-		<Box
-			pt="15rem"
-			pb="5rem"
-			bg={isDarkMode ? "darkBrand.white300" : "brand.white300"}
-			minHeight={"90vh"}
-		>
+		<Box pt="15rem" pb="5rem" bg={"brand.lightGrey"} minHeight={"90vh"}>
 			<Flex alignItems={"center"} flexDirection={"column"}>
 				<Box ml={"9%"} alignSelf={"flex-start"}>
 					<PreviousPageButton />
 				</Box>
 
-				<Tabs
-					defaultIndex={0}
-					variant={"enclosed-colored"}
-					colorScheme={isDarkMode ? "blackAlpha" : ""}
-				>
+				<Tabs defaultIndex={0} variant={"enclosed-colored"}>
 					<TabList>
 						<Tab fontSize={"large"} value="products">
 							Carrito

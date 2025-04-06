@@ -15,12 +15,8 @@ import { FilterSizeDisplayer } from "./ui/modals/FilterSizeDisplayer";
 import { FilterTagsDisplayer } from "./ui/modals/FilterTagsDisplayer";
 
 export const FiltersDrawer = () => {
-	const {
-		isFiltersDrawerOpen,
-		onCloseFiltersDrawer,
-		finalProductsData,
-		isDarkMode,
-	} = useGlobalContext();
+	const { isFiltersDrawerOpen, onCloseFiltersDrawer, finalProductsData } =
+		useGlobalContext();
 
 	const [allSizes, setAllSizes] = useState<number[] | undefined>();
 	const [allTags, setAllTags] = useState<string[]>();
@@ -64,15 +60,10 @@ export const FiltersDrawer = () => {
 			size={"lg"}
 		>
 			<DrawerOverlay />
-			<DrawerContent bg={isDarkMode ? "darkBrand.color2" : "brand.color2"}>
-				<DrawerCloseButton
-					color={isDarkMode ? "darkBrand.white100" : "brand.secondaryColor1"}
-				/>
+			<DrawerContent bg={"brand.color2"}>
+				<DrawerCloseButton color={"brand.secondaryColor1"} />
 
-				<DrawerHeader
-					fontSize={"x-large"}
-					color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
-				>
+				<DrawerHeader fontSize={"x-large"} color={"brand.white100"}>
 					Filtros
 				</DrawerHeader>
 
@@ -80,20 +71,12 @@ export const FiltersDrawer = () => {
 					<VStack align={"start"} width={"100%"}>
 						<Flex flexDirection={"column"} gap={1} width={"100%"}>
 							<Flex justify={"start"} gap={2} align={"end"}>
-								<Text
-									color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
-								>
-									Talles (US)
-								</Text>
+								<Text color={"brand.white100"}>Talles (US)</Text>
 							</Flex>
 							<FilterSizeDisplayer allSizes={allSizes} />
 						</Flex>
 						<VStack mt={"2rem"} alignItems={"flex-start"}>
-							<Text
-								color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
-							>
-								Etiquetas:
-							</Text>
+							<Text color={"brand.white100"}>Etiquetas:</Text>
 							<FilterTagsDisplayer allTags={allTags} />
 						</VStack>
 					</VStack>

@@ -24,7 +24,7 @@ const AdminProductDataDisplay = ({
 	slug,
 	allowTagFiltering,
 }: Props) => {
-	const { onOpenFiltersDrawer, isDarkMode } = useGlobalContext();
+	const { onOpenFiltersDrawer } = useGlobalContext();
 
 	const validSizeOptions = sizeOptions.filter((sizeOption) => sizeOption);
 
@@ -33,7 +33,7 @@ const AdminProductDataDisplay = ({
 			? onOpenFiltersDrawer
 			: () => {
 					console.log("tagOnClickFunction");
-			  };
+				};
 	}
 	return (
 		<Stack ml="2rem" flexDir="column" spacing="1.2rem">
@@ -41,9 +41,7 @@ const AdminProductDataDisplay = ({
 				<Text
 					fontSize="1.8rem"
 					fontWeight="600"
-					color={
-						isDarkMode ? "darkBrand.secondaryColor5" : "brand.secondaryColor1"
-					}
+					color={"brand.secondaryColor1"}
 				>
 					{name} {brand && capitalize(brand)}
 				</Text>
@@ -60,13 +58,7 @@ const AdminProductDataDisplay = ({
 					))}
 			</Flex>
 			<Flex align="center">
-				<Text
-					fontSize="1.7rem"
-					fontWeight="600"
-					color={
-						isDarkMode ? "darkBrand.secondaryColor4" : "brand.secondaryColor1"
-					}
-				>
+				<Text fontSize="1.7rem" fontWeight="600">
 					AR$ {Number(price)?.toFixed(2)}
 				</Text>
 			</Flex>

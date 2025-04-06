@@ -1,15 +1,18 @@
 import { BoxCardLoader } from "@/components/animations/CustomLoader";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
-import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
-import Image from "next/image";
-import { Fragment, useEffect, useState } from "react";
-import { ProductCard } from "../product/ProductCard";
-import { FiltersButton } from "./FiltersButton";
 import { applyFilters } from "@/utils/functions";
+import { Box, Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import { Fragment, useEffect, useState } from "react";
+import { BsFilterLeft } from "react-icons/bs";
+import { ProductCard } from "../product/ProductCard";
 
-export const Products = () => {
-	const { filter, finalProductsData, isLoadingProductData, isDarkMode } =
+interface Props {
+	hideFilter?: boolean;
+}
+
+export const Products = ({ hideFilter }: Props) => {
+	const { filter, finalProductsData, isLoadingProductData } =
 		useGlobalContext();
 
 	const [filteredProductsData, setFinalProductsData] =
@@ -48,48 +51,36 @@ export const Products = () => {
 	return (
 		<Box
 			p="0"
-			bg={isDarkMode ? "darkBrand.color2" : "brand.color1"}
+			bg={"brand.mainContenetBG"}
 			position="relative"
 			h="100%"
 			overflow="hidden"
 		>
 			<Box maxW="1280px" mx="auto" pb="4rem">
-				{/* Grid background decorative */}
-				{!isDarkMode && (
-					<Box pos="absolute" top="310px" left="-100px">
-						<Image
-							width={200}
-							height={200}
-							src="/assets/images/product-bg.png"
-							alt="Fondo de productos"
-						/>
-					</Box>
-				)}
-
 				<Box p="3rem" pos="relative" zIndex="">
-					<Flex justify={"space-between"}>
-						<Flex align="center">
-							{/* <Image
-								src="/assets/images/new-seal.svg"
-								height={30}
-								width={30}
-								alt="Indicativo de nuevo"
+					<Box>
+						{!hideFilter && (
+							<Flex gap={"2rem"}>
+								<BsFilterLeft color="white" />
+								<Button>Talle</Button>
+								<Button>Color</Button>
+								<Button>Otros</Button>
+							</Flex>
+						)}
 
-							/> */}
-							<Text
-								color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
-								fontWeight="600"
-								ml="1rem"
-								userSelect={"none"}
-							>
-								{/* Nuevos productos! */}
-								Nuestros productos!
-							</Text>
-						</Flex>
-						<Flex>
-							<FiltersButton />
-						</Flex>
-					</Flex>
+						{hideFilter && (
+							<Flex align="center">
+								<Text
+									color={"brand.white100"}
+									fontWeight="600"
+									ml="1rem"
+									userSelect={"none"}
+								>
+									ÚLTIMOS LANZAMIENTOS
+								</Text>
+							</Flex>
+						)}
+					</Box>
 
 					<SimpleGrid columns={[2, 3, 3, 4]} gap="2rem" mt="1rem">
 						{isLoadingProductData ? (

@@ -10,8 +10,7 @@ export const SimilarProduct = () => {
 	const router = useRouter();
 	const { slug } = router.query;
 
-	const { finalProductsData, isLoadingProductData, isDarkMode } =
-		useGlobalContext();
+	const { finalProductsData, isLoadingProductData } = useGlobalContext();
 
 	const [shuffledProducts, setShuffledProducts] = useState<Product[]>([]);
 
@@ -42,8 +41,8 @@ export const SimilarProduct = () => {
 		);
 
 		const filteredProducts = finalProductsData?.filter((product) => {
-			const tagsFiltering = product.tags?.some(
-				(tag) => currentProduct?.tags?.includes(tag)
+			const tagsFiltering = product.tags?.some((tag) =>
+				currentProduct?.tags?.includes(tag)
 			);
 
 			const sizeFiltering = product.sizeOptions.some(() => {
@@ -79,15 +78,11 @@ export const SimilarProduct = () => {
 			px="3rem"
 			pb="8rem"
 			pt="3rem"
-			bg={isDarkMode ? "darkBrand.color1" : "brand.color1"}
+			bg={"brand.mainContenetBG"}
 		>
 			{shuffledProducts.length > 0 && (
 				<Box maxW="1280px">
-					<Text
-						fontWeight="600"
-						fontSize="2.5rem"
-						color={isDarkMode ? "darkBrand.white100" : "brand.white100"}
-					>
+					<Text fontWeight="600" fontSize="2.5rem" color={"brand.white100"}>
 						Podrían interesarte
 					</Text>
 

@@ -10,7 +10,7 @@ import { ProductsFilter } from "@/types/filters";
 import { OrderDataBEFormat } from "@/types/order";
 import { Product } from "@/types/product";
 import { QueryData } from "@/types/Query";
-import { useBoolean, useDisclosure, useToast } from "@chakra-ui/react";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
@@ -30,8 +30,6 @@ interface GlobalContextProps {
 	ordersData: OrderDataBEFormat[] | undefined;
 	isLoadingOrderData: boolean;
 	handleClearFilters: () => void;
-	isDarkMode: boolean;
-	toggleDarkMode: () => void;
 	selectedTags: string[];
 	setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
 	queryData: QueryData | undefined;
@@ -83,24 +81,6 @@ export const GlobalContextProvider = ({
 		Product[] | undefined
 	>();
 
-	const [isDarkMode, { on: darkModeOn, off: darkModeOff }] = useBoolean(false);
-
-	function toggleDarkMode() {
-		const localStorageDarkMode = localStorage.getItem("mateosShoes-darkmode");
-
-		if (localStorageDarkMode === "true") {
-			darkModeOff();
-			localStorage.removeItem("mateosShoes-darkmode");
-		} else {
-			darkModeOn();
-			localStorage.setItem("mateosShoes-darkmode", "true");
-		}
-	}
-
-	useEffect(() => {
-		toggleDarkMode();
-	}, []);
-
 	function handleClearFilters() {
 		localStorage.removeItem("mateosShoes-shoesSizeFilterRange");
 		setFilter(undefined);
@@ -133,9 +113,7 @@ export const GlobalContextProvider = ({
 							return false;
 						}
 					});
-					const itemCopy = {
-						...item,
-					};
+					const itemCopy = { ...item };
 					itemCopy.isFavorite = !!isFavorite;
 					return itemCopy;
 				});
@@ -221,8 +199,6 @@ export const GlobalContextProvider = ({
 				ordersData,
 				isLoadingOrderData,
 				handleClearFilters,
-				isDarkMode,
-				toggleDarkMode,
 				selectedTags,
 				setSelectedTags,
 				queryData,
