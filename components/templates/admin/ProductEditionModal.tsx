@@ -5,9 +5,13 @@ import {
 	useUpdateProduct,
 } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
-import { Product } from "@/types/product";
+import { Product, SizeOptions } from "@/types/product";
 import { getAdminsIds } from "@/utils/functions";
-import { Brand, ColorOptions } from "@/utils/productCaracteristics";
+import {
+	Brand,
+	ColorOptions,
+	ProductType,
+} from "@/utils/productCaracteristics";
 import {
 	Box,
 	Modal,
@@ -20,7 +24,7 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BrandSelector } from "./BrandSelector";
 import { DescriptionInput } from "./DescriptionInput";
@@ -28,9 +32,9 @@ import { ImagesInputsContainer } from "./ImagesInputsContainer";
 import { NameInput } from "./NameInput";
 import { PriceInput } from "./PriceInput";
 import { ProductStockEdited } from "./ProductStockEditer";
+import ProductTypeSelector from "./ProductTypeSelector";
 import { SlugInput } from "./SlugInput";
 import { TagsInputs } from "./TagsInputs";
-import ProductTypeSelector from "./ProductTypeSelector";
 
 interface Props {
 	editingProduct: boolean;
@@ -62,77 +66,73 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 
 	const token = useHydratedStoreState("token");
 
-	const defaultItem = useMemo(
-		() =>
-			item || {
-				productType: "calzado",
-				name: "",
-				slug: "",
-				images: [],
-				price: 0,
-				brand: "other",
-				sizeOptions: [{}],
-				desc: "",
-				tags: "",
-			},
-		[item]
-	) as Product;
-
-	const [productType, setProductType] = useState(
-		defaultItem?.productType || "calzado"
-	);
-	const [name, setName] = useState(defaultItem?.name || "");
-	const [slug, setSlug] = useState(defaultItem?.slug || "");
-	const [images, setImages] = useState(defaultItem?.images || [""]);
-	const [price, setPrice] = useState(defaultItem?.price || 0);
-	const [brand, setBrand] = useState<Brand | "other">(
-		defaultItem?.brand || "other"
-	);
-	const [sizeOptions, setSizeOptions] = useState(
-		defaultItem?.sizeOptions || [{}]
-	);
-	const [desc, setDesc] = useState(defaultItem?.desc || "");
-	const [tags, setTags] = useState(defaultItem?.tags || []);
+	const [productType, setProductType] = useState<ProductType>("calzado");
+	const [name, setName] = useState<string>("");
+	const [slug, setSlug] = useState<string>("");
+	const [images, setImages] = useState<string[]>([""]);
+	const [price, setPrice] = useState<number>(0);
+	const [brand, setBrand] = useState<Brand | "other">("other");
+	const [sizeOptions, setSizeOptions] = useState<SizeOptions>([]);
+	const [desc, setDesc] = useState<string>("");
+	const [tags, setTags] = useState<string[]>([""]);
 
 	const [isValidNameData, { on: setValidNameData, off: setInvalidNameData }] =
-		useBoolean(editingProduct);
+		useBoolean();
 
 	const [isValidSlugData, { on: setValidSlugData, off: setInvalidSlugData }] =
-		useBoolean(editingProduct);
+		useBoolean();
 
 	const [
 		isValidImagesData,
 		{ on: setValidImagesData, off: setInvalidImagesData },
-	] = useBoolean(editingProduct);
+	] = useBoolean();
 
 	const [
 		isValidPriceData,
 		{ on: setValidPriceData, off: setInvalidPriceData },
-	] = useBoolean(editingProduct);
+	] = useBoolean();
 
 	const [
 		isValidsizeOptionsData,
 		{ on: setValidsizeOptionsData, off: setInvalidsizeOptionsData },
-	] = useBoolean(editingProduct);
+	] = useBoolean();
 
 	const [showFormErrors, { on: handleShowErrors, off: handleHideErrors }] =
 		useBoolean(false);
 
 	useEffect(() => {
-		setName((editingProduct && defaultItem?.name) || "");
-		setSlug((editingProduct && defaultItem?.slug) || "");
-		setImages((editingProduct && defaultItem?.images) || [""]);
-		setPrice((editingProduct && defaultItem?.price) || 0);
-		setBrand((editingProduct && defaultItem?.brand) || "other");
+		setName((editingProduct && item?.name) || "");
+		setSlug((editingProduct && item?.slug) || "");
+		setImages((editingProduct && item?.images) || [""]);
+		setPrice((editingProduct && item?.price) || 0);
+		setBrand((editingProduct && item?.brand) || "other");
 		setSizeOptions(
-			(editingProduct && defaultItem?.sizeOptions) || [
+			(editingProduct && item?.sizeOptions) || [
 				{ usSize: 0, color: "negro", quantity: 0 },
 			]
 		);
-		setDesc((editingProduct && defaultItem?.desc) || "");
-		setTags((editingProduct && defaultItem?.tags) || []);
+		setDesc((editingProduct && item?.desc) || "");
+		setTags((editingProduct && item?.tags) || [""]);
 		handleHideErrors();
-	}, [defaultItem, editingProduct]);
+
+		if (item) {
+			if (item.name) {
+				setValidNameData();
+			}
+			if (item.slug) {
+				setValidSlugData();
+			}
+			if (item.images[0]) {
+				setValidImagesData();
+			}
+			if (item.price > 0) {
+				setValidPriceData();
+			}
+			if (item.sizeOptions) {
+				setValidsizeOptionsData();
+			}
+		}
+	}, [item, editingProduct]);
 
 	useEffect(() => {
 		function areAllSizeOptionsDataValid() {

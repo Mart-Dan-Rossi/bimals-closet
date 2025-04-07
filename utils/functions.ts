@@ -1,5 +1,6 @@
 import { ProductsFilter } from "@/types/filters";
 import { Product, ReservedData } from "@/types/product";
+import { ColorOptions } from "./productCaracteristics";
 
 export function capitalize(string: string) {
 	return `${string[0].toUpperCase()}${string.slice(1)}`;
@@ -48,7 +49,7 @@ export function getReservedDataFromNameAndQtty(
 		.map((string) => string.replace(/\s+/g, ""));
 
 	const usSize = Number(splitedName[2].slice(0, -2));
-	const color = splitedName[1];
+	const color = splitedName[1] as ColorOptions;
 	return { usSize, color, quantity, userId };
 }
 
