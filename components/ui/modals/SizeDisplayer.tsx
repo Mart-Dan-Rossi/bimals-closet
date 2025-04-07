@@ -1,6 +1,6 @@
 // import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
-import { getProperSizeEquivalencies } from "@/utils/sizesEquivalencies";
+import { getProperSizeEquivalencies } from "@/utils/productCaracteristics";
 import { Box, Flex, Text, Tooltip } from "@chakra-ui/react";
 
 interface Props {
@@ -29,6 +29,7 @@ export const SizeDisplayer = ({ keyHelper, allSizes, product }: Props) => {
 							placement="auto"
 							label={getProperSizeEquivalencies(
 								product.brand,
+								sizeOption,
 								product.sizeOptions[index]
 							)}
 						>

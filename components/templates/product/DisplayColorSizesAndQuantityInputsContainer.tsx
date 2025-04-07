@@ -1,5 +1,8 @@
 import { SizeOptions } from "@/types/product";
-import { Brand, getProperSizeEquivalencies } from "@/utils/sizesEquivalencies";
+import {
+	Brand,
+	getProperSizeEquivalencies,
+} from "@/utils/productCaracteristics";
 import { Box, Button, Text, Tooltip, VStack, Wrap } from "@chakra-ui/react";
 
 interface Props {
@@ -72,6 +75,7 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 															placement="top-start"
 															label={getProperSizeEquivalencies(
 																brand,
+																sizeOption.usSize,
 																sizeOption
 															)}
 														>

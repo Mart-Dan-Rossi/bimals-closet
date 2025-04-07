@@ -1,7 +1,7 @@
 import { SizeOptions } from "@/types/product";
 import { Box, Button, Flex, Icon } from "@chakra-ui/react";
 import { ColorSizesAndQuantityInputsEditionContainer } from "./ColorSizesAndQuantityInputsEditionContainer";
-import { Brand } from "@/utils/sizesEquivalencies";
+import { Brand } from "@/utils/productCaracteristics";
 import { Dispatch, SetStateAction } from "react";
 import { inputStyles } from "./ProductEditionModal";
 import { RiAddCircleLine } from "react-icons/ri";

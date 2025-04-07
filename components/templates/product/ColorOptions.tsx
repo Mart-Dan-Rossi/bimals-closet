@@ -1,4 +1,5 @@
 import { Product } from "@/types/product";
+import { colorOptionDataArray } from "@/utils/productCaracteristics";
 import { Flex, Tag } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useMemo } from "react";
 
@@ -38,21 +39,20 @@ export const ColorOptions = ({
 					userSelect={"none"}
 					onClick={() => handleSelectColor(color)}
 					cursor="pointer"
-					size="lg"
 					key={`color-picker-${product._id}-${color}`}
-					p={[".8rem", ".8rem 1.5rem"]}
+					p={[".6rem", ".6rem 1rem"]}
 					fontSize={["1.5rem", "1.5rem", "1.2rem", "1.5rem"]}
 					fontWeight="500"
-					bg={selectedColor === color ? "brand.secondaryColor4" : "transparent"}
-					border={selectedColor === color ? "1px solid" : "1px solid"}
-					borderColor={
-						selectedColor === color ? "brand.secondaryColor1" : "brand.dark100"
+					bg={
+						colorOptionDataArray.find((colorData) => colorData.name === color)
+							?.hash
+					}
+					border={
+						selectedColor === color ? "1px solid gold" : "1px solid black"
 					}
 					borderRadius=".5rem"
-					_hover={{ borderColor: "brand.secondaryColor1" }}
-				>
-					{color}
-				</Tag>
+					_hover={{ borderColor: "gold" }}
+				></Tag>
 			))}
 		</Flex>
 	);

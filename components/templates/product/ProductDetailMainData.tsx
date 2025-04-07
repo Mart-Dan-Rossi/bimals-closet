@@ -9,6 +9,7 @@ import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { useCartState } from "@/hooks/state/storage";
 import { useShowToast } from "@/hooks/toast/useShowToast";
+import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
 import { CartItemMPFormat } from "@/types/order";
 import { Product } from "@/types/product";
 import {
@@ -21,7 +22,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { FaArrowRight } from "react-icons/fa";
 import { GoHeart, GoHeartFill } from "react-icons/go";
@@ -53,13 +54,6 @@ export const ProductDetailMainData = ({
 		onOpen: showSizeTable,
 		onClose: hideSizeTable,
 	} = useDisclosure();
-
-	useEffect(() => {
-		if (product?.sizeOptions[0].color)
-			setSelectedColor(() => {
-				return product?.sizeOptions[0].color;
-			});
-	}, [product]);
 
 	const token = useHydratedStoreState("token");
 
@@ -198,29 +192,46 @@ export const ProductDetailMainData = ({
 											resetSelectedSize={() => setSelectedSize("")}
 										/>
 									</Flex>
-									<Flex justify={"flex-start"} gap={"1rem"} mt={"1rem"}>
-										<Text
-											fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
-											fontWeight="600"
-										>
-											Talles (US)
-										</Text>
-										<Box display={["block", "none", "none", "none"]}>
-											<Button
-												onClick={showSizeTable}
-												boxShadow="2px 2px 5px 0px rgba(0,0,0,0.75)"
-												colorScheme="red"
+									{selectedColor !== "" ? (
+										<>
+											<Flex justify={"flex-start"} gap={"1rem"} mt={"1rem"}>
+												<Text
+													fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
+													fontWeight="600"
+												>
+													Talles (US)
+												</Text>
+												<Box display={["block", "none", "none", "none"]}>
+													<Button
+														onClick={showSizeTable}
+														boxShadow={standardBoxShadow}
+														colorScheme="blackAlpha"
+														marginBottom={".5rem"}
+													>
+														Tabla de talles
+													</Button>
+												</Box>
+											</Flex>
+											<SizeOptions
+												selectedColor={selectedColor}
+												product={product}
+												selectedSize={selectedSize}
+												select={setSelectedSize}
+											/>
+										</>
+									) : (
+										<Flex justify={"flex-start"} gap={"1rem"} mt={"1rem"}>
+											<Text
+												fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
+												fontWeight="600"
 											>
-												Tabla de talles
-											</Button>
-										</Box>
-									</Flex>
-									<SizeOptions
-										selectedColor={selectedColor}
-										product={product}
-										selectedSize={selectedSize}
-										select={setSelectedSize}
-									/>
+												Talles (US)
+											</Text>
+											<Text marginTop={"2rem"} fontWeight={"600"}>
+												Selecciona un color para ver los talles
+											</Text>
+										</Flex>
+									)}
 								</Box>
 
 								<Box mt="2rem">

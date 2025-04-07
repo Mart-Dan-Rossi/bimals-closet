@@ -38,7 +38,7 @@ export const ImagesInputsContainer = ({
 			borderRadius={"10px"}
 			border={"1px solid black"}
 		>
-			<Text fontSize="1.7rem" fontWeight="600" color={"brand.secondaryColor1"}>
+			<Text fontSize="1.7rem" fontWeight="600" color={"brand.black"}>
 				Imágenes:
 			</Text>
 			{images.map((__, index) => {

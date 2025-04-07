@@ -1,7 +1,7 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import { SizeOptions } from "@/types/product";
 import { capitalize } from "@/utils/functions";
-import { Brand } from "@/utils/sizesEquivalencies";
+import { Brand } from "@/utils/productCaracteristics";
 import { Flex, Stack, Tag, Text } from "@chakra-ui/react";
 import { DisplayColorSizesAndQuantityInputsContainer } from "../product/DisplayColorSizesAndQuantityInputsContainer";
 
@@ -33,7 +33,7 @@ const AdminProductDataDisplay = ({
 			? onOpenFiltersDrawer
 			: () => {
 					console.log("tagOnClickFunction");
-				};
+			  };
 	}
 	return (
 		<Stack ml="2rem" flexDir="column" spacing="1.2rem">

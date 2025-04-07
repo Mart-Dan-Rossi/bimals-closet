@@ -10,7 +10,7 @@ interface Props {
 export const DescriptionInput = ({ desc, handleSetDescription }: Props) => {
 	return (
 		<Box my="2rem">
-			<Text fontSize="1.7rem" fontWeight="600" color={"brand.secondaryColor1"}>
+			<Text fontSize="1.7rem" fontWeight="600" color={"brand.black"}>
 				Descripción (Optativo):
 			</Text>
 			<Input

@@ -22,6 +22,7 @@ import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { ConfirmDeleteModal } from "../admin/ConfirmDeleteModal";
+import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
 
 interface Props {
 	userReservedProductsMPFormated: CartItemMPFormat[];
@@ -216,7 +217,7 @@ const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
 									(cart?.length === 0 &&
 										userReservedProductsMPFormated.length === 0),
 								onClickFunction: handleConfirmPay,
-								boxShadow: "2px 2px 5px 0px rgba(0,0,0,0.75)",
+								boxShadow: standardBoxShadow,
 							}}
 						/>
 						{preferenceId && <Wallet initialization={{ preferenceId }} />}
@@ -231,7 +232,7 @@ const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
 									text: "Vaciar Carrito",
 									py: ["2rem", "2rem"],
 									isDisabled: cart?.length === 0,
-									boxShadow: "2px 2px 5px 0px rgba(0,0,0,0.75)",
+									boxShadow: standardBoxShadow,
 								}}
 							/>
 						</Box>

@@ -18,8 +18,9 @@ AuthAxiosInstance.interceptors.request.use(
 		const token = getLocalStorage("__mateo_shoes_store_data__");
 
 		if ((token as ConfigResponse)?.state?.token) {
-			(request.headers as Record<string, unknown>)["authorization"] =
-				`Bearer ${(token as ConfigResponse)?.state?.token}`;
+			(request.headers as Record<string, unknown>)[
+				"authorization"
+			] = `Bearer ${(token as ConfigResponse)?.state?.token}`;
 		}
 		return request;
 	},

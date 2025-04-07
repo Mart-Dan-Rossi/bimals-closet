@@ -1,3 +1,4 @@
+import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
 import { CustomButtonProps } from "@/types/button";
 import { Box, Button, Icon } from "@chakra-ui/react";
 
@@ -33,14 +34,14 @@ export const CustomButton = ({
 				bg={bg || "brand.black"}
 				border={border || ".2rem solid"}
 				borderRadius="10px"
-				boxShadow={boxShadow || "2px 2px 5px 0px rgba(0,0,0,0.75)"}
+				boxShadow={boxShadow || standardBoxShadow}
 				borderColor={borderColor || "brand.green500"}
 				type={isValidData ? "submit" : "button"}
 				onClick={
 					isValidData
 						? () => {
 								console.log("Upload data");
-							}
+						  }
 						: onClickFunction
 				}
 				cursor="pointer"

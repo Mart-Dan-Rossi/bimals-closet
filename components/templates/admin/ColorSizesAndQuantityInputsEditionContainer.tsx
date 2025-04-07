@@ -1,9 +1,19 @@
 import { SizeOptions } from "@/types/product";
-import { Brand } from "@/utils/sizesEquivalencies";
+import { capitalize } from "@/utils/functions";
+import {
+	Brand,
+	colorOptionDataArray,
+	ColorOptions,
+} from "@/utils/productCaracteristics";
 import {
 	Box,
+	Button,
 	CloseButton,
-	Input,
+	Flex,
+	Menu,
+	MenuButton,
+	MenuItem,
+	MenuList,
 	NumberDecrementStepper,
 	NumberIncrementStepper,
 	NumberInput,
@@ -12,16 +22,9 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
+import { AiOutlineCaretDown } from "react-icons/ai";
 
 interface Props {
-	inputStyles: {
-		border: string;
-		borderRadius: string;
-		py: string;
-		fontSize: string;
-		_placeholder: { fontWeight: number; fontSize: string; color: string };
-		_focus: { borderColor: string; boxShadow: string };
-	};
 	brand: Brand | "other";
 	sizeOptions: SizeOptions;
 	index1: number;
@@ -29,10 +32,17 @@ interface Props {
 	showFormErrors: boolean;
 	isValidsizeOptionsData: boolean;
 	handleDeleteSizeOptionsInputsLine: (index: number) => void;
+	inputStyles?: {
+		border: string;
+		borderRadius: string;
+		py: string;
+		fontSize: string;
+		_placeholder: { fontWeight: number; fontSize: string; color: string };
+		_focus: { borderColor: string; boxShadow: string };
+	};
 }
 
 export const ColorSizesAndQuantityInputsEditionContainer = ({
-	inputStyles,
 	brand,
 	sizeOptions,
 	index1,
@@ -46,7 +56,9 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 	const handleColorChange = (index: number, newColor: string) => {
 		setSizeOptions((prevSizeOptions) => {
 			return prevSizeOptions.map((sizeOption, idx) =>
-				idx === index ? { ...sizeOption, color: newColor } : sizeOption
+				idx === index
+					? { ...sizeOption, color: newColor as ColorOptions }
+					: sizeOption
 			);
 		});
 	};
@@ -69,7 +81,7 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 										? 40
 										: 8
 									: newSize,
-						}
+					  }
 					: sizeOption;
 			});
 		});
@@ -86,23 +98,32 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 
 	return (
 		<>
-			<Box>
+			<Box maxW={"33%"}>
 				<Text>Color:</Text>
-				<Input
-					id={`productSizeOptionColor${index1}`}
-					value={sizeOptions[index1].color || ""}
-					onChange={(e) => handleColorChange(index1, e.target.value)}
-					placeholder={"Color"}
-					type="text"
-					{...inputStyles}
-				/>
-				{showFormErrors &&
-					!isValidsizeOptionsData &&
-					sizeOptions[index1].color === "" && (
-						<Text color="red" fontSize={"sm"}>
-							Este campo es requerido!
-						</Text>
-					)}
+				<Menu>
+					<MenuButton as={Button} rightIcon={<AiOutlineCaretDown />}>
+						{capitalize(sizeOptions[index1].color || "Negro")}
+					</MenuButton>
+					<MenuList>
+						{colorOptionDataArray.map((colorData, index) => (
+							<MenuItem
+								key={`color-${index}`}
+								onClick={() => handleColorChange(index1, colorData.name)}
+							>
+								<Flex align="center" gap={2}>
+									<Box
+										w="16px"
+										h="16px"
+										borderRadius="full"
+										bg={colorData.hash}
+										border="1px solid #ccc"
+									/>
+									{capitalize(colorData.name)}
+								</Flex>
+							</MenuItem>
+						))}
+					</MenuList>
+				</Menu>
 			</Box>
 
 			<Box margin={"0 1rem"}>
@@ -114,7 +135,7 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 					onChange={(e) => handleSizeChange(index1, e)}
 					border="1px solid #EAEAEA"
 					borderRadius="1rem"
-					fontSize="1.6rem"
+					size={"lg"}
 				>
 					<NumberInputField />
 					<NumberInputStepper>
@@ -145,6 +166,7 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 										border="1px solid #EAEAEA"
 										borderRadius="1rem"
 										fontSize="1.6rem"
+										size={"lg"}
 									>
 										<NumberInputField />
 										<NumberInputStepper>
@@ -176,6 +198,7 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 					border="1px solid #EAEAEA"
 					borderRadius="1rem"
 					fontSize="1.6rem"
+					size={"lg"}
 				>
 					<NumberInputField />
 					<NumberInputStepper>

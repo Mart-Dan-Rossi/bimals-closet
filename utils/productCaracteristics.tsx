@@ -1,5 +1,52 @@
 export type Brand = "puma" | "nike" | "adidas" | "underarmour";
 
+export type ColorOptions =
+	| "negro"
+	| "blanco"
+	| "gris"
+	| "azul"
+	| "rojo"
+	| "amarillo"
+	| "verde"
+	| "violeta"
+	| "naranja"
+	| "rosa"
+	| "celeste";
+
+const colorOptionArray = [
+	"negro",
+	"blanco",
+	"gris",
+	"azul",
+	"rojo",
+	"amarillo",
+	"verde",
+	"violeta",
+	"naranja",
+	"rosa",
+	"celeste",
+];
+
+const colorOptionActualColorArray = [
+	"#000000",
+	"#fafafa",
+	"#c7c7c7",
+	"#0066ff",
+	"#ff0000",
+	"#e6e600",
+	"#00cc00",
+	"#c61aff",
+	"#ff9900",
+	"#ff80ff",
+	"#99ccff",
+];
+
+export const colorOptionDataArray = colorOptionArray.map((CO, index) => {
+	return { name: CO, hash: colorOptionActualColorArray[index] };
+});
+
+export type ProductType = "indumentaria" | "calzado";
+
 export type SizeEquivalency = { arg: number; eu: number; cm: number };
 
 export type SizeEquivalencies = Record<string, SizeEquivalency>;
@@ -66,16 +113,19 @@ export const sizeEquivalencies: Record<Brand, SizeEquivalencies> = {
 
 export function getProperSizeEquivalencies(
 	brand: Brand | "other",
-	sizeOption: {
-		usSize: number;
-		color: string;
-		quantity: number;
-		arg?: number;
-		cm?: number;
-		eu?: number;
-	}
+	currentSize: string | number,
+	sizeOption:
+		| {
+				usSize: number;
+				color: string;
+				quantity: number;
+				arg?: number;
+				cm?: number;
+				eu?: number;
+		  }
+		| undefined
 ) {
-	const sizeKey = sizeOption.usSize.toString();
+	const sizeKey = currentSize.toString();
 
 	if (brand !== "other" && brand in sizeEquivalencies) {
 		const equivalencies = sizeEquivalencies[brand][sizeKey];
@@ -84,7 +134,11 @@ export function getProperSizeEquivalencies(
 		}
 	}
 
-	return `ARG ${sizeOption.arg ?? "N/A"} | EU ${sizeOption.eu ?? "N/A"} | CM ${
-		sizeOption.cm ?? "N/A"
-	}`;
+	if (sizeOption) {
+		return `ARG ${sizeOption.arg ?? "N/A"} | EU ${
+			sizeOption.eu ?? "N/A"
+		} | CM ${sizeOption.cm ?? "N/A"}`;
+	}
+
+	return "Consulta con nuestro stuff las equivalencias";
 }

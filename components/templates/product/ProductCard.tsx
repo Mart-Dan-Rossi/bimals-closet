@@ -6,7 +6,7 @@ import { capitalize } from "@/utils/functions";
 import { Box, Circle, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { ColorOptions } from "./ColorOptions";
 import { SizeOptions } from "./SizeOptions";
@@ -24,13 +24,6 @@ export const ProductCard = ({ product }: Props) => {
 	);
 
 	const [selectedColor, setSelectedColor] = useState<string | undefined>("");
-
-	useEffect(() => {
-		if (product?.sizeOptions[0].color)
-			setSelectedColor(() => {
-				return product?.sizeOptions[0].color;
-			});
-	}, [product]);
 
 	function handleOpenProductPage() {
 		router.push(`/product/${product?.slug}`);
@@ -129,9 +122,16 @@ export const ProductCard = ({ product }: Props) => {
 									select={setSelectedColor}
 								/>
 							</Flex>
-							<Box onClick={handleOpenProductPage} cursor="pointer">
-								<SizeOptions selectedColor={selectedColor} product={product} />
-							</Box>
+							{selectedColor !== "" ? (
+								<Box onClick={handleOpenProductPage} cursor="pointer">
+									<SizeOptions
+										selectedColor={selectedColor}
+										product={product}
+									/>
+								</Box>
+							) : (
+								<Text>Selecciona un color para ver los talles disponibles</Text>
+							)}
 						</Flex>
 					</Box>
 				</Box>

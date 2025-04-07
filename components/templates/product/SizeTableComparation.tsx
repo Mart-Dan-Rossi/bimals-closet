@@ -1,5 +1,5 @@
 import { SizeOption, SizeOptions } from "@/types/product";
-import { Brand, sizeEquivalencies } from "@/utils/sizesEquivalencies";
+import { Brand, sizeEquivalencies } from "@/utils/productCaracteristics";
 import {
 	Modal,
 	ModalBody,
@@ -44,7 +44,7 @@ const SizeTableComparation = ({
 								string,
 								Omit<SizeOption, "usSize" | "color" | "quantity">
 							>
-						)
+					  )
 					: {}
 				: sizeEquivalencies[brand],
 		[brand]

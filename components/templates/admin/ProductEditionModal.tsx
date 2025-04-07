@@ -7,7 +7,7 @@ import {
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product } from "@/types/product";
 import { getAdminsIds } from "@/utils/functions";
-import { Brand } from "@/utils/sizesEquivalencies";
+import { Brand, ColorOptions } from "@/utils/productCaracteristics";
 import {
 	Box,
 	Modal,
@@ -30,6 +30,7 @@ import { PriceInput } from "./PriceInput";
 import { ProductStockEdited } from "./ProductStockEditer";
 import { SlugInput } from "./SlugInput";
 import { TagsInputs } from "./TagsInputs";
+import ProductTypeSelector from "./ProductTypeSelector";
 
 interface Props {
 	editingProduct: boolean;
@@ -64,6 +65,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 	const defaultItem = useMemo(
 		() =>
 			item || {
+				productType: "calzado",
 				name: "",
 				slug: "",
 				images: [],
@@ -76,6 +78,9 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 		[item]
 	) as Product;
 
+	const [productType, setProductType] = useState(
+		defaultItem?.productType || "calzado"
+	);
 	const [name, setName] = useState(defaultItem?.name || "");
 	const [slug, setSlug] = useState(defaultItem?.slug || "");
 	const [images, setImages] = useState(defaultItem?.images || [""]);
@@ -121,7 +126,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 		setBrand((editingProduct && defaultItem?.brand) || "other");
 		setSizeOptions(
 			(editingProduct && defaultItem?.sizeOptions) || [
-				{ usSize: 0, color: "", quantity: 0 },
+				{ usSize: 0, color: "negro", quantity: 0 },
 			]
 		);
 		setDesc((editingProduct && defaultItem?.desc) || "");
@@ -132,19 +137,14 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 	useEffect(() => {
 		function areAllSizeOptionsDataValid() {
 			const anyInvalid = sizeOptions.some((sizeOption) => {
-				const { usSize, quantity, color, arg, cm, eu } = sizeOption;
+				const { usSize, quantity, arg, cm, eu } = sizeOption;
 
-				const hasColor = color !== "";
 				const hasInvalidSize = !arg || !cm || !eu;
 
 				const isInvalid =
-					(!usSize && !quantity && !hasColor) ||
-					((usSize || quantity) && !hasColor) ||
-					((hasColor || quantity) && !usSize) ||
-					((usSize || hasColor) && !quantity) ||
-					(brand === "other" &&
-						(usSize || quantity || hasColor) &&
-						hasInvalidSize);
+					!usSize ||
+					!quantity ||
+					(brand === "other" && (usSize || quantity) && hasInvalidSize);
 
 				return isInvalid;
 			});
@@ -175,13 +175,13 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 			const userId = user ? user.id : undefined;
 
 			const product: Product = {
+				productType,
 				name,
 				slug,
 				images: images.filter((urlImg) => urlImg.length > 0),
 				price,
 				sizeOptions: sizeOptions.filter(
 					(sizeOption) =>
-						sizeOption.color.length > 0 &&
 						sizeOption.quantity > 0 &&
 						sizeOption.usSize &&
 						sizeOption.usSize > 0 &&
@@ -203,6 +203,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 			}
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
+				console.log("Error:", error);
 				toast({
 					status: "error",
 					title:
@@ -306,7 +307,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 			...prevSizeOptions,
 			{
 				usSize: 0,
-				color: "",
+				color: "negro",
 				quantity: 0,
 				arg: undefined,
 				cm: undefined,
@@ -323,7 +324,9 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 		setSizeOptions((prevSizeOptions) => {
 			let newSizeOptions;
 			if (prevSizeOptions.length === 1) {
-				newSizeOptions = [{ usSize: 0, quantity: 0, color: "" }];
+				newSizeOptions = [
+					{ usSize: 0, quantity: 0, color: "negro" as ColorOptions },
+				];
 			} else {
 				newSizeOptions = prevSizeOptions.filter((__, i) => i !== index);
 			}
@@ -371,6 +374,11 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 						px="4rem"
 						onSubmit={handleSubmit(handleUploadProduct)}
 					>
+						<ProductTypeSelector
+							productType={productType}
+							setProductType={setProductType}
+						/>
+
 						<NameInput
 							name={name}
 							handleSetName={handleSetName}

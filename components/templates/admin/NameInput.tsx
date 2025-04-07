@@ -17,7 +17,7 @@ export const NameInput = ({
 }: Props) => {
 	return (
 		<Box my="2rem">
-			<Text fontSize="1.7rem" fontWeight="600" color={"brand.secondaryColor1"}>
+			<Text fontSize="1.7rem" fontWeight="600" color={"brand.black"}>
 				Nombre:
 			</Text>
 			<Input

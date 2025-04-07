@@ -1,4 +1,8 @@
-import { Brand } from "@/utils/sizesEquivalencies";
+import {
+	Brand,
+	ColorOptions,
+	ProductType,
+} from "@/utils/productCaracteristics";
 
 export type ReserveProductData = {
 	id: string;
@@ -8,7 +12,7 @@ export type ReserveProductData = {
 
 export type SizeOption = {
 	usSize: number;
-	color: string;
+	color: ColorOptions;
 	quantity: number;
 	arg?: number;
 	cm?: number;
@@ -19,13 +23,14 @@ export type SizeOptions = SizeOption[];
 
 export type ReservedData = {
 	usSize: number;
-	color: string;
+	color: ColorOptions;
 	quantity: number;
 	userId: string | undefined;
 	hide?: boolean;
 };
 
 export type Product = {
+	productType: ProductType;
 	name: string;
 	slug: string;
 	images: string[];

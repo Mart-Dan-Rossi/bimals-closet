@@ -1,10 +1,12 @@
-import { SizeDisplayer } from "@/components/ui/modals/SizeDisplayer";
 import { useHydratedCartState } from "@/hooks/state/hydrated";
 import { CartItemMPFormat } from "@/types/order";
 import { Product } from "@/types/product";
 import { getAvailableQuantitiesBySizeAndColor } from "@/utils/functions";
-import { getProperSizeEquivalencies } from "@/utils/sizesEquivalencies";
-import { Flex, Tag, Text, Tooltip, VStack } from "@chakra-ui/react";
+import {
+	getProperSizeEquivalencies,
+	sizeEquivalencies,
+} from "@/utils/productCaracteristics";
+import { Button, ButtonGroup, Tooltip } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface Props {
@@ -93,66 +95,52 @@ export const SizeOptions = ({
 		}
 	}, [selectedColor, cart]);
 
+	const sizeEquivalenciesOrdered = Object.keys(
+		sizeEquivalencies[product.brand]
+	).sort((a, b) => Number(a) - Number(b));
+
 	return (
-		<>
-			{select && typeof selectedSize === "string" ? (
-				<Flex gap={4} mt="1rem" maxW={"100%"}>
-					{finalProductSizes?.map((size, index) => (
-						<Tooltip
-							key={`product-size-options-tooltip-tag-${index}`}
-							fontSize={"small"}
-							hasArrow
-							placement="top-start"
-							label={getProperSizeEquivalencies(
-								product.brand,
-								product.sizeOptions[index]
-							)}
-						>
-							<Tag
-								onClick={() => select(size.toString())}
-								cursor="pointer"
-								size="lg"
-								key={`product-size-options-tooltip-tag-${index}-${size}`}
-								p={[".8rem", ".8rem 1.5rem"]}
-								fontSize={["1.5rem", "1.5rem", "1.2rem", "1.5rem"]}
-								fontWeight="500"
-								bg={
-									selectedSize === size.toString()
-										? "brand.secondaryColor4"
-										: "transparent"
-								}
-								border={
-									selectedSize === size.toString() ? "1px solid" : "1px solid"
-								}
-								borderColor={
-									selectedSize === size.toString()
-										? "brand.secondaryColor1"
-										: "brand.dark100"
-								}
-								borderRadius=".5rem"
-								_hover={{ borderColor: "brand.secondaryColor1" }}
-							>
-								{size.toString()}
-							</Tag>
-						</Tooltip>
-					))}
-				</Flex>
-			) : (
-				<VStack align={"start"}>
-					<Text
-						margin={"0"}
-						fontWeight={"bold"}
-						color={"brand.secondaryColor1"}
+		<ButtonGroup
+			flexWrap="wrap"
+			display="flex"
+			isAttached
+			variant="outline"
+			colorScheme="blackAlpha"
+			borderRadius={"7px"}
+		>
+			{sizeEquivalenciesOrdered?.map((size, index) => {
+				const currentSizeOption = product.sizeOptions.find((sizeOption) => {
+					return sizeOption.usSize === Number(size);
+				});
+				return (
+					<Tooltip
+						key={`product-size-options-tooltip-tag-${index}`}
+						fontSize={"small"}
+						hasArrow
+						placement="top-start"
+						label={getProperSizeEquivalencies(
+							product.brand,
+							size,
+							currentSizeOption
+						)}
 					>
-						Talles (US):
-					</Text>
-					<SizeDisplayer
-						keyHelper={product._id || "undefined"}
-						allSizes={finalProductSizes}
-						product={product}
-					/>
-				</VStack>
-			)}
-		</>
+						<Button
+							marginTop={".5rem"}
+							onClick={() =>
+								select &&
+								typeof selectedSize === "string" &&
+								select(size.toString())
+							}
+							p={[".8rem", ".8rem 1.5rem"]}
+							isDisabled={!finalProductSizes.includes(Number(size))}
+							color={selectedSize === size ? "white" : "black"}
+							bg={selectedSize === size ? "black" : "white"}
+						>
+							{size.toString()}
+						</Button>
+					</Tooltip>
+				);
+			})}
+		</ButtonGroup>
 	);
 };

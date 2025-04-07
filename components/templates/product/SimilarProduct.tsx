@@ -41,8 +41,8 @@ export const SimilarProduct = () => {
 		);
 
 		const filteredProducts = finalProductsData?.filter((product) => {
-			const tagsFiltering = product.tags?.some((tag) =>
-				currentProduct?.tags?.includes(tag)
+			const tagsFiltering = product.tags?.some(
+				(tag) => currentProduct?.tags?.includes(tag)
 			);
 
 			const sizeFiltering = product.sizeOptions.some(() => {
