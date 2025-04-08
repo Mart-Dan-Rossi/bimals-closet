@@ -66,7 +66,7 @@ const FilterButtons = ({
 	return (
 		<Flex gap={"2rem"}>
 			<BsFilterLeft color="white" />
-			{section === "todo" && setSectionFilter && (
+			{(section === "todo" || section === "sale") && setSectionFilter && (
 				<Menu>
 					<MenuButton as={Button} rightIcon={<GoChevronDown />}>
 						Tipo de producto
@@ -96,9 +96,7 @@ const FilterButtons = ({
 					</MenuList>
 				</Menu>
 			)}
-			{section !== "todo" ||
-			sectionFilter === "calzado" ||
-			sectionFilter === "indumentaria" ? (
+			{sectionFilter === "calzado" || sectionFilter === "indumentaria" ? (
 				<Menu>
 					<MenuButton as={Button} rightIcon={<GoChevronDown />}>
 						Talle

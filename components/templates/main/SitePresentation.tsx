@@ -1,7 +1,10 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
 import { Box, Flex, Image, Text, VStack } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 const SitePresentation = () => {
+	const router = useRouter()
+
 	return (
 		<Flex justifyContent={"center"} margin="4rem 0">
 			<Flex width={"60%"} minW={"420px"} maxW={"1200px"} gap={"2rem"}>
@@ -20,7 +23,7 @@ const SitePresentation = () => {
 						nam molestiae!
 					</Text>
 					<Box alignSelf="center">
-						<CustomButton {...{ text: "Todos los productos" }} />
+						<CustomButton {...{ text: "Todos los productos" }} onClickFunction={()=> router.push("/product/todo")}/>
 					</Box>
 				</VStack>
 				<Image width={"35%"} src="./assets/images/Shoes-Intro2.png" />

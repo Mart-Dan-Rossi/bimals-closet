@@ -35,7 +35,12 @@ export const FilterColorDisplayer = () => {
 				<MenuItem
 					key={`color-${index}`}
 					onClick={() => handleColorSelection(colorData)}
-					bg={color === colorData.name ? "lightGrey" : ""}
+					bg={
+						color?.toLocaleLowerCase() === colorData.name.toLocaleLowerCase()
+							? "lightGrey"
+							: ""
+					}
+					_hover={{backgroundColor: "lightGrey"}}
 				>
 					<Flex align="center" gap={2}>
 						<Box
