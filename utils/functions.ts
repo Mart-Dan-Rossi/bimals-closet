@@ -40,11 +40,14 @@ export function applyFilters(
 			});
 		})();
 
+		const allLowerCaseTags = product.tags?.map((tag) => tag.toLowerCase());
+
 		const isInRightSection = section
 			? section &&
 			  (product.productType.toLocaleLowerCase() ===
 					section.toLocaleLowerCase() ||
-					section === "todo")
+					section === "todo" ||
+					(section === "sale" && allLowerCaseTags?.includes("sale")))
 			: true;
 
 		return (
