@@ -3,13 +3,14 @@ import { useDeleteProduct } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product } from "@/types/product";
 import { applyFilters, getAdminsIds } from "@/utils/functions";
-import { Button, Flex, TabPanel, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, TabPanel, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { FiltersButton } from "../main/FiltersButton";
 import { AdminProductCard } from "./AdminProductCard";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { ProductEditionModal } from "./ProductEditionModal";
+import FilterButtons from "@/components/ui/FilterButtons";
+import { SiteMainSections } from "@/utils/helpers";
 
 const AdminProductsSection = () => {
 	const { finalProductsData, filter, onOpenAddNewProduct } = useGlobalContext();
@@ -28,6 +29,10 @@ const AdminProductsSection = () => {
 	const [isDeleteProduct, setIsDeleteProduct] = useState(false);
 	const [editingProduct, setEditingProduct] = useState(false);
 
+	const [sectionFilter, setSectionFilter] = useState<
+		SiteMainSections | undefined
+	>("todo");
+
 	const [filteredProductsData, setFilteredProductsData] = useState<
 		Product[] | undefined
 	>(finalProductsData);
@@ -39,8 +44,10 @@ const AdminProductsSection = () => {
 	const adminIds = useRef(getAdminsIds()).current as string[];
 
 	useEffect(() => {
-		setFilteredProductsData(applyFilters(finalProductsData, filter));
-	}, [finalProductsData, filter]);
+		setFilteredProductsData(
+			applyFilters(finalProductsData, filter, sectionFilter)
+		);
+	}, [finalProductsData, filter, sectionFilter]);
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
@@ -68,7 +75,14 @@ const AdminProductsSection = () => {
 
 	return (
 		<TabPanel bg={"brand.color1"} minH={"70vh"}>
-			<FiltersButton />
+			<Box marginBottom={"2rem"}>
+				<FilterButtons
+					filteredProductsData={filteredProductsData}
+					sectionFilter={sectionFilter}
+					setSectionFilter={setSectionFilter}
+					section="todo"
+				/>
+			</Box>
 			{filteredProductsData?.map((item, index) => (
 				<AdminProductCard
 					key={`admin-product-card-${item.slug}-${index}`}

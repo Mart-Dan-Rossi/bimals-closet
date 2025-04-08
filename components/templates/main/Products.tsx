@@ -2,55 +2,40 @@ import { BoxCardLoader } from "@/components/animations/CustomLoader";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
 import { applyFilters } from "@/utils/functions";
-import { Box, Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import { SiteMainSections } from "@/utils/helpers";
+import { Box, Flex, SimpleGrid, Text, useBoolean } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
-import { BsFilterLeft } from "react-icons/bs";
 import { ProductCard } from "../product/ProductCard";
+import FilterButtons from "@/components/ui/FilterButtons";
 
 interface Props {
 	hideFilter?: boolean;
+	section?: SiteMainSections;
 }
 
-export const Products = ({ hideFilter }: Props) => {
+export const Products = ({ hideFilter, section }: Props) => {
 	const { filter, finalProductsData, isLoadingProductData } =
 		useGlobalContext();
 
-	const [filteredProductsData, setFinalProductsData] =
+	const [filteredProductsData, setFilteredProductsData] =
 		useState(finalProductsData);
+
+	const [isLoadingFilters, { on: filtersLoaded, off: filtersLoading }] =
+		useBoolean(false);
 
 	useEffect(() => {
 		if (finalProductsData) {
-			const filteredProducts = finalProductsData.filter((product) => {
-				let passAllFilters = true;
-
-				if (filter) {
-					if (passAllFilters && filter.sizeOptions) {
-						const isOverMin = product.sizeOptions?.some((sizeData) => {
-							if (filter.sizeOptions && filter.sizeOptions.usSize) {
-								return sizeData.usSize >= filter.sizeOptions.usSize.min;
-							}
-						});
-
-						const isUnderMax = product.sizeOptions?.some((sizeData) => {
-							if (filter.sizeOptions && filter.sizeOptions.usSize) {
-								return sizeData.usSize <= filter.sizeOptions.usSize.max;
-							}
-						});
-
-						passAllFilters = !!(isOverMin && isUnderMax);
-					}
-				}
-
-				return passAllFilters;
-			});
-
-			setFinalProductsData(applyFilters(filteredProducts, filter));
+			filtersLoading();
+			setFilteredProductsData(applyFilters(finalProductsData, filter, section));
+			filtersLoaded();
 		}
-	}, [finalProductsData, filter]);
+	}, [finalProductsData, filter, section]);
 
 	return (
 		<Box
 			p="0"
+			pt={!hideFilter ? "15rem" : ""}
+			minH={"65vh"}
 			bg={"brand.mainContenetBG"}
 			position="relative"
 			h="100%"
@@ -60,12 +45,10 @@ export const Products = ({ hideFilter }: Props) => {
 				<Box p="3rem" pos="relative" zIndex="">
 					<Box>
 						{!hideFilter && (
-							<Flex gap={"2rem"}>
-								<BsFilterLeft color="white" />
-								<Button>Talle</Button>
-								<Button>Color</Button>
-								<Button>Otros</Button>
-							</Flex>
+							<FilterButtons
+								filteredProductsData={filteredProductsData}
+								section={section}
+							/>
 						)}
 
 						{hideFilter && (
@@ -83,7 +66,7 @@ export const Products = ({ hideFilter }: Props) => {
 					</Box>
 
 					<SimpleGrid columns={[2, 3, 3, 4]} gap="2rem" mt="1rem">
-						{isLoadingProductData ? (
+						{isLoadingFilters && isLoadingProductData ? (
 							<Fragment>
 								{Array(4)
 									.fill(0)
@@ -97,9 +80,7 @@ export const Products = ({ hideFilter }: Props) => {
 							</Fragment>
 						) : (
 							<Fragment>
-								{/* {productsData?.data?.products?.map((product: Product) => ( */}
 								{filteredProductsData &&
-									finalProductsData &&
 									filteredProductsData.map(
 										(product: Product) =>
 											product._id && (

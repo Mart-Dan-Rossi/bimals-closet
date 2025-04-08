@@ -1,7 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
 
-import { FiltersDrawer } from "@/components/FiltersDrawer";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 
@@ -20,7 +19,6 @@ const MainLayout = ({ children, subHeaderName }: childrenProps) => {
 				</Box>
 				<Footer />
 			</Box>
-			<FiltersDrawer />
 		</>
 	);
 };

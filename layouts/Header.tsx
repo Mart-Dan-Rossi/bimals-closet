@@ -62,16 +62,62 @@ export const Header = ({
 					</Box>
 
 					<Flex gap="2rem">
-						<Text fontWeight="bold" fontSize="large" cursor="pointer">
+						<Text
+							fontWeight="bold"
+							fontSize="large"
+							cursor="pointer"
+							color={subHeaderName?.toLowerCase() === "calzado" ? "gold" : ""}
+							_hover={{ color: "gold" }}
+							onClick={() => {
+								if (subHeaderName?.toLowerCase() !== "calzado") {
+									router.push("/product/shoesSection");
+								}
+							}}
+						>
 							Calzado
 						</Text>
-						<Text fontWeight="bold" fontSize="large" cursor="pointer">
+						<Text
+							fontWeight="bold"
+							fontSize="large"
+							cursor="pointer"
+							color={
+								subHeaderName?.toLowerCase() === "indumentaria" ? "gold" : ""
+							}
+							_hover={{ color: "gold" }}
+							onClick={() => {
+								if (subHeaderName?.toLowerCase() !== "indumentaria") {
+									router.push("/product/indumentaria");
+								}
+							}}
+						>
 							Indumentaria
 						</Text>
-						<Text fontWeight="bold" fontSize="large" cursor="pointer">
+						<Text
+							fontWeight="bold"
+							fontSize="large"
+							cursor="pointer"
+							color={subHeaderName?.toLowerCase() === "sale" ? "gold" : ""}
+							_hover={{ color: "gold" }}
+							onClick={() => {
+								if (subHeaderName?.toLowerCase() !== "sale") {
+									router.push("/product/sale");
+								}
+							}}
+						>
 							Sale
 						</Text>
-						<Text fontWeight="bold" fontSize="large" cursor="pointer">
+						<Text
+							fontWeight="bold"
+							fontSize="large"
+							cursor="pointer"
+							color={subHeaderName?.toLowerCase() === "todo" ? "gold" : ""}
+							_hover={{ color: "gold" }}
+							onClick={() => {
+								if (subHeaderName?.toLowerCase() !== "todo") {
+									router.push("/product/todo");
+								}
+							}}
+						>
 							Todo
 						</Text>
 					</Flex>

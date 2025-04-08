@@ -1,6 +1,7 @@
 import { ProductsFilter } from "@/types/filters";
 import { Product, ReservedData } from "@/types/product";
 import { ColorOptions } from "./productCaracteristics";
+import { SiteMainSections } from "./helpers";
 
 export function capitalize(string: string) {
 	return `${string[0].toUpperCase()}${string.slice(1)}`;
@@ -8,10 +9,12 @@ export function capitalize(string: string) {
 
 export function applyFilters(
 	products: Product[] | undefined,
-	filter?: ProductsFilter
+	filter?: ProductsFilter,
+	section?: SiteMainSections
 ): Product[] {
 	if (!products) return [];
 	if (!filter) return products;
+
 	return products.filter((product) => {
 		const passSizeFilter = (() => {
 			if (!filter.sizeOptions?.usSize) return true;
@@ -22,6 +25,13 @@ export function applyFilters(
 			);
 		})();
 
+		const passColorFilter = (() => {
+			if (!filter.sizeOptions?.color) return true;
+
+			const filterColor = filter.sizeOptions.color;
+			return product.sizeOptions.some(({ color }) => color === filterColor);
+		})();
+
 		const passTagFilter = (() => {
 			if (!filter.tags || filter.tags.length === 0) return true;
 
@@ -30,7 +40,16 @@ export function applyFilters(
 			});
 		})();
 
-		return passSizeFilter && passTagFilter;
+		const isInRightSection = section
+			? section &&
+			  (product.productType.toLocaleLowerCase() ===
+					section.toLocaleLowerCase() ||
+					section === "todo")
+			: true;
+
+		return (
+			passSizeFilter && passTagFilter && passColorFilter && isInRightSection
+		);
 	});
 }
 

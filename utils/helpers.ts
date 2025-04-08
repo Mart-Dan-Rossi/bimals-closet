@@ -17,3 +17,10 @@ export const getLocalStorage = <T>(key: string): T | null => {
 		return null;
 	}
 };
+
+export type SiteMainSections =
+	| "home"
+	| "calzado"
+	| "indumentaria"
+	| "sale"
+	| "todo";

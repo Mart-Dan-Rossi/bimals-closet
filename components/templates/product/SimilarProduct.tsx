@@ -41,6 +41,9 @@ export const SimilarProduct = () => {
 		);
 
 		const filteredProducts = finalProductsData?.filter((product) => {
+			if (!currentProduct) {
+				return true;
+			}
 			const tagsFiltering = product.tags?.some(
 				(tag) => currentProduct?.tags?.includes(tag)
 			);
