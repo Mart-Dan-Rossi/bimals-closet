@@ -35,6 +35,29 @@ export const Products = ({ hideFilter, section }: Props) => {
 		}
 	}, [finalProductsData, filter, section]);
 
+	function getProductsToShow() {
+		if (filteredProductsData) {
+			if (hideFilter) {
+				return filteredProductsData
+					.sort((a, b) => {
+						if (a.createdAt && b.createdAt) {
+							return (
+								new Date(b.createdAt).getTime() -
+								new Date(a.createdAt).getTime()
+							);
+						} else {
+							return 0;
+						}
+					})
+					.slice(0, 20);
+			} else {
+				return filteredProductsData;
+			}
+		}
+
+		return [];
+	}
+
 	return (
 		<Box
 			p="0"
@@ -86,28 +109,27 @@ export const Products = ({ hideFilter, section }: Props) => {
 							</Fragment>
 						) : (
 							<Fragment>
-								{filteredProductsData &&
-									filteredProductsData
-										.sort((a, b) => {
-											if (a.createdAt && b.createdAt) {
-												return (
-													new Date(b.createdAt).getTime() -
-													new Date(a.createdAt).getTime()
-												);
-											} else {
-												return 0;
-											}
-										})
-										.slice(0, 10)
-										.map(
-											(product: Product) =>
-												product._id && (
-													<ProductCard
-														key={`products-general-view-${product._id}-${product.slug}`}
-														product={product}
-													/>
-												)
-										)}
+								{filteredProductsData && getProductsToShow().length > 0 ? (
+									getProductsToShow().map(
+										(product: Product) =>
+											product._id && (
+												<ProductCard
+													key={`products-general-view-${product._id}-${product.slug}`}
+													product={product}
+												/>
+											)
+									)
+								) : (
+									<Text
+										w={"70vw"}
+										fontSize={"x-large"}
+										fontWeight={"bold"}
+										color={"brand.white200"}
+									>
+										En este momento no hay productos con estas características
+										para mostrar
+									</Text>
+								)}
 							</Fragment>
 						)}
 					</SimpleGrid>
