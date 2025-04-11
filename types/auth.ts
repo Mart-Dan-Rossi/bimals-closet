@@ -1,14 +1,17 @@
 export type IFormLoginInput = {
+	fullName: string;
+	phoneNumber: string;
 	email?: string;
 	password?: string;
 	newPassword?: string;
-	confirmPassword?: string;
-	code?: string;
+	passwordVerification?: string;
+	userId?: string;
 };
 
 export type IFormRegisterInput = {
 	email: string;
 	password: string;
+	passwordVerification: string;
 	fullName: string;
 	phoneNumber: string;
 };

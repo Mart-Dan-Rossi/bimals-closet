@@ -1,16 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useShowToast } from "../toast/useShowToast";
-import { onError } from "@/utils/error";
 import {
 	forgotPassword,
 	getUser,
 	loginUser,
 	registerUser,
-	resetPassword,
+	editProfile,
 	verifyEmailToken,
 } from "@/queries/auth";
 import { IFormLoginInput, IFormRegisterInput, UserData } from "@/types/auth";
+import { onError } from "@/utils/error";
 import { useRouter } from "next/router";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useShowToast } from "../toast/useShowToast";
 
 export const useGetUser = (userId: string) => {
 	return useQuery<UserData>({
@@ -75,12 +75,12 @@ export const useForgotPassword = () => {
 	});
 };
 
-export const useResetPassword = () => {
+export const useEditProfile = () => {
 	const queryClient = useQueryClient();
 	const toast = useShowToast();
 
 	return useMutation({
-		mutationFn: (payload: IFormLoginInput) => resetPassword(payload),
+		mutationFn: (payload: IFormLoginInput) => editProfile(payload),
 		onSuccess: () => {
 			queryClient.invalidateQueries();
 			toast({

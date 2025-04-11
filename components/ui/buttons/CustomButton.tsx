@@ -22,6 +22,7 @@ export const CustomButton = ({
 	isBtnIcon,
 	isValidData,
 	onClickFunction,
+	isSubmitButton,
 }: CustomButtonProps) => {
 	return (
 		<Box>
@@ -36,13 +37,17 @@ export const CustomButton = ({
 				borderRadius="10px"
 				boxShadow={boxShadow || standardBoxShadow}
 				borderColor={borderColor || "brand.green500"}
-				type={isValidData ? "submit" : "button"}
+				type={isSubmitButton && isValidData ? "submit" : "button"}
 				onClick={
-					isValidData
+					isSubmitButton && isValidData
 						? () => {
-								console.log("Upload data");
+								console.log("click");
 						  }
-						: onClickFunction
+						: !isSubmitButton
+						? onClickFunction
+						: () => {
+								console.log("click");
+						  }
 				}
 				cursor="pointer"
 				fontSize={fontSize || ["1.5rem", "1.8rem", "1.6rem", "1.8rem"]}

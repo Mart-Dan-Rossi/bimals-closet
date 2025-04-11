@@ -3,7 +3,7 @@ import { Box, Flex, Image, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
 const SitePresentation = () => {
-	const router = useRouter()
+	const router = useRouter();
 
 	return (
 		<Flex justifyContent={"center"} margin="4rem 0">
@@ -23,7 +23,10 @@ const SitePresentation = () => {
 						nam molestiae!
 					</Text>
 					<Box alignSelf="center">
-						<CustomButton {...{ text: "Todos los productos" }} onClickFunction={()=> router.push("/product/todo")}/>
+						<CustomButton
+							{...{ text: "Todos los productos" }}
+							onClickFunction={() => router.push("/product/todo")}
+						/>
 					</Box>
 				</VStack>
 				<Image width={"35%"} src="./assets/images/Shoes-Intro2.png" />

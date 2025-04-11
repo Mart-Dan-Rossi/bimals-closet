@@ -1,6 +1,6 @@
 import { IconType } from "react-icons";
 import { GiLoincloth, GiTrousers } from "react-icons/gi";
-import { GoHeart } from "react-icons/go";
+import { GoGear, GoHeart } from "react-icons/go";
 import { IoMdLogOut } from "react-icons/io";
 import { SiGooglemybusiness } from "react-icons/si";
 import { TiShoppingCart } from "react-icons/ti";
@@ -29,6 +29,11 @@ export const AuthModalData: AuthModalDataProps[] = [
 	{
 		icon: IoMdLogOut,
 		text: "Desconectar",
+	},
+	{
+		icon: GoGear,
+		text: "Editar perfil",
+		link: "/auth/edit-profile",
 	},
 ];
 

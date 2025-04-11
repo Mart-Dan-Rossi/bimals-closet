@@ -1,36 +1,46 @@
 import { CustomButton } from "@/components/ui/buttons/CustomButton";
 import { CustomInput } from "@/components/ui/forms/CustomInput";
-import { useResetPassword } from "@/hooks/auth/useAuth";
+import { useEditProfile } from "@/hooks/auth/useAuth";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 import { IFormLoginInput } from "@/types/auth";
 import { Box, Icon, Image, Stack, Text, useBoolean } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import { withAuth } from "../../components/templates/withAuth";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
+import PhoneInput from "react-phone-input-2";
 
 const ResetPassword = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [status, setStatus] = useBoolean();
+	const [phoneInput, setPhoneInput] = useState("");
 	const toast = useShowToast();
-	const { mutateAsync, isLoading } = useResetPassword();
+	const { mutateAsync, isLoading } = useEditProfile();
 	const router = useRouter();
-	const { code } = router.query;
+
+	const token = useHydratedStoreState("token");
+
+	const storedUser = localStorage.getItem("MateoShoesUser");
+	const user = storedUser && token ? JSON.parse(storedUser) : undefined;
 
 	const {
 		register,
 		handleSubmit,
+		control,
 		formState: { errors },
 	} = useForm<IFormLoginInput>();
 
 	const onSubmit: SubmitHandler<IFormLoginInput> = async (data) => {
-		const { newPassword, confirmPassword } = data;
+		console.log("submit");
+		const { fullName, phoneNumber, email, newPassword, passwordVerification } =
+			data;
 
-		if (newPassword !== confirmPassword) {
+		if (newPassword !== passwordVerification) {
 			return toast({
 				status: "error",
 				title:
@@ -38,7 +48,14 @@ const ResetPassword = () => {
 			});
 		}
 
-		const payload = { newPassword, resetToken: code };
+		const payload = {
+			fullName,
+			phoneNumber,
+			email,
+			newPassword,
+			passwordVerification,
+			userId: user?.id,
+		};
 
 		try {
 			const res = await mutateAsync(payload);
@@ -105,16 +122,14 @@ const ResetPassword = () => {
 						/>
 					)}
 					<Text
-						color={"brand.secondaryColor1"}
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 						textAlign="center"
 						px="4rem"
 					>
-						{!status ? "Reset Password" : "Password Reset Successful"}
+						{!status ? "Editar perfil" : "Perfil editado exitosamente"}
 					</Text>
 					<Text
-						color={"brand.secondaryColor1"}
 						fontWeight="500"
 						fontSize={["1.4rem", "1.15rem", "1.15rem", "1.4rem"]}
 						letterSpacing="0.05rem"
@@ -122,8 +137,8 @@ const ResetPassword = () => {
 						px="4rem"
 					>
 						{!status
-							? "Buen trabajo, clickeaste el link para cambiar tu contraseña. introduce la contraseña nueva."
-							: "Felicitaciones! Tu contraseña se cambió correctamente. Tienes una nueva contraseña. Clickea el botón de debajo para conectarte"}
+							? "Introduce los nuevos datos."
+							: "Felicitaciones! Tu perfil se cambió correctamente. Clickea el botón de debajo para conectarte nuevamente"}
 					</Text>
 
 					<Box
@@ -132,8 +147,84 @@ const ResetPassword = () => {
 						px="4rem"
 						onSubmit={handleSubmit(onSubmit)}
 					>
-						{!status && (
+						{!status && user && (
 							<Fragment>
+								<Box my="2rem">
+									<CustomInput
+										{...{
+											id: "fullName",
+											defaultValue: user.name,
+											type: "text",
+											formHook: register("fullName", {
+												required: "Por favor introduce tu nombre completo",
+											}),
+											errorMessage: errors.fullName?.message as string,
+										}}
+									/>
+								</Box>
+								<Box my="2rem">
+									<CustomInput
+										{...{
+											id: "email",
+											defaultValue: user.email,
+											type: "text",
+											formHook: register("email", {
+												required: "Por favor introduce tu mail",
+											}),
+											errorMessage: errors.email?.message as string,
+										}}
+									/>
+								</Box>
+
+								<Box my="2rem">
+									<Controller
+										name="phoneNumber"
+										control={control}
+										rules={{
+											required: "Por favor introduce tu número de teléfono",
+										}}
+										render={({ field }) => {
+											return (
+												<PhoneInput
+													country="ar"
+													value={phoneInput}
+													autoFormat={true}
+													onChange={(e) => {
+														setPhoneInput(e);
+														field.onChange(e);
+													}}
+													inputClass="phone-input"
+													inputProps={{
+														id: "phoneNumber",
+														placeholder: "Número de teléfono",
+														required: true,
+													}}
+													inputStyle={{
+														border: "1px solid #EAEAEA",
+														paddingLeft: "5rem",
+														borderRadius: "1rem",
+														cursor: "pointer",
+														margin: "2rem 0",
+														padding: "2rem 3rem 2rem 4.5rem",
+														width: "100%",
+														fontSize: "1.6rem",
+													}}
+												/>
+											);
+										}}
+									/>
+									{errors.phoneNumber && (
+										<Text
+											color={"brand.red100"}
+											fontSize="1.1rem"
+											fontWeight="300"
+											mt=".5rem"
+										>
+											{errors.phoneNumber.message}
+										</Text>
+									)}
+								</Box>
+
 								<Box my="2rem">
 									<CustomInput
 										{...{
@@ -167,10 +258,10 @@ const ResetPassword = () => {
 								<Box my="2rem">
 									<CustomInput
 										{...{
-											id: "confirmPassword",
+											id: "passwordVerification",
 											placeholder: "Confirmar contraseña",
 											type: showConfirmPassword ? "text" : "password",
-											formHook: register("confirmPassword", {
+											formHook: register("passwordVerification", {
 												required: "Por favor confirma tu contraseña",
 												pattern: {
 													value: /^(?=.*[A-Z])(?=.*\d)[^\s]{8,}$/,
@@ -194,7 +285,8 @@ const ResetPassword = () => {
 												</Box>
 											),
 
-											errorMessage: errors.confirmPassword?.message as string,
+											errorMessage: errors.passwordVerification
+												?.message as string,
 										}}
 									/>
 								</Box>
@@ -202,7 +294,14 @@ const ResetPassword = () => {
 						)}
 
 						{!status ? (
-							<CustomButton {...{ text: "Cambiar contraseña", isLoading }} />
+							<CustomButton
+								{...{
+									text: "Confirmar edición",
+									isLoading,
+									isValidData: Object.keys(errors).length === 0,
+									isSubmitButton: true,
+								}}
+							/>
 						) : (
 							<Box>
 								<Box

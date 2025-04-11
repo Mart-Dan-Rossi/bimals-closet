@@ -443,6 +443,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 								isValidPriceData &&
 								isValidsizeOptionsData
 							}
+							isSubmitButton={true}
 						/>
 					</Box>
 				</ModalBody>

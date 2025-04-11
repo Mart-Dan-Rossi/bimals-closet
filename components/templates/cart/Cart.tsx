@@ -100,7 +100,7 @@ export const CartItems = () => {
 	}, [finalProductsData, token]);
 
 	return (
-		<Box pt="15rem" pb="5rem" bg={"brand.lightGrey"} minHeight={"90vh"}>
+		<Box pt="15rem" pb="5rem" bg={"brand.white400"} minHeight={"90vh"}>
 			<Flex alignItems={"center"} flexDirection={"column"}>
 				<Box ml={"9%"} alignSelf={"flex-start"}>
 					<PreviousPageButton />

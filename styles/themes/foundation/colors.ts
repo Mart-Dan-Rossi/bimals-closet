@@ -1,7 +1,8 @@
 export const customColors = {
 	brand: {
 		headerBG: "linear-gradient(110deg, #ca0101 0%, #000000 50%)",
-		// footerBG: "linear-gradient(290deg, #ca0101 0%, #000000 20%)",
+		cartCardBG: "linear-gradient(290deg, #ca0101 0%, #000000 20%)",
+		cartFooterBG: "linear-gradient(90deg, #3a3939, #000000, #3a3939);",
 		footerBG: "#3a3939",
 		black: "black",
 		mainContenetBG: "linear-gradient(180deg, #000000, #3a3939);",
@@ -17,10 +18,10 @@ export const customColors = {
 			"linear-gradient(183.58deg, #ca0101 74.64%, rgba(0, 175, 84, 0) 201.35%)",
 		white100: "#ffffff",
 		white200: "#fafafa",
-		lightGrey: "#e6e6e6",
 		white400: "#979797",
 		white500: "#F0F0F0",
 		white600: "#DFDFDF",
+		lightGrey: "#e6e6e6",
 		gold100: "#FBAF00",
 		red100: "#FF0E0E",
 		blue100: "#007CBE",

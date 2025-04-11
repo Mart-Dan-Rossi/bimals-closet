@@ -1,8 +1,6 @@
 import { useShowToast } from "@/hooks/toast/useShowToast";
-// import { IFormRegisterInput } from "@/types/auth";
 import { Box, Flex, Icon } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-// import { useForm } from "react-hook-form";
 import {
 	FaFacebookF,
 	FaInstagram,
@@ -11,13 +9,6 @@ import {
 } from "react-icons/fa";
 
 export const Footer = () => {
-	// const {
-	// 	// register,
-	// 	// handleSubmit,
-	// 	// control,
-	// 	// formState: { errors },
-	// } = useForm<IFormRegisterInput>();
-
 	const router = useRouter();
 
 	const toast = useShowToast();

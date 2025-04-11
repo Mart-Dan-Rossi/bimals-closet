@@ -38,11 +38,7 @@ const AdminProductDataDisplay = ({
 	return (
 		<Stack ml="2rem" flexDir="column" spacing="1.2rem">
 			<Flex gap={"2rem"}>
-				<Text
-					fontSize="1.8rem"
-					fontWeight="600"
-					color={"brand.secondaryColor1"}
-				>
+				<Text fontSize="1.8rem" fontWeight="600">
 					{name} {brand && capitalize(brand)}
 				</Text>
 				{tags &&

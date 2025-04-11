@@ -38,11 +38,7 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 							alignItems={"left"}
 							m={"0 2rem 2rem 0	"}
 						>
-							<Text
-								fontSize="1.7rem"
-								fontWeight="600"
-								color={"brand.secondaryColor1"}
-							>
+							<Text fontSize="1.7rem" fontWeight="600">
 								Color {color}:
 							</Text>
 							<VStack ml={"2rem"}>
@@ -52,20 +48,14 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 											key={`groupedSizeOption-${color}-sizeOption${sizeOption.usSize}`}
 											mb={"2rem"}
 										>
-											<Text
-												ml={"2rem"}
-												fontSize="1.4rem"
-												fontWeight="600"
-												color={"brand.secondaryColor1"}
-											>
+											<Text ml={"2rem"} fontSize="1.4rem" fontWeight="600">
 												Talle:{" "}
 												<Button
 													disabled={true}
 													fontSize="1.4rem"
 													fontWeight="600"
 													cursor={"auto"}
-													color={"brand.secondaryColor1"}
-													bg={"brand.color2"}
+													bg={"brand.white500"}
 													_hover={{ backgroundColor: "brand.color2" }}
 												>
 													{brand ? (
@@ -86,12 +76,7 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 													)}
 												</Button>
 											</Text>
-											<Text
-												ml={"2rem"}
-												fontSize="1.4rem"
-												fontWeight="600"
-												color={"brand.secondaryColor1"}
-											>
+											<Text ml={"2rem"} fontSize="1.4rem" fontWeight="600">
 												Cantidad: {sizeOption.quantity}
 											</Text>
 										</Box>

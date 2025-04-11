@@ -21,11 +21,12 @@ export const CartProductCard = ({
 }: Props) => {
 	return (
 		<Flex
-			bg={"brand.color2"}
+			bg={"brand.cartCardBG"}
 			borderRadius="1rem"
 			p="1rem"
 			justify="space-between"
 			mb="2rem"
+			color="brand.white200"
 		>
 			<Flex>
 				<Box overflow="hidden" borderRadius="1rem">
@@ -38,23 +39,14 @@ export const CartProductCard = ({
 				</Box>
 
 				<Stack ml="2rem" flexDir="column" spacing="1.2rem">
-					<Text
-						fontSize="1.8rem"
-						fontWeight="300"
-						color={"brand.secondaryColor1"}
-					>
+					<Text fontSize="1.8rem" fontWeight="300">
 						{item?.name.split("-")[0]}
 					</Text>
 					<Flex align="center">
 						<Text fontSize="1.7rem" fontWeight="600">
 							AR$ {item?.unit_price?.toFixed(2)}{" "}
 						</Text>
-						<Text
-							ml=".5rem"
-							fontSize="1.5rem"
-							fontWeight="300"
-							color={"brand.black"}
-						>
+						<Text ml=".5rem" fontSize="1.5rem" fontWeight="300">
 							{item?.quantity &&
 								item?.quantity > 1 &&
 								`x ${item?.quantity} = AR$ ${(
@@ -63,11 +55,7 @@ export const CartProductCard = ({
 						</Text>
 					</Flex>
 					<Flex align="center">
-						<Text
-							fontSize="1.4rem"
-							fontWeight="600"
-							color={"brand.secondaryColor1"}
-						>
+						<Text fontSize="1.4rem" fontWeight="600">
 							Talle (US):
 						</Text>
 						<Text as="span" fontWeight="400" ml=".5rem">
@@ -76,12 +64,7 @@ export const CartProductCard = ({
 					</Flex>
 
 					<Flex align="center">
-						<Text
-							display={"inline-block"}
-							fontSize="1.4rem"
-							fontWeight="600"
-							color={"brand.secondaryColor1"}
-						>
+						<Text display={"inline-block"} fontSize="1.4rem" fontWeight="600">
 							Cantidad:{" "}
 							<Text display={"inline-block"} fontWeight="300">
 								{item.quantity}
@@ -89,11 +72,7 @@ export const CartProductCard = ({
 						</Text>
 					</Flex>
 					<Flex alignItems={"center"}>
-						<Text
-							fontSize="1.4rem"
-							fontWeight="600"
-							color={"brand.secondaryColor1"}
-						>
+						<Text fontSize="1.4rem" fontWeight="600">
 							Color:
 						</Text>
 						<Text ml={"0.5rem"}>{color}</Text>
@@ -102,12 +81,7 @@ export const CartProductCard = ({
 			</Flex>
 
 			<Box onClick={() => removeFromCart(item?.id, item.name)}>
-				<Icon
-					as={RiDeleteBinLine}
-					fontSize="2rem"
-					cursor="pointer"
-					color={"brand.secondaryColor2"}
-				/>
+				<Icon as={RiDeleteBinLine} fontSize="2rem" cursor="pointer" />
 			</Box>
 		</Flex>
 	);

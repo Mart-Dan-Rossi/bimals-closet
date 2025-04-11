@@ -36,11 +36,8 @@ const Register = () => {
 
 			if (res?.status === "success") {
 				setTimeout(() => {
-					router.push({
-						pathname: "/auth/verify-email",
-						query: { email: res?.data?.email },
-					});
-				}, 1500);
+					router.push("/auth/login");
+				});
 			}
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
@@ -72,17 +69,6 @@ const Register = () => {
 							alt="Fondo de 'regístrate'"
 						/>
 					</Box>
-					<Box>
-						<Text
-							color="#fff"
-							pl=".6rem"
-							fontWeight="600"
-							textAlign="left"
-							fontSize="1.5rem"
-						>
-							Paso 1 de 3
-						</Text>
-					</Box>
 				</Box>
 
 				<Box
@@ -95,7 +81,6 @@ const Register = () => {
 					flexDir="column"
 				>
 					<Text
-						color={"brand.secondaryColor1"}
 						fontWeight="600"
 						fontSize={["3rem", "2.5rem", "2.5rem", "3rem"]}
 					>
@@ -215,14 +200,50 @@ const Register = () => {
 								}}
 							/>
 						</Box>
+						<Box my="2rem">
+							<CustomInput
+								{...{
+									id: "passwordVerification",
+									repeatInput: true,
+									placeholder: "Repita contraseña",
+									type: showPassword ? "text" : "password",
+									formHook: register("passwordVerification", {
+										required: "Por favor introduce la contraseña",
+										pattern: {
+											value: /^(?=.*[A-Z])(?=.*\d)[^\s]{8,}$/,
+											message: "Debe coincidir con la contraseña",
+										},
+									}),
+									handlePasswordClick: () => setShowPassword(!showPassword),
+									passwordIcon: (
+										<Box onClick={() => setShowPassword(!showPassword)}>
+											{showPassword ? (
+												<AiOutlineEye />
+											) : (
+												<AiOutlineEyeInvisible />
+											)}
+										</Box>
+									),
 
-						<CustomButton {...{ text: "Crear cuenta", isLoading }} />
+									errorMessage: errors.password?.message as string,
+								}}
+							/>
+						</Box>
+
+						<CustomButton
+							{...{
+								text: "Crear cuenta",
+								isLoading,
+								isValidData: Object.keys(errors).length === 0,
+								isSubmitButton: true,
+							}}
+						/>
 
 						<Box>
 							<Box cursor="pointer" onClick={() => router.push("/auth/login")}>
 								<Text
 									mt=".7rem"
-									color={"brand.secondaryColor2"}
+									color={"brand.seconda	ryColor2"}
 									fontWeight="500"
 									fontSize="1.3rem"
 								>

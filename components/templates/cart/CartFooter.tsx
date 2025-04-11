@@ -199,11 +199,12 @@ const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
 		<>
 			{cart && (
 				<Flex
-					bg={"brand.color2"}
+					bg={"brand.cartFooterBG"}
 					borderRadius="1rem"
 					p="2rem"
 					justify="space-between"
 					mt="5rem"
+					color={"brand.white200"}
 				>
 					<Box overflow="hidden" borderRadius="1rem">
 						<Text fontWeight="600">Total de Items</Text>

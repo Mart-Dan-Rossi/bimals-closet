@@ -13,8 +13,9 @@ const ReservedProductsTab = ({ userReservedProducts }: Props) => {
 				return (
 					<Flex
 						key={`reservedProductsTab-${item._id}`}
-						bg={"brand.secondaryColor5"}
+						bg={"brand.headerBG"}
 						borderRadius="1rem"
+						color={"brand.white100"}
 						p="1rem"
 						justify="space-between"
 						mb="2rem"

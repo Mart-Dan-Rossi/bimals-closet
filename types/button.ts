@@ -20,4 +20,5 @@ export type CustomButtonProps = {
 	isBtnIcon?: boolean;
 	isValidData?: boolean;
 	onClickFunction?: () => void;
+	isSubmitButton?: boolean;
 };

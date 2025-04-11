@@ -1,3 +1,5 @@
+import { useGlobalContext } from "@/context/GlobalContext";
+import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 import { Product } from "@/types/product";
 import { Box, Circle, Flex, Icon, Img, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -14,21 +16,20 @@ interface Props {
 export const WishlistProductCard = ({ product }: Props) => {
 	const router = useRouter();
 
-	// const mapProducts = wishlistData?.map((item: Product) => {
-	// 	const res = {
-	// 		...item,
-	// 		isFavorite: true,
-	// 	};
-	// 	return res;
-	// });
+	const { finalProductsData } = useGlobalContext();
+
+	const { toggleProductChecked, isProductChecked } = useToggleFavorite(
+		finalProductsData ?? []
+	);
 
 	return (
 		<Flex
-			bg={"brand.color2"}
+			bg={"brand.cartCardBG"}
 			borderRadius="1rem"
 			p="1rem"
 			justify="space-between"
 			mb="2rem"
+			color={"brand.white100"}
 		>
 			<Flex w="100%">
 				<Box
@@ -56,11 +57,7 @@ export const WishlistProductCard = ({ product }: Props) => {
 							cursor="pointer"
 							onClick={() => router.push(`/product/${product?.slug}`)}
 						>
-							<Text
-								fontSize="1.8rem"
-								fontWeight="300"
-								color={"brand.secondaryColor1"}
-							>
+							<Text fontSize="1.8rem" fontWeight="300">
 								{product?.name}
 							</Text>
 						</Box>
@@ -73,18 +70,26 @@ export const WishlistProductCard = ({ product }: Props) => {
 					</Stack>
 
 					<Circle
+						cursor={"pointer"}
 						bg={"brand.white100"}
 						p=".5rem"
 						pos="absolute"
 						right="0"
 						top=".1rem"
+						onClick={() => {
+							if (product._id) toggleProductChecked(product?._id);
+						}}
 					>
 						<Icon
 							color={`${
 								product?.isFavorite ? "brand.red100" : "brand.secondaryColor2"
 							}`}
 							fontSize="1.5rem"
-							as={product?.isFavorite ? GoHeartFill : GoHeart}
+							as={
+								product._id && isProductChecked(product._id)
+									? GoHeartFill
+									: GoHeart
+							}
 						/>
 					</Circle>
 				</Flex>

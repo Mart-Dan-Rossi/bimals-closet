@@ -16,10 +16,13 @@ export const withAuth = <T extends object>(
 		useEffect(() => {
 			const checkAuthentication = async () => {
 				if (token !== undefined) {
-					if (token && router.pathname !== "/") {
+					if (
+						token &&
+						router.pathname !== "/" &&
+						router.pathname !== "/auth/login" &&
+						router.pathname !== "/auth/edit-profile"
+					) {
 						await router.push("/");
-					} else if (!token && router.pathname !== "/auth/login") {
-						await router.push("/auth/login");
 					}
 					setAuthChecked(true);
 					setRenderLoading(false);

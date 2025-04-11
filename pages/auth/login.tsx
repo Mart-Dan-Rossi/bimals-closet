@@ -182,7 +182,12 @@ const Login = () => {
 						</Box>
 
 						<CustomButton
-							{...{ text: "Loguear", isLoading, isValidData: true }}
+							{...{
+								text: "Loguear",
+								isLoading,
+								isValidData: true,
+								isSubmitButton: true,
+							}}
 						/>
 
 						<Box>

@@ -28,11 +28,8 @@ export const forgotPassword = async (payload: IFormLoginInput) => {
 	return data;
 };
 
-export const resetPassword = async (payload: IFormLoginInput) => {
-	const { data } = await AxiosInstance.post(
-		"/api/users/reset-password",
-		payload
-	);
+export const editProfile = async (payload: IFormLoginInput) => {
+	const { data } = await AxiosInstance.post("/api/users/edit-profile", payload);
 
 	return data;
 };

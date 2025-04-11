@@ -40,7 +40,7 @@ export const FilterColorDisplayer = () => {
 							? "lightGrey"
 							: ""
 					}
-					_hover={{backgroundColor: "lightGrey"}}
+					_hover={{ backgroundColor: "lightGrey" }}
 				>
 					<Flex align="center" gap={2}>
 						<Box
