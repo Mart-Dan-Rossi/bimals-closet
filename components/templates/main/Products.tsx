@@ -87,15 +87,27 @@ export const Products = ({ hideFilter, section }: Props) => {
 						) : (
 							<Fragment>
 								{filteredProductsData &&
-									filteredProductsData.map(
-										(product: Product) =>
-											product._id && (
-												<ProductCard
-													key={`products-general-view-${product._id}-${product.slug}`}
-													product={product}
-												/>
-											)
-									)}
+									filteredProductsData
+										.sort((a, b) => {
+											if (a.createdAt && b.createdAt) {
+												return (
+													new Date(b.createdAt).getTime() -
+													new Date(a.createdAt).getTime()
+												);
+											} else {
+												return 0;
+											}
+										})
+										.slice(0, 10)
+										.map(
+											(product: Product) =>
+												product._id && (
+													<ProductCard
+														key={`products-general-view-${product._id}-${product.slug}`}
+														product={product}
+													/>
+												)
+										)}
 							</Fragment>
 						)}
 					</SimpleGrid>

@@ -42,6 +42,7 @@ export type Product = {
 	tags?: string[];
 	isFavorite?: boolean;
 	reservedData?: ReservedData[];
+	createdAt?: string;
 };
 
 export type ProductListProps = {

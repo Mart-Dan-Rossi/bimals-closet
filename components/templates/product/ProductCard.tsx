@@ -37,6 +37,7 @@ export const ProductCard = ({ product }: Props) => {
 				pos="absolute"
 				left="15px"
 				top="15px"
+				cursor="pointer"
 			>
 				<Icon
 					onClick={() => {
