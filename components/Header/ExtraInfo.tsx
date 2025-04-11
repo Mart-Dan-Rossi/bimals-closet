@@ -55,7 +55,10 @@ export const ExtraInfo = ({
 			</Box>
 
 			{openModal && token !== undefined ? (
-				<MobileNavbar loggedIsAdmin={loggedIsAdmin} />
+				<MobileNavbar
+					loggedIsAdmin={loggedIsAdmin}
+					subHeaderName={subHeaderName}
+				/>
 			) : null}
 			{openCatgories && subHeaderName === "Categories" ? (
 				<CategoriesModal />

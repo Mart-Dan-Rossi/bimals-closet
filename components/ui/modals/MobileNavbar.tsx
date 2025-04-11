@@ -1,5 +1,6 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
+import MainSectionsNavigation from "@/layouts/MainSectionNavigation";
 import { AuthModalData } from "@/utils/modal";
 import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -7,9 +8,10 @@ import { Fragment } from "react";
 
 interface Props {
 	loggedIsAdmin: boolean;
+	subHeaderName?: string;
 }
 
-export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
+export const MobileNavbar = ({ loggedIsAdmin, subHeaderName }: Props) => {
 	const router = useRouter();
 
 	const { handleLogout } = useGlobalContext();
@@ -44,11 +46,17 @@ export const MobileNavbar = ({ loggedIsAdmin }: Props) => {
 					fontWeight="500"
 					spacing={0}
 				>
+					<MainSectionsNavigation
+						subHeaderName={subHeaderName}
+						isMobile={true}
+					/>
+
 					{loggedIsAdmin && (
 						<Box cursor="pointer" onClick={() => router.push("/adminPanel")}>
 							Admin panel
 						</Box>
 					)}
+
 					{AuthModalData.map((item, idx) => {
 						return (
 							<Fragment key={idx}>

@@ -2,9 +2,10 @@ import { BurguerIcon } from "@/components/Header/BurguerIcon";
 import { DesktopUserInteraction } from "@/components/Header/DesktopUserInteraction";
 import { ExtraInfo } from "@/components/Header/ExtraInfo";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
-import { Box, Flex, Stack, Text, useBoolean } from "@chakra-ui/react";
+import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+import MainSectionsNavigation from "./MainSectionNavigation";
 
 export const Header = ({
 	subHeaderName,
@@ -61,66 +62,10 @@ export const Header = ({
 						</Box>
 					</Box>
 
-					<Flex gap="2rem">
-						<Text
-							fontWeight="bold"
-							fontSize="large"
-							cursor="pointer"
-							color={subHeaderName?.toLowerCase() === "calzado" ? "gold" : ""}
-							_hover={{ color: "gold" }}
-							onClick={() => {
-								if (subHeaderName?.toLowerCase() !== "calzado") {
-									router.push("/product/shoesSection");
-								}
-							}}
-						>
-							Calzado
-						</Text>
-						<Text
-							fontWeight="bold"
-							fontSize="large"
-							cursor="pointer"
-							color={
-								subHeaderName?.toLowerCase() === "indumentaria" ? "gold" : ""
-							}
-							_hover={{ color: "gold" }}
-							onClick={() => {
-								if (subHeaderName?.toLowerCase() !== "indumentaria") {
-									router.push("/product/indumentaria");
-								}
-							}}
-						>
-							Indumentaria
-						</Text>
-						<Text
-							fontWeight="bold"
-							fontSize="large"
-							cursor="pointer"
-							color={subHeaderName?.toLowerCase() === "sale" ? "gold" : ""}
-							_hover={{ color: "gold" }}
-							onClick={() => {
-								if (subHeaderName?.toLowerCase() !== "sale") {
-									router.push("/product/sale");
-								}
-							}}
-						>
-							Sale
-						</Text>
-						<Text
-							fontWeight="bold"
-							fontSize="large"
-							cursor="pointer"
-							color={subHeaderName?.toLowerCase() === "todo" ? "gold" : ""}
-							_hover={{ color: "gold" }}
-							onClick={() => {
-								if (subHeaderName?.toLowerCase() !== "todo") {
-									router.push("/product/todo");
-								}
-							}}
-						>
-							Todo
-						</Text>
-					</Flex>
+					<MainSectionsNavigation
+						subHeaderName={subHeaderName}
+						isMobile={false}
+					/>
 
 					<BurguerIcon setOpenModal={setOpenModal} />
 

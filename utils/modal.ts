@@ -27,13 +27,13 @@ export const AuthModalData: AuthModalDataProps[] = [
 		link: "/wishlist",
 	},
 	{
-		icon: IoMdLogOut,
-		text: "Desconectar",
-	},
-	{
 		icon: GoGear,
 		text: "Editar perfil",
 		link: "/auth/edit-profile",
+	},
+	{
+		icon: IoMdLogOut,
+		text: "Desconectar",
 	},
 ];
 
