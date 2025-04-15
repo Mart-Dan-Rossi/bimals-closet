@@ -4,6 +4,7 @@ import { inputStyles } from "./ProductEditionModal";
 
 interface Props {
 	slug: string;
+	editingProduct: boolean | undefined;
 	handleSetSlug: (e: ChangeEvent<HTMLInputElement>) => void;
 	showFormErrors: boolean;
 	isSlugAllowed: boolean;
@@ -11,6 +12,7 @@ interface Props {
 
 export const SlugInput = ({
 	slug,
+	editingProduct,
 	handleSetSlug,
 	showFormErrors,
 	isSlugAllowed,
@@ -24,6 +26,7 @@ export const SlugInput = ({
 				id={"productSlug"}
 				value={slug || ""}
 				placeholder={"Slug"}
+				disabled={editingProduct}
 				type="text"
 				onChange={handleSetSlug}
 				{...inputStyles}

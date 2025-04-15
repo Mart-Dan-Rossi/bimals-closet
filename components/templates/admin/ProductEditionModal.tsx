@@ -413,6 +413,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 
 						<SlugInput
 							slug={slug}
+							editingProduct={editingProduct}
 							handleSetSlug={handleSetSlug}
 							showFormErrors={showFormErrors}
 							isSlugAllowed={isValidSlugData}
