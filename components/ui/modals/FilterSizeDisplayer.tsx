@@ -28,19 +28,6 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 	>();
 
 	useEffect(() => {
-		const sizeOptionMin = allSizes ? allSizes[0] : range[0];
-		const sizeOptionMax = allSizes ? allSizes[allSizes.length - 1] : range[1];
-
-		const filterToAdd = {
-			sizeOptions: { usSize: { min: sizeOptionMin, max: sizeOptionMax } },
-		};
-
-		const newFilter = { ...filter, ...filterToAdd };
-
-		setFilter(newFilter);
-	}, []);
-
-	useEffect(() => {
 		if (allSizes && allSizes.length > 0) {
 			const sorted = [...allSizes].sort((a, b) => a - b);
 			setSortedSizes(sorted);
@@ -58,18 +45,16 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 					onChange={(newRange) => {
 						setCurrentValue({ min: newRange[0], max: newRange[1] });
 						setRange(newRange as [number, number]);
-						const sizeOptionMin = newRange[0];
-						const sizeOptionMax = newRange[1];
 
-						const filterToAdd = {
-							sizeOptions: {
-								usSize: { min: sizeOptionMin, max: sizeOptionMax },
-							},
-						};
-
-						const newFilter = { ...filter, ...filterToAdd };
-
-						setFilter(newFilter);
+						setFilter((prev) => {
+							return {
+								tags: prev?.tags ?? [],
+								sizeOptions: {
+									usSize: { min: newRange[0] || 0, max: newRange[1] || 9999 },
+									color: prev?.sizeOptions?.color,
+								},
+							};
+						});
 
 						localStorage.setItem(
 							"mateosShoes-shoesSizeFilterRange",

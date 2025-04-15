@@ -27,6 +27,7 @@ export const PriceInput = ({
 				type="number"
 				onChange={handleSetPrice}
 				{...inputStyles}
+				min={1}
 			/>
 			{showFormErrors && !isValidPriceData && (
 				<Text color="red" fontSize={"sm"}>

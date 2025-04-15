@@ -12,8 +12,17 @@ export function applyFilters(
 	filter?: ProductsFilter,
 	section?: SiteMainSections
 ): Product[] {
+	console.log("filter:", filter);
 	if (!products) return [];
-	if (!filter) return products;
+	if (
+		!filter ||
+		Object.keys(filter).length === 0 ||
+		(filter &&
+			!filter.sizeOptions?.color &&
+			(!filter.sizeOptions?.usSize?.min || !filter.sizeOptions?.usSize?.max) &&
+			(!filter.tags || filter.tags.length === 0))
+	)
+		return products;
 
 	return products.filter((product) => {
 		const passSizeFilter = (() => {

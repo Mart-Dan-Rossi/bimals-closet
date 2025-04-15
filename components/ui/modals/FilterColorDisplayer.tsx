@@ -8,20 +8,25 @@ import { Box, Flex, MenuItem } from "@chakra-ui/react";
 import { useState } from "react";
 
 export const FilterColorDisplayer = () => {
-	const { filter, setFilter } = useGlobalContext();
+	const { setFilter } = useGlobalContext();
 
 	const [color, setColor] = useState<ColorOptions | undefined>();
 
 	function handleColorSelection(colorData: { name: string; hash: string }) {
 		setColor(colorData.name as ColorOptions);
 
-		const filterToAdd = {
-			sizeOptions: { color: colorData.name as ColorOptions },
-		};
+		setFilter((prev) => {
+			console.log("prev color:", prev);
+			const usSize = prev?.sizeOptions?.usSize;
 
-		const newFilter = { ...filter, ...filterToAdd };
-
-		setFilter(newFilter);
+			return {
+				tags: prev?.tags ?? [],
+				sizeOptions: {
+					...(usSize ? { usSize: { min: usSize.min, max: usSize.max } } : {}),
+					color: colorData.name as ColorOptions,
+				},
+			};
+		});
 
 		localStorage.setItem(
 			"mateosShoes-shoesSizeFilterColor",

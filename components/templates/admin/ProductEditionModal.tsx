@@ -174,32 +174,43 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 			const user = storedUser && token ? JSON.parse(storedUser) : undefined;
 			const userId = user ? user.id : undefined;
 
-			const product: Product = {
-				productType,
-				name,
-				slug,
-				images: images.filter((urlImg) => urlImg.length > 0),
-				price,
-				sizeOptions: sizeOptions.filter(
-					(sizeOption) =>
-						sizeOption.quantity > 0 &&
-						sizeOption.usSize &&
-						sizeOption.usSize > 0 &&
-						(brand !== "other" ||
-							(sizeOption.arg && sizeOption.cm) ||
-							sizeOption.eu)
-				),
-				brand: brand.toLocaleLowerCase() as Brand,
-				desc,
-				tags: tags ? tags.filter((tag) => tag !== "") : undefined,
-			};
+			if (getAdminsIds().includes(userId)) {
+				const product: Product = {
+					productType,
+					name,
+					slug,
+					images: images.filter((urlImg) => urlImg.length > 0),
+					price,
+					sizeOptions: sizeOptions.filter(
+						(sizeOption) =>
+							sizeOption.quantity > 0 &&
+							sizeOption.usSize &&
+							sizeOption.usSize > 0 &&
+							(brand !== "other" ||
+								(sizeOption.arg && sizeOption.cm) ||
+								sizeOption.eu)
+					),
+					brand: brand.toLocaleLowerCase() as Brand,
+					desc,
+					tags: tags ? tags.filter((tag) => tag !== "") : undefined,
+				};
 
-			const res = editingProduct
-				? await addMutateAsynceEditProduct(product)
-				: await addMutateAsyncCreateProduct(product);
+				const res = editingProduct
+					? await addMutateAsynceEditProduct(product)
+					: await addMutateAsyncCreateProduct(product);
 
-			if (res?.status === "success" && getAdminsIds().includes(userId)) {
-				toast({ status: "success", title: "Producto cargado correctamente" });
+				if (res) {
+					setName("");
+					setSlug("");
+					setImages([""]);
+					setPrice(0);
+					setBrand("other");
+					setSizeOptions([{ usSize: 0, color: "negro", quantity: 0 }]);
+					setDesc("");
+					setTags([""]);
+
+					toast({ status: "success", title: res.message });
+				}
 			}
 		} catch (error) {
 			if (axios.isAxiosError(error)) {

@@ -199,6 +199,7 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 					borderRadius="1rem"
 					fontSize="1.6rem"
 					size={"lg"}
+					min={1}
 				>
 					<NumberInputField />
 					<NumberInputStepper>

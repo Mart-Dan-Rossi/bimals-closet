@@ -3,8 +3,15 @@ import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
 import { applyFilters } from "@/utils/functions";
 import { SiteMainSections } from "@/utils/helpers";
-import { Box, Flex, SimpleGrid, Text, useBoolean } from "@chakra-ui/react";
-import { Fragment, useEffect, useState } from "react";
+import {
+	Box,
+	Flex,
+	SimpleGrid,
+	Text,
+	useBoolean,
+	Button,
+} from "@chakra-ui/react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { ProductCard } from "../product/ProductCard";
 import FilterButtons from "@/components/ui/FilterButtons";
 
@@ -20,43 +27,45 @@ export const Products = ({ hideFilter, section }: Props) => {
 	const [sectionFilter, setSectionFilter] = useState<
 		SiteMainSections | undefined
 	>(section);
-
-	const [filteredProductsData, setFilteredProductsData] =
-		useState(finalProductsData);
-
-	const [isLoadingFilters, { on: filtersLoaded, off: filtersLoading }] =
+	const [filteredProductsData, setFilteredProductsData] = useState<Product[]>(
+		[]
+	);
+	const [isLoadingFilters, { on: filtersLoading, off: filtersLoaded }] =
 		useBoolean(false);
+	const [currentPage, setCurrentPage] = useState(1);
+	const itemsPerPage = 8;
 
 	useEffect(() => {
-		if (finalProductsData) {
+		if (finalProductsData && finalProductsData.length > 0) {
 			filtersLoading();
-			setFilteredProductsData(applyFilters(finalProductsData, filter, section));
+
+			const filtered = applyFilters(finalProductsData, filter, section);
+
+			setFilteredProductsData(filtered);
+			setCurrentPage(1);
 			filtersLoaded();
 		}
 	}, [finalProductsData, filter, section]);
 
-	function getProductsToShow() {
-		if (filteredProductsData) {
-			if (hideFilter) {
-				return filteredProductsData
-					.sort((a, b) => {
-						if (a.createdAt && b.createdAt) {
-							return (
-								new Date(b.createdAt).getTime() -
-								new Date(a.createdAt).getTime()
-							);
-						} else {
-							return 0;
-						}
-					})
-					.slice(0, 20);
-			} else {
-				return filteredProductsData;
-			}
-		}
+	const sortedProducts = useMemo(() => {
+		return [...filteredProductsData]
+			.sort((a, b) => {
+				if (hideFilter && a.createdAt && b.createdAt) {
+					return (
+						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+					);
+				}
+				return 0;
+			})
+			.slice(0, hideFilter ? 8 : filteredProductsData.length - 1);
+	}, [filteredProductsData]);
 
-		return [];
-	}
+	const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+
+	const paginatedProducts = useMemo(() => {
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		return sortedProducts.slice(startIndex, startIndex + itemsPerPage);
+	}, [sortedProducts, currentPage]);
 
 	return (
 		<Box
@@ -71,16 +80,14 @@ export const Products = ({ hideFilter, section }: Props) => {
 			<Box maxW="1280px" mx="auto" pb="4rem">
 				<Box p="3rem" pos="relative" zIndex="">
 					<Box>
-						{!hideFilter && (
+						{!hideFilter ? (
 							<FilterButtons
 								filteredProductsData={filteredProductsData}
 								section={section}
 								sectionFilter={sectionFilter}
 								setSectionFilter={setSectionFilter}
 							/>
-						)}
-
-						{hideFilter && (
+						) : (
 							<Flex align="center">
 								<Text
 									color={"brand.white100"}
@@ -95,7 +102,7 @@ export const Products = ({ hideFilter, section }: Props) => {
 					</Box>
 
 					<SimpleGrid columns={[2, 3, 3, 4]} gap="2rem" mt="1rem">
-						{isLoadingFilters && isLoadingProductData ? (
+						{isLoadingFilters || isLoadingProductData ? (
 							<Fragment>
 								{Array(4)
 									.fill(0)
@@ -109,30 +116,69 @@ export const Products = ({ hideFilter, section }: Props) => {
 							</Fragment>
 						) : (
 							<Fragment>
-								{filteredProductsData && getProductsToShow().length > 0 ? (
-									getProductsToShow().map(
-										(product: Product) =>
-											product._id && (
-												<ProductCard
-													key={`products-general-view-${product._id}-${product.slug}`}
-													product={product}
-												/>
-											)
-									)
-								) : (
-									<Text
-										w={"70vw"}
-										fontSize={"x-large"}
-										fontWeight={"bold"}
-										color={"brand.white200"}
-									>
-										En este momento no hay productos con estas características
-										para mostrar
-									</Text>
+								{paginatedProducts.map(
+									(product: Product) =>
+										product._id && (
+											<ProductCard
+												key={`products-general-view-${product._id}-${product.slug}`}
+												product={product}
+											/>
+										)
 								)}
 							</Fragment>
 						)}
 					</SimpleGrid>
+					{!hideFilter && (
+						<Flex
+							justifyContent={"center"}
+							gap={"1rem"}
+							alignItems={"flex-end"}
+						>
+							<Button
+								onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+								isDisabled={currentPage === 1}
+								colorScheme="whiteAlpha"
+								variant="solid"
+								size="lg"
+							>
+								Anterior
+							</Button>
+
+							{totalPages > 1 && (
+								<Flex mt="2rem" justify="center" gap="0.5rem" wrap="wrap">
+									{Array.from({ length: totalPages }).map((_, index) => {
+										const pageNum = index + 1;
+										return (
+											<Button
+												key={pageNum}
+												onClick={() => setCurrentPage(pageNum)}
+												bg={
+													currentPage === pageNum
+														? "brand.secondary"
+														: "gray.600"
+												}
+												color="white"
+												size="lg"
+												fontWeight="bold"
+												_hover={{ bg: "brand.secondary" }}
+											>
+												{pageNum}
+											</Button>
+										);
+									})}
+								</Flex>
+							)}
+							<Button
+								onClick={() => setCurrentPage((prev) => Math.max(prev + 1, 1))}
+								isDisabled={currentPage === totalPages}
+								colorScheme="whiteAlpha"
+								variant="solid"
+								size="lg"
+							>
+								Siguiente
+							</Button>
+						</Flex>
+					)}
 				</Box>
 			</Box>
 		</Box>
