@@ -1,14 +1,13 @@
 import { BurguerIcon } from "@/components/Header/BurguerIcon";
 import { DesktopUserInteraction } from "@/components/Header/DesktopUserInteraction";
 import { ExtraInfo } from "@/components/Header/ExtraInfo";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
+import { Product, SizeOptions } from "@/types/product";
 import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import MainSectionsNavigation from "./MainSectionNavigation";
-import { Product, SizeOptions } from "@/types/product";
-import { useGlobalContext } from "@/context/GlobalContext";
-import { CartItemMPFormat } from "@/types/order";
 
 export const Header = ({
 	subHeaderName,
