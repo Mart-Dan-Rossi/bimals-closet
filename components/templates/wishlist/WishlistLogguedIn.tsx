@@ -2,13 +2,21 @@ import { RectangularCardLoader } from "@/components/animations/CustomLoader";
 import { useGetMyFavorites } from "@/hooks/favorite/useFavorite";
 import { Product } from "@/types/product";
 import { Center, Icon, Text } from "@chakra-ui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { FaGhost } from "react-icons/fa";
 import { WishlistProductCard } from "./WishlistProductCard";
 
 export const WishlistLogguedIn = () => {
 	const { data: wishlistData, isLoading: isLoadingWishlistData } =
 		useGetMyFavorites();
+
+	const [finalWishlistData, setFinalWishlistData] = useState<Product[]>([]);
+
+	useEffect(() => {
+		if (wishlistData) {
+			setFinalWishlistData(wishlistData?.filter((item) => !!item));
+		}
+	}, [wishlistData]);
 
 	return (
 		<>
@@ -43,9 +51,15 @@ export const WishlistLogguedIn = () => {
 					</Fragment>
 				) : (
 					<Fragment>
-						{wishlistData?.map((product: Product) => (
-							<WishlistProductCard key={product?._id} product={product} />
-						))}
+						{finalWishlistData.length > 0 ? (
+							finalWishlistData?.map((product: Product) => (
+								<WishlistProductCard key={product?._id} product={product} />
+							))
+						) : (
+							<Text width="100vw" textAlign="center" fontWeight={"600"}>
+								Aún no tienes productos en favoritos!
+							</Text>
+						)}
 					</Fragment>
 				)}
 			</Fragment>
