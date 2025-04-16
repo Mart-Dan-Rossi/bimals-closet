@@ -165,7 +165,7 @@ const Login = () => {
 							/>
 						</Box>
 
-						<Box
+						{/* <Box
 							cursor="pointer"
 							onClick={() => router.push("/auth/forgot-password")}
 						>
@@ -179,7 +179,7 @@ const Login = () => {
 							>
 								Olvidate la contraseña?
 							</Text>
-						</Box>
+						</Box> */}
 
 						<CustomButton
 							{...{

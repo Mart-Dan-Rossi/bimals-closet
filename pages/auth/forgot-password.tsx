@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import { withAuth } from "../../components/templates/withAuth";
+import PreviousPageButton from "@/components/ui/buttons/PreviousPageButton";
 
 const ForgotPassword = () => {
 	const router = useRouter();
@@ -52,6 +53,7 @@ const ForgotPassword = () => {
 					pos="relative"
 					display={["none", "none", "flex"]}
 				>
+					<PreviousPageButton />
 					<Image
 						w="460px"
 						pos="absolute"
