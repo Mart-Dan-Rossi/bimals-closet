@@ -139,9 +139,9 @@ export function getProperSizeEquivalencies(
 	}
 
 	if (sizeOption) {
-		return `ARG ${sizeOption.arg ?? "N/A"} | EU ${
-			sizeOption.eu ?? "N/A"
-		} | CM ${sizeOption.cm ?? "N/A"}`;
+		return `ARG ${sizeOption.arg ?? "Consultar"} | EU ${
+			sizeOption.eu ?? "Consultar"
+		} | CM ${sizeOption.cm ?? "Consultar"}`;
 	}
 
 	return "Consulta con nuestro stuff las equivalencias";
