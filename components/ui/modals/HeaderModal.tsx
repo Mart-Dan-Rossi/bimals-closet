@@ -15,6 +15,7 @@ export const AuthModal = () => {
 		<Box
 			position="absolute"
 			top="3rem"
+			right={"0"}
 			border={"1px solid grey"}
 			borderRadius="1rem"
 			bg={"brand.white200"}
