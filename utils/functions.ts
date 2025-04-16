@@ -14,13 +14,14 @@ export function applyFilters(
 ): Product[] {
 	if (!products) return [];
 
-	const { sizeOptions, tags } = filter || {};
+	const { sizeOptions, tags, brand } = filter || {};
 	const { usSize, color } = sizeOptions || {};
 
 	const hasUsSizeFilter =
 		usSize && (usSize?.min !== null || usSize?.max !== null);
 	const hasColorFilter = !!color;
 	const hasTagsFilter = tags && tags.length > 0;
+	const hasBrandFilter = brand && brand !== "";
 
 	return products.filter((product) => {
 		const passSizeFilter = (() => {
@@ -45,6 +46,12 @@ export function applyFilters(
 			return tags.every((tag) => product.tags?.includes(tag));
 		})();
 
+		const passBrandFilter = (() => {
+			if (!hasBrandFilter) return true;
+
+			return product.brand === brand;
+		})();
+
 		const allLowerCaseTags = product.tags?.map((tag) => tag.toLowerCase());
 
 		const isInRightSection = section
@@ -54,7 +61,11 @@ export function applyFilters(
 			: true;
 
 		return (
-			passSizeFilter && passColorFilter && passTagFilter && isInRightSection
+			passSizeFilter &&
+			passColorFilter &&
+			passTagFilter &&
+			isInRightSection &&
+			passBrandFilter
 		);
 	});
 }

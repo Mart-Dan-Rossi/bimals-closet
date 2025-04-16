@@ -6,4 +6,5 @@ export interface ProductsFilter {
 		color?: ColorOptions;
 	};
 	tags?: string[];
+	brand?: string;
 }

@@ -1,6 +1,6 @@
 export type Brand = "puma" | "nike" | "adidas" | "underarmour";
 
-export const validBrands = ["puma", "nike", "adidas", "underarmour"];
+export const validBrands = ["puma", "nike", "adidas", "underarmour"] as Brand[];
 
 export type ColorOptions =
 	| "negro"

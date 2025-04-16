@@ -16,13 +16,10 @@ export const FilterColorDisplayer = () => {
 		setColor(colorData.name as ColorOptions);
 
 		setFilter((prev) => {
-			console.log("prev color:", prev);
-			const usSize = prev?.sizeOptions?.usSize;
-
 			return {
-				tags: prev?.tags ?? [],
+				...(prev ?? {}),
 				sizeOptions: {
-					...(usSize ? { usSize: { min: usSize.min, max: usSize.max } } : {}),
+					usSize: prev?.sizeOptions?.usSize ?? { min: 0, max: 9999 },
 					color: colorData.name as ColorOptions,
 				},
 			};

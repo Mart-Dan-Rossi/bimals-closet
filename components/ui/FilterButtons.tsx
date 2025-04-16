@@ -1,10 +1,11 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
+import { capitalize } from "@/utils/functions";
 import { SiteMainSections } from "@/utils/helpers";
+import { Brand, validBrands } from "@/utils/productCaracteristics";
 import {
 	Box,
 	Button,
-	CloseButton,
 	Flex,
 	Menu,
 	MenuButton,
@@ -15,6 +16,7 @@ import {
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BsFilterLeft } from "react-icons/bs";
 import { GoChevronDown } from "react-icons/go";
+import TinyCloseButton from "./buttons/TinyCloseButton";
 import { FilterColorDisplayer } from "./modals/FilterColorDisplayer";
 import { FilterSizeDisplayer } from "./modals/FilterSizeDisplayer";
 import { FilterTagsDisplayer } from "./modals/FilterTagsDisplayer";
@@ -27,7 +29,8 @@ interface Props {
 }
 
 const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
-	const { finalProductsData, filter, setFilter } = useGlobalContext();
+	const { finalProductsData, filter, setFilter, setSelectedTags } =
+		useGlobalContext();
 	const [allTags, setAllTags] = useState<string[]>([]);
 
 	useEffect(() => {
@@ -57,6 +60,12 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 				});
 			})
 			.flat();
+	}
+
+	function handleSetBrandFilter(brand: Brand) {
+		setFilter((prev) => {
+			return { ...(prev ?? {}), brand };
+		});
 	}
 
 	return (
@@ -92,6 +101,37 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 					</MenuList>
 				</Menu>
 			)}
+			<Flex>
+				<Menu>
+					<MenuButton as={Button} rightIcon={<GoChevronDown />}>
+						Marca
+					</MenuButton>
+					<MenuList>
+						{validBrands.map((brand, index) => {
+							return (
+								<MenuItem
+									key={`filter-buttons-brand-${brand}-${index}`}
+									onClick={() => handleSetBrandFilter(brand)}
+								>
+									{capitalize(brand)}
+								</MenuItem>
+							);
+						})}
+					</MenuList>
+				</Menu>
+				{filter?.brand && (
+					<TinyCloseButton
+						onClickFunction={() => {
+							setFilter((prev) => {
+								return {
+									...(prev ?? {}),
+									brand: undefined,
+								};
+							});
+						}}
+					/>
+				)}
+			</Flex>
 			{sectionFilter === "calzado" || sectionFilter === "indumentaria" ? (
 				<Flex>
 					<Menu>
@@ -113,17 +153,11 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 					{filter?.sizeOptions?.usSize &&
 						filter?.sizeOptions?.usSize.min !== 0 &&
 						filter?.sizeOptions?.usSize.max !== 9999 && (
-							<Box
-								width={"15px"}
-								height={"15px"}
-								margin="2px"
-								bg={"brand.white500"}
-								padding={"0 .2px"}
-								borderRadius={"2rem"}
-								onClick={() => {
+							<TinyCloseButton
+								onClickFunction={() => {
 									setFilter((prev) => {
 										return {
-											tags: prev?.tags ?? [],
+											...(prev ?? {}),
 											sizeOptions: {
 												usSize: { min: 0, max: 9999 },
 												color: prev?.sizeOptions?.color,
@@ -131,9 +165,7 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 										};
 									});
 								}}
-							>
-								<CloseButton size={"sm"} />
-							</Box>
+							/>
 						)}
 				</Flex>
 			) : (
@@ -157,30 +189,21 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 						<FilterColorDisplayer />
 					</MenuList>
 				</Menu>
-				{filter?.sizeOptions?.color &&
-					filter?.sizeOptions?.color !== "negro" && (
-						<Box
-							width={"15px"}
-							height={"15px"}
-							margin="2px"
-							bg={"brand.white500"}
-							padding={"0 .2px"}
-							borderRadius={"2rem"}
-							onClick={() => {
-								setFilter((prev) => {
-									return {
-										tags: prev?.tags ?? [],
-										sizeOptions: {
-											usSize: prev?.sizeOptions?.usSize,
-											color: "negro",
-										},
-									};
-								});
-							}}
-						>
-							<CloseButton size={"sm"} />
-						</Box>
-					)}
+				{filter?.sizeOptions?.color && (
+					<TinyCloseButton
+						onClickFunction={() => {
+							setFilter((prev) => {
+								return {
+									...(prev ?? {}),
+									sizeOptions: {
+										usSize: prev?.sizeOptions?.usSize,
+										color: undefined,
+									},
+								};
+							});
+						}}
+					/>
+				)}
 			</Flex>
 			<Flex>
 				<Menu>
@@ -192,24 +215,14 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 					</MenuList>
 				</Menu>
 				{filter?.tags && filter.tags.length > 0 && (
-					<Box
-						width={"15px"}
-						height={"15px"}
-						margin="2px"
-						bg={"brand.white500"}
-						padding={"0 .2px"}
-						borderRadius={"2rem"}
-						onClick={() => {
+					<TinyCloseButton
+						onClickFunction={() => {
 							setFilter((prev) => {
-								return {
-									tags: [],
-									sizeOptions: { ...prev?.sizeOptions },
-								};
+								return { ...(prev ?? {}), tags: undefined };
 							});
+							setSelectedTags([]);
 						}}
-					>
-						<CloseButton size={"sm"} />
-					</Box>
+					/>
 				)}
 			</Flex>
 		</Flex>

@@ -48,7 +48,7 @@ export const FilterSizeDisplayer = ({ allSizes }: Props) => {
 
 						setFilter((prev) => {
 							return {
-								tags: prev?.tags ?? [],
+								...(prev ?? {}),
 								sizeOptions: {
 									usSize: { min: newRange[0] || 0, max: newRange[1] || 9999 },
 									color: prev?.sizeOptions?.color,
