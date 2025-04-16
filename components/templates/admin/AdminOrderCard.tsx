@@ -1,29 +1,27 @@
 import { useUpdateBEOrder } from "@/hooks/orders/useBEOrders";
-import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { OrderDataBEFormat } from "@/types/order";
 import { getAdminsIds } from "@/utils/functions";
 import {
 	Box,
 	Flex,
-	Grid,
 	HStack,
 	Spinner,
 	Switch,
 	Text,
 	useBoolean,
 	useToast,
+	VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
-import AdminProductDataDisplay from "./AdminProductDataDisplay";
+import AdminOrderCardUserData from "./AdminOrderCardUserData";
+import ProductDataDisplay from "./ProductDataDisplay";
 
 interface Props {
 	orderData: OrderDataBEFormat;
 }
 
 const AdminOrderCard = ({ orderData }: Props) => {
-	const { _id, user, name, phone, mail, products, isDelivered } = orderData;
-
-	const token = useHydratedStoreState("token");
+	const { MPUserName, MPmail, products, user, isDelivered } = orderData;
 
 	const { mutateAsync: addMutateAsynceEditBEOrder, isLoading } =
 		useUpdateBEOrder();
@@ -35,17 +33,9 @@ const AdminOrderCard = ({ orderData }: Props) => {
 	] = useBoolean(false);
 
 	async function uploadBEOrder() {
-		const storedUser = localStorage.getItem("MateoShoesUser");
-		const user = storedUser && token ? JSON.parse(storedUser) : undefined;
-		const userId = user ? user.id : undefined;
 		try {
 			const order: OrderDataBEFormat = {
-				_id,
-				user,
-				name,
-				phone,
-				mail,
-				products,
+				...orderData,
 				isDelivered: !isDelivered,
 			};
 
@@ -53,7 +43,7 @@ const AdminOrderCard = ({ orderData }: Props) => {
 			const res = await addMutateAsynceEditBEOrder(order);
 			modifiedDeliveredValue();
 
-			if (res?.status === "success" && getAdminsIds().includes(userId)) {
+			if (res?.status === "success" && getAdminsIds().includes(user.id)) {
 				toast({ status: "success", title: "Órden cargada correctamente" });
 			}
 		} catch (error) {
@@ -69,69 +59,93 @@ const AdminOrderCard = ({ orderData }: Props) => {
 		}
 	}
 
+	function getTotalPrice() {
+		const totalPrice = orderData.products.reduce((accTotal, product) => {
+			return (
+				accTotal +
+				product.sizeOptions.reduce((productTotal, sizeOption) => {
+					return productTotal + sizeOption.quantity * Number(product.price);
+				}, 0)
+			);
+		}, 0);
+
+		return totalPrice.toFixed(2);
+	}
+
 	return (
-		<Flex
-			bg={"brand.secondaryColor5"}
-			borderRadius="1rem"
-			p="1rem"
-			justify="space-between"
-			m="2rem"
-		>
+		<Flex direction="column" bg={"brand.cartCardBG"} borderRadius={"20px"}>
 			<Flex
-				alignItems={"flex-start"}
-				width={"100%"}
-				m={"2rem"}
-				justifyContent={"space-between"}
+				bg={"brand.secondaryColor5"}
+				borderRadius="1rem"
+				p="1rem"
+				justify="space-between"
+				m="2rem"
 			>
-				<HStack alignItems={"flex-start"} gap={"3rem"}>
-					<Box>
-						{products.map((item, index) => {
-							return (
-								<Box key={`${orderData._id}-product-${index}`}>
-									<AdminProductDataDisplay
-										name={item.name}
-										sizeOptions={[item.sizeOption]}
-										price={item.price}
-									/>
-								</Box>
-							);
-						})}
-					</Box>
-					<Grid>
-						{user && user.accName ? (
-							<Text fontWeight={"600"}>Cuenta: {user.accName}</Text>
-						) : (
-							<Text fontWeight={"600"}>Cuenta no encontrada</Text>
-						)}
-						{name ? (
-							<Text fontWeight={"600"}>Nombre: {name}</Text>
-						) : (
-							<Text fontWeight={"600"}>Nombre no encontrado</Text>
-						)}
-						{mail ? (
-							<Text fontWeight={"600"}>Email: {mail}</Text>
-						) : (
-							<Text fontWeight={"600"}>Mail no encontrado</Text>
-						)}
-						{phone ? (
-							<Text fontWeight={"600"}>N° tel: {phone}</Text>
-						) : (
-							<Text fontWeight={"600"}>Teléfono no encontrado</Text>
-						)}
-					</Grid>
-				</HStack>
-				<HStack>
-					<Text fontWeight={"600"}>Entregado:</Text>
-					{isLoading || isModifiyingDeliveredValue ? (
-						<Spinner />
-					) : (
-						<Switch
-							isChecked={isDelivered}
-							size="lg"
-							onChange={() => uploadBEOrder()}
-						/>
-					)}
-				</HStack>
+				<Flex
+					alignItems={"flex-start"}
+					width={"100%"}
+					m={"2rem"}
+					justifyContent={"space-between"}
+					wrap={"wrap-reverse"}
+					gap="1rem"
+				>
+					<AdminOrderCardUserData
+						user={user}
+						MPUserName={MPUserName}
+						MPmail={MPmail}
+						products={products}
+						orderId={orderData._id}
+					/>
+					<Flex alignSelf={"self-start"} gap={"5rem"} alignItems={"flex-start"}>
+						<VStack>
+							<Text fontWeight={"600"} alignSelf={"flex-start"}>
+								Total pagado:
+							</Text>
+							<Text fontWeight={"600"} alignSelf={"flex-end"}>
+								AR$ {getTotalPrice()}
+							</Text>
+						</VStack>
+						<HStack>
+							<Text fontWeight={"600"}>Entregado:</Text>
+							{isLoading || isModifiyingDeliveredValue ? (
+								<Spinner />
+							) : (
+								<Switch
+									isChecked={isDelivered}
+									size="lg"
+									onChange={() => uploadBEOrder()}
+								/>
+							)}
+						</HStack>
+					</Flex>
+				</Flex>
+			</Flex>
+			<Flex
+				flexDirection={"column"}
+				gap={"2rem"}
+				borderRadius={"0 0 20px 20px"}
+				mb={"2rem"}
+			>
+				{orderData.products.map((item) => {
+					return (
+						<Box
+							key={`admin-order-card-key-${item._id || "a"}-${item.id || "b"}`}
+						>
+							<ProductDataDisplay
+								name={item.name}
+								sizeOptions={item.sizeOptions}
+								price={Number(item.price)}
+								allowTagFiltering={false}
+								fontColor={"brand.white100"}
+								bgColor={"brand.cartFooterBG"}
+								width={"50%"}
+								minWidth={"300px"}
+								padding={"2rem"}
+								borderRaious={"20px"}
+							/>
+						</Box>
+					);
+				})}
 			</Flex>
 		</Flex>
 	);

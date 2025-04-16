@@ -8,7 +8,7 @@ import {
 import { useCartState } from "@/hooks/state/storage";
 import { StoredUserData } from "@/types/auth";
 import { CartItemMPFormat } from "@/types/order";
-import { ReserveProductData } from "@/types/product";
+import { Product, ReserveProductData } from "@/types/product";
 import { getReservedDataFromNameAndQtty } from "@/utils/functions";
 import {
 	Box,
@@ -25,10 +25,14 @@ import { ConfirmDeleteModal } from "../admin/ConfirmDeleteModal";
 import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
 
 interface Props {
+	userReservedProducts: Product[];
 	userReservedProductsMPFormated: CartItemMPFormat[];
 }
 
-const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
+const CartFooter = ({
+	userReservedProducts,
+	userReservedProductsMPFormated,
+}: Props) => {
 	const token = useHydratedStoreState("token");
 
 	const { emptyCart } = useCartState((state) => state);
@@ -109,7 +113,7 @@ const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
 
 		const totalReservedProductsAmount =
 			userReservedProductsMPFormated.reduce((total, item) => {
-				return item.quantity;
+				return total + item.quantity;
 			}, 0) ?? 0;
 
 		return totalCartItemsAmount + totalReservedProductsAmount;
@@ -165,7 +169,10 @@ const CartFooter = ({ userReservedProductsMPFormated }: Props) => {
 
 		const createMPOrderRes = await addMutateAsyncCreateOrder({
 			cartItems: [...cart, ...userReservedProductsMPFormated],
-			metadata: { userId: localStoredUser?.id },
+			metadata: {
+				userId: localStoredUser?.id,
+				products: userReservedProducts,
+			},
 		});
 
 		const id = createMPOrderRes.id;

@@ -227,7 +227,7 @@ export const ProductDetailMainData = ({
 											>
 												Talles (US)
 											</Text>
-											<Text marginTop={"2rem"} fontWeight={"600"}>
+											<Text color="red" marginTop={"2rem"} fontWeight={"600"}>
 												Selecciona un color para ver los talles
 											</Text>
 										</Flex>

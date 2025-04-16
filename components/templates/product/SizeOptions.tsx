@@ -5,6 +5,7 @@ import { getAvailableQuantitiesBySizeAndColor } from "@/utils/functions";
 import {
 	getProperSizeEquivalencies,
 	sizeEquivalencies,
+	validBrands,
 } from "@/utils/productCaracteristics";
 import { Button, ButtonGroup, Tooltip } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -95,9 +96,13 @@ export const SizeOptions = ({
 		}
 	}, [selectedColor, cart]);
 
-	const sizeEquivalenciesOrdered = Object.keys(
-		sizeEquivalencies[product.brand]
-	).sort((a, b) => Number(a) - Number(b));
+	function sortSizeEquivalencies(sE: string[]) {
+		return sE.sort((a, b) => Number(a) - Number(b));
+	}
+
+	const sizeEquivalenciesOrdered = validBrands.includes(product.brand)
+		? sortSizeEquivalencies(Object.keys(sizeEquivalencies[product.brand]))
+		: sortSizeEquivalencies(Object.keys(sizeEquivalencies["underarmour"]));
 
 	return (
 		<ButtonGroup

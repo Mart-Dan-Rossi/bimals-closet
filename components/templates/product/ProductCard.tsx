@@ -10,6 +10,7 @@ import { useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { ColorOptions } from "./ColorOptions";
 import { SizeOptions } from "./SizeOptions";
+import { validBrands } from "@/utils/productCaracteristics";
 
 interface Props {
 	product: Product;
@@ -96,16 +97,18 @@ export const ProductCard = ({ product }: Props) => {
 									>
 										{product?.name}
 									</Text>
-									<Text
-										color={"brand.secondaryColor1"}
-										textAlign="left"
-										maxW="200px"
-										fontSize={["1.4rem", "1.5rem"]}
-										fontWeight="600"
-										isTruncated
-									>
-										{capitalize(product.brand)}
-									</Text>
+									{validBrands.includes(product.brand) && (
+										<Text
+											color={"brand.secondaryColor1"}
+											textAlign="left"
+											maxW="200px"
+											fontSize={["1.4rem", "1.5rem"]}
+											fontWeight="600"
+											isTruncated
+										>
+											{capitalize(product.brand)}
+										</Text>
+									)}
 								</HStack>
 								<Text fontSize={["1.2rem", "1.3rem"]} fontWeight="500">
 									AR$ {product?.price}
@@ -131,7 +134,9 @@ export const ProductCard = ({ product }: Props) => {
 									/>
 								</Box>
 							) : (
-								<Text>Selecciona un color para ver los talles disponibles</Text>
+								<Text color="red">
+									Selecciona un color para ver los talles disponibles
+								</Text>
 							)}
 						</Flex>
 					</Box>

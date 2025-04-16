@@ -24,8 +24,8 @@ export type SizeOptions = SizeOption[];
 export type ReservedData = {
 	usSize: number;
 	color: ColorOptions;
-	quantity: number;
 	userId: string | undefined;
+	quantity: number;
 	hide?: boolean;
 };
 

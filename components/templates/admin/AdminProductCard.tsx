@@ -2,7 +2,7 @@ import { Product } from "@/types/product";
 import { Box, Flex, Icon, Img } from "@chakra-ui/react";
 import { SetStateAction } from "react";
 import { RiDeleteBinLine, RiPencilLine } from "react-icons/ri";
-import AdminProductDataDisplay from "./AdminProductDataDisplay";
+import ProductDataDisplay from "./ProductDataDisplay";
 
 interface Props {
 	item: Product;
@@ -35,11 +35,12 @@ export const AdminProductCard = ({
 
 	return (
 		<Flex
-			bg={"brand.secondaryColor5"}
+			bg={"brand.cartCardBG"}
 			borderRadius="1rem"
 			p="1rem"
 			justify="space-between"
 			mb="2rem"
+			color={"brand.white100"}
 		>
 			<Flex>
 				<Box overflow="hidden" borderRadius="1rem">
@@ -51,7 +52,7 @@ export const AdminProductCard = ({
 					/>
 				</Box>
 
-				<AdminProductDataDisplay
+				<ProductDataDisplay
 					name={item.name}
 					sizeOptions={item.sizeOptions}
 					price={item.price}
@@ -68,14 +69,14 @@ export const AdminProductCard = ({
 					as={RiPencilLine}
 					fontSize="2rem"
 					cursor="pointer"
-					color={"brand.secondaryColor2"}
+					color={"brand.white100"}
 				/>
 				<Icon
 					onClick={openDeleteProductModal}
 					as={RiDeleteBinLine}
 					fontSize="2rem"
 					cursor="pointer"
-					color={"brand.secondaryColor2"}
+					color={"brand.white100"}
 				/>
 			</Flex>
 		</Flex>

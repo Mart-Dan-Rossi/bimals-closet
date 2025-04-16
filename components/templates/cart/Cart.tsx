@@ -1,10 +1,15 @@
 import PreviousPageButton from "@/components/ui/buttons/PreviousPageButton";
 import { useGlobalContext } from "@/context/GlobalContext";
-import { useHydratedStoreState } from "@/hooks/state/hydrated";
+import {
+	useHydratedCartState,
+	useHydratedStoreState,
+} from "@/hooks/state/hydrated";
 import { CartItemMPFormat } from "@/types/order";
 import { Product, SizeOptions } from "@/types/product";
+import { getTotalProductsReserved } from "@/utils/functions";
 import {
 	Box,
+	Circle,
 	Flex,
 	Tab,
 	TabList,
@@ -22,10 +27,12 @@ export const CartItems = () => {
 	const { finalProductsData } = useGlobalContext();
 
 	const token = useHydratedStoreState("token");
+	const cart = useHydratedCartState("cart");
 
 	const [userReservedProducts, setUserReserverdProducts] = useState<Product[]>(
 		[]
 	);
+
 	const [userReservedProductsMPFormated, setUserReservedProductsMPFormated] =
 		useState<CartItemMPFormat[]>([]);
 
@@ -109,11 +116,39 @@ export const CartItems = () => {
 				<Tabs defaultIndex={0} variant={"enclosed-colored"}>
 					<TabList>
 						<Tab fontSize={"large"} value="products">
-							Carrito
+							<Box as="span" pos="relative">
+								<Circle
+									bg={"brand.gold100"}
+									p=".3rem .7rem"
+									pos="absolute"
+									right="-1.5rem"
+									top="-1rem"
+									fontSize=".9rem"
+									fontWeight="600"
+									color="white"
+								>
+									{cart && cart.length}
+								</Circle>
+								<span>Carrito</span>
+							</Box>
 						</Tab>
 						{userReservedProducts.length > 0 && (
 							<Tab fontSize={"large"} value="orders">
-								Reservas
+								<Box as="span" pos="relative">
+									<Circle
+										bg={"brand.gold100"}
+										p=".3rem .7rem"
+										pos="absolute"
+										right="-1.5rem"
+										top="-1rem"
+										fontSize=".9rem"
+										fontWeight="600"
+										color="white"
+									>
+										{getTotalProductsReserved(userReservedProducts)}
+									</Circle>
+									<span>Reservas</span>
+								</Box>
 							</Tab>
 						)}
 					</TabList>
@@ -131,6 +166,7 @@ export const CartItems = () => {
 				</Tabs>
 				<Box minW={"80vw"}>
 					<CartFooter
+						userReservedProducts={userReservedProducts}
 						userReservedProductsMPFormated={userReservedProductsMPFormated}
 					/>
 				</Box>

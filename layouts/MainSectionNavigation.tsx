@@ -20,6 +20,7 @@ const MainSectionsNavigation = ({ subHeaderName, isMobile }: Props) => {
 			bg={isMobile ? "brand.white100" : ""}
 			p={isMobile ? ".9rem 1.5rem" : ""}
 			borderRadius={isMobile ? "2rem" : ""}
+			userSelect={"none"}
 		>
 			<Text
 				fontWeight="bold"

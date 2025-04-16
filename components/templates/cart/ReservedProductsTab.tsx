@@ -1,6 +1,6 @@
 import { Product } from "@/types/product";
 import { Box, Flex, Img } from "@chakra-ui/react";
-import AdminProductDataDisplay from "../admin/AdminProductDataDisplay";
+import ProductDataDisplay from "../admin/ProductDataDisplay";
 
 interface Props {
 	userReservedProducts: Product[];
@@ -30,7 +30,7 @@ const ReservedProductsTab = ({ userReservedProducts }: Props) => {
 								/>
 							</Box>
 
-							<AdminProductDataDisplay
+							<ProductDataDisplay
 								name={item.name}
 								sizeOptions={item.sizeOptions}
 								price={item.price}

@@ -1,4 +1,5 @@
-import { SizeOption } from "./product";
+import { StoredUserData } from "./auth";
+import { Product, SizeOption } from "./product";
 
 export type CartItemMPFormat = {
 	id: string;
@@ -13,6 +14,7 @@ export type OrderDataMPFormat = {
 	cartItems: CartItemMPFormat[];
 	metadata: {
 		userId: string | undefined;
+		products: Product[];
 	};
 };
 
@@ -23,12 +25,24 @@ export type CartItemBEFormat = {
 	sizeOption: SizeOption;
 };
 
-export type OrderDataBEFormat = {
-	user: { accName: string };
+export type StoredOrdersDataFormat = {
 	name: string;
-	phone: string;
-	mail: string;
-	products: CartItemBEFormat[];
+	price: string | number;
+	sizeOptions: SizeOption[];
+	id?: string;
 	_id?: string;
+};
+
+export type OrderDataBEFormat = {
+	MPUserName: string;
+	MPmail: string;
+	createdAt: string;
+	phoneMS: string;
+	products: StoredOrdersDataFormat[];
+	status: string;
+	statusDetail: string;
+	updatedAt: string;
+	user: StoredUserData;
+	_id: string;
 	isDelivered?: boolean;
 };

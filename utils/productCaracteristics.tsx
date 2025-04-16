@@ -1,5 +1,7 @@
 export type Brand = "puma" | "nike" | "adidas" | "underarmour";
 
+export const validBrands = ["puma", "nike", "adidas", "underarmour"];
+
 export type ColorOptions =
 	| "negro"
 	| "blanco"
@@ -13,6 +15,7 @@ export type ColorOptions =
 	| "rosa"
 	| "celeste";
 
+//===========================THIS 2 CONSTS MUST BE EDITED TOGHETER===========================================
 const colorOptionArray = [
 	"negro",
 	"blanco",
@@ -40,6 +43,7 @@ const colorOptionActualColorArray = [
 	"#ff80ff",
 	"#99ccff",
 ];
+//===========================THIS 2 CONSTS MUST BE EDITED TOGHETER===========================================
 
 export const colorOptionDataArray = colorOptionArray.map((CO, index) => {
 	return { name: CO, hash: colorOptionActualColorArray[index] };

@@ -57,7 +57,7 @@ export const Products = ({ hideFilter, section }: Props) => {
 				}
 				return 0;
 			})
-			.slice(0, hideFilter ? 8 : filteredProductsData.length - 1);
+			.slice(0, hideFilter ? 8 : filteredProductsData.length);
 	}, [filteredProductsData]);
 
 	const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
@@ -128,7 +128,7 @@ export const Products = ({ hideFilter, section }: Props) => {
 							</Fragment>
 						)}
 					</SimpleGrid>
-					{!hideFilter && (
+					{!hideFilter && totalPages > 1 && (
 						<Flex
 							justifyContent={"center"}
 							gap={"1rem"}
@@ -144,30 +144,26 @@ export const Products = ({ hideFilter, section }: Props) => {
 								Anterior
 							</Button>
 
-							{totalPages > 1 && (
-								<Flex mt="2rem" justify="center" gap="0.5rem" wrap="wrap">
-									{Array.from({ length: totalPages }).map((_, index) => {
-										const pageNum = index + 1;
-										return (
-											<Button
-												key={pageNum}
-												onClick={() => setCurrentPage(pageNum)}
-												bg={
-													currentPage === pageNum
-														? "brand.secondary"
-														: "gray.600"
-												}
-												color="white"
-												size="lg"
-												fontWeight="bold"
-												_hover={{ bg: "brand.secondary" }}
-											>
-												{pageNum}
-											</Button>
-										);
-									})}
-								</Flex>
-							)}
+							<Flex mt="2rem" justify="center" gap="0.5rem" wrap="wrap">
+								{Array.from({ length: totalPages }).map((_, index) => {
+									const pageNum = index + 1;
+									return (
+										<Button
+											key={pageNum}
+											onClick={() => setCurrentPage(pageNum)}
+											bg={
+												currentPage === pageNum ? "brand.secondary" : "gray.600"
+											}
+											color="white"
+											size="lg"
+											fontWeight="bold"
+											_hover={{ bg: "brand.secondary" }}
+										>
+											{pageNum}
+										</Button>
+									);
+								})}
+							</Flex>
 							<Button
 								onClick={() => setCurrentPage((prev) => Math.max(prev + 1, 1))}
 								isDisabled={currentPage === totalPages}

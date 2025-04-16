@@ -6,16 +6,22 @@ import { Flex, Stack, Tag, Text } from "@chakra-ui/react";
 import { DisplayColorSizesAndQuantityInputsContainer } from "../product/DisplayColorSizesAndQuantityInputsContainer";
 
 interface Props {
-	name: string;
 	sizeOptions: SizeOptions;
+	name?: string;
 	price?: number;
 	slug?: string;
 	tags?: string[];
 	brand?: Brand;
 	allowTagFiltering?: boolean;
+	fontColor?: string;
+	bgColor?: string;
+	minWidth?: string;
+	padding?: string;
+	borderRaious?: string;
+	width?: string;
 }
 
-const AdminProductDataDisplay = ({
+const ProductDataDisplay = ({
 	name,
 	sizeOptions,
 	price,
@@ -23,10 +29,14 @@ const AdminProductDataDisplay = ({
 	tags,
 	slug,
 	allowTagFiltering,
+	fontColor,
+	bgColor,
+	minWidth: maxWidth,
+	padding,
+	borderRaious,
+	width,
 }: Props) => {
 	const { onOpenFiltersDrawer } = useGlobalContext();
-
-	const validSizeOptions = sizeOptions.filter((sizeOption) => sizeOption);
 
 	function getPropperTagOnclickFunction() {
 		return allowTagFiltering
@@ -35,8 +45,26 @@ const AdminProductDataDisplay = ({
 					console.log("tagOnClickFunction");
 			  };
 	}
+
+	function getTotalPrice() {
+		const totalPrice = sizeOptions.reduce((acc, sizeOption) => {
+			return acc + sizeOption.quantity * Number(price);
+		}, 0);
+
+		return totalPrice.toFixed(2);
+	}
 	return (
-		<Stack ml="2rem" flexDir="column" spacing="1.2rem">
+		<Stack
+			ml="2rem"
+			flexDir="column"
+			spacing="1.2rem"
+			color={fontColor || undefined}
+			bg={bgColor || undefined}
+			minWidth={maxWidth || undefined}
+			padding={padding || undefined}
+			borderRadius={borderRaious || undefined}
+			width={width || undefined}
+		>
 			<Flex gap={"2rem"}>
 				<Text fontSize="1.8rem" fontWeight="600">
 					{name} {brand && capitalize(brand)}
@@ -53,18 +81,23 @@ const AdminProductDataDisplay = ({
 						</Tag>
 					))}
 			</Flex>
-			<Flex align="center">
-				<Text fontSize="1.7rem" fontWeight="600">
-					AR$ {Number(price)?.toFixed(2)}
-				</Text>
-			</Flex>
+			{sizeOptions && price && (
+				<>
+					<Text fontSize="1.7rem" fontWeight="600">
+						Precio total de este tipo de producto:
+					</Text>
+					<Text fontSize="1.7rem" fontWeight="600" ml={"2rem"}>
+						AR$ {getTotalPrice()}
+					</Text>
+				</>
+			)}
 
 			<DisplayColorSizesAndQuantityInputsContainer
-				sizeOptions={validSizeOptions}
+				sizeOptions={sizeOptions}
 				brand={brand}
 			/>
 		</Stack>
 	);
 };
 
-export default AdminProductDataDisplay;
+export default ProductDataDisplay;

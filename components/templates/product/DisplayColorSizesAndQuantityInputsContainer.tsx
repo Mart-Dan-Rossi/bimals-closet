@@ -37,6 +37,11 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 							key={`groupedSizeOption-${color}-${index1}`}
 							alignItems={"left"}
 							m={"0 2rem 2rem 0	"}
+							p={"1rem 1rem 0 1rem"}
+							borderRadius={"1rem"}
+							bg={"brand.white400"}
+							boxShadow={"0px 0px 8px 2px lightGrey"}
+							width={"210px"}
 						>
 							<Text fontSize="1.7rem" fontWeight="600">
 								Color {color}:
@@ -46,7 +51,12 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 									return (
 										<Box
 											key={`groupedSizeOption-${color}-sizeOption${sizeOption.usSize}`}
-											mb={"2rem"}
+											mb={"1rem"}
+											minWidth={"90%"}
+											bg={"brand.footerBG"}
+											padding={".5rem"}
+											borderRadius={"1rem"}
+											boxShadow={"0px 0px 5px 1px lightGrey inset"}
 										>
 											<Text ml={"2rem"} fontSize="1.4rem" fontWeight="600">
 												Talle:{" "}

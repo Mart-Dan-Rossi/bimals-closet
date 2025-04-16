@@ -6,6 +6,9 @@ import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import MainSectionsNavigation from "./MainSectionNavigation";
+import { Product, SizeOptions } from "@/types/product";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { CartItemMPFormat } from "@/types/order";
 
 export const Header = ({
 	subHeaderName,
@@ -13,6 +16,8 @@ export const Header = ({
 	subHeaderName: string | undefined;
 }) => {
 	const router = useRouter();
+
+	const { finalProductsData } = useGlobalContext();
 
 	const token = useHydratedStoreState("token");
 
@@ -28,6 +33,10 @@ export const Header = ({
 
 	const [loggedIsAdmin, setLoggedIsAdmin] = useState(false);
 
+	const [userReservedProducts, setUserReserverdProducts] = useState<Product[]>(
+		[]
+	);
+
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
 		const user = storedUser && token ? JSON.parse(storedUser) : undefined;
@@ -42,6 +51,49 @@ export const Header = ({
 			setLoggedIsAdmin(adminIds.includes(userId));
 		}
 	}, [name, token]);
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem("MateoShoesUser");
+		const user = storedUser && token ? JSON.parse(storedUser) : null;
+
+		if (user) {
+			const URP: Product[] = finalProductsData
+				?.map((product) => {
+					const userReservations =
+						product.reservedData?.filter((reserve) => {
+							const sameUserId = reserve.userId === user.id;
+							const isHidden = reserve.hide;
+
+							return sameUserId && !isHidden;
+						}) || [];
+
+					if (userReservations.length === 0) return null;
+
+					const filteredSizeOptions = product.sizeOptions
+						.map((sizeOption) => {
+							const matchingReservation = userReservations.find(
+								(reserve) =>
+									reserve.usSize === sizeOption.usSize &&
+									reserve.color === sizeOption.color
+							);
+
+							return matchingReservation
+								? { ...sizeOption, quantity: matchingReservation.quantity }
+								: null;
+						})
+						.filter(Boolean) as SizeOptions;
+
+					return {
+						...product,
+						sizeOptions: filteredSizeOptions,
+						reservedData: product.reservedData,
+					};
+				})
+				.filter(Boolean) as Product[];
+
+			setUserReserverdProducts(URP || []);
+		}
+	}, [finalProductsData, token]);
 
 	return (
 		<Box bg={"brand.headerBG"} pos="fixed" w="100%" zIndex="99">
@@ -69,7 +121,11 @@ export const Header = ({
 
 					<BurguerIcon setOpenModal={setOpenModal} />
 
-					<DesktopUserInteraction name={name} loggedIsAdmin={loggedIsAdmin} />
+					<DesktopUserInteraction
+						name={name}
+						loggedIsAdmin={loggedIsAdmin}
+						userReservedProducts={userReservedProducts}
+					/>
 				</Stack>
 			</Box>
 
