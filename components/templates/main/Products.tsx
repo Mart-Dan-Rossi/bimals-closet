@@ -1,19 +1,19 @@
 import { BoxCardLoader } from "@/components/animations/CustomLoader";
+import FilterButtons from "@/components/ui/FilterButtons";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
 import { applyFilters } from "@/utils/functions";
 import { SiteMainSections } from "@/utils/helpers";
 import {
 	Box,
+	Button,
 	Flex,
 	SimpleGrid,
 	Text,
 	useBoolean,
-	Button,
 } from "@chakra-ui/react";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { ProductCard } from "../product/ProductCard";
-import FilterButtons from "@/components/ui/FilterButtons";
 
 interface Props {
 	hideFilter?: boolean;
@@ -78,7 +78,7 @@ export const Products = ({ hideFilter, section }: Props) => {
 			overflow="hidden"
 		>
 			<Box maxW="1280px" mx="auto" pb="4rem">
-				<Box p="3rem" pos="relative" zIndex="">
+				<Box p="3rem" pos="relative">
 					<Box>
 						{!hideFilter ? (
 							<FilterButtons
@@ -116,14 +116,25 @@ export const Products = ({ hideFilter, section }: Props) => {
 							</Fragment>
 						) : (
 							<Fragment>
-								{paginatedProducts.map(
-									(product: Product) =>
-										product._id && (
-											<ProductCard
-												key={`products-general-view-${product._id}-${product.slug}`}
-												product={product}
-											/>
-										)
+								{paginatedProducts.length === 0 ? (
+									<Text
+										width={"100vw"}
+										fontWeight={"600"}
+										color={"brand.white100"}
+										textAlign={"center"}
+									>
+										No se encontraron productos
+									</Text>
+								) : (
+									paginatedProducts.map(
+										(product: Product) =>
+											product._id && (
+												<ProductCard
+													key={`products-general-view-${product._id}-${product.slug}`}
+													product={product}
+												/>
+											)
+									)
 								)}
 							</Fragment>
 						)}
