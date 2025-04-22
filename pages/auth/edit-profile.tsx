@@ -37,7 +37,6 @@ const ResetPassword = () => {
 	} = useForm<IFormLoginInput>();
 
 	const onSubmit: SubmitHandler<IFormLoginInput> = async (data) => {
-		console.log("submit");
 		const { fullName, phoneNumber, email, newPassword, passwordVerification } =
 			data;
 

@@ -73,6 +73,8 @@ const AdminProductsSection = () => {
 		onOpenAddNewProduct();
 	}
 
+	// console.log("filter:", filter);
+
 	return (
 		<TabPanel bg={"brand.color1"} minH={"70vh"}>
 			<Box marginBottom={"2rem"}>

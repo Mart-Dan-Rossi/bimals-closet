@@ -1,5 +1,6 @@
 import {
 	Brand,
+	ClothSizesOptions,
 	ColorOptions,
 	ProductType,
 } from "@/utils/productCaracteristics";
@@ -11,7 +12,7 @@ export type ReserveProductData = {
 };
 
 export type SizeOption = {
-	usSize: number;
+	usSize: number | ClothSizesOptions;
 	color: ColorOptions;
 	quantity: number;
 	arg?: number;
@@ -22,7 +23,7 @@ export type SizeOption = {
 export type SizeOptions = SizeOption[];
 
 export type ReservedData = {
-	usSize: number;
+	usSize: number | ClothSizesOptions;
 	color: ColorOptions;
 	userId: string | undefined;
 	quantity: number;

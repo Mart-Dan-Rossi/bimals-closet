@@ -101,6 +101,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 		useBoolean(false);
 
 	useEffect(() => {
+		setProductType((editingProduct && item?.productType) || "calzado");
 		setName((editingProduct && item?.name) || "");
 		setSlug((editingProduct && item?.slug) || "");
 		setImages((editingProduct && item?.images) || [""]);
@@ -144,7 +145,10 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 				const isInvalid =
 					!usSize ||
 					!quantity ||
-					(brand === "other" && (usSize || quantity) && hasInvalidSize);
+					(brand === "other" &&
+						productType === "calzado" &&
+						(usSize || quantity) &&
+						hasInvalidSize);
 
 				return isInvalid;
 			});
@@ -185,7 +189,9 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 						(sizeOption) =>
 							sizeOption.quantity > 0 &&
 							sizeOption.usSize &&
-							sizeOption.usSize > 0 &&
+							((productType === "calzado" && Number(sizeOption.usSize) > 0) ||
+								(productType === "indumentaria" &&
+									typeof sizeOption.usSize !== "number")) &&
 							(brand !== "other" ||
 								(sizeOption.arg && sizeOption.cm) ||
 								sizeOption.eu)
@@ -400,6 +406,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 						<BrandSelector brand={brand} setBrand={setBrand} />
 
 						<ProductStockEdited
+							productType={productType}
 							sizeOptions={sizeOptions}
 							brand={brand}
 							setSizeOptions={setSizeOptions}

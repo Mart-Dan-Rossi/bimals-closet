@@ -72,9 +72,13 @@ export const ProductDetailMainData = ({
 		const id = product?._id;
 		const name = product?.name;
 		const price = product?.price;
-		const selectedSizeIndex = product?.sizeOptions.findIndex(
-			(item) => item.usSize === Number(selectedSize)
-		);
+		const selectedSizeIndex = product?.sizeOptions.findIndex((item) => {
+			if (typeof item.usSize === "number") {
+				return item.usSize === Number(selectedSize);
+			} else {
+				return item.usSize === selectedSize;
+			}
+		});
 
 		if (selectedSizeIndex || typeof selectedSizeIndex === "number") {
 			const sizeOption = product?.sizeOptions[selectedSizeIndex];
@@ -90,7 +94,9 @@ export const ProductDetailMainData = ({
 
 				const payload: CartItemMPFormat = {
 					id,
-					name: `${name} - ${selectedColor} - ${sizeOption.usSize}US`,
+					name: `${name} - ${selectedColor} - ${sizeOption.usSize}${
+						typeof sizeOption.usSize === "number" ? "US" : ""
+					}`,
 					unit_price: price,
 					size: sizeOption.usSize,
 					image: image,
@@ -100,7 +106,9 @@ export const ProductDetailMainData = ({
 				toast({
 					status: "success",
 					title: "Agregado al carrito",
-					description: `${name} ${selectedColor} ${sizeOption.usSize}US en el carrito!`,
+					description: `${name} ${selectedColor} ${sizeOption.usSize}${
+						typeof sizeOption.usSize === "number" ? "US" : ""
+					} en el carrito!`,
 				});
 			}
 
@@ -225,7 +233,8 @@ export const ProductDetailMainData = ({
 												fontSize={["1.6rem", "1.8rem", "1.5rem", "1.8rem"]}
 												fontWeight="600"
 											>
-												Talles (US)
+												Talles{" "}
+												{`${product.productType === "calzado" ? "(US)" : ""}`}
 											</Text>
 											<Text color="red" marginTop={"2rem"} fontWeight={"600"}>
 												Selecciona un color para ver los talles

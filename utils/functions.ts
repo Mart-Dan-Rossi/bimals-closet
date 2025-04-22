@@ -1,7 +1,11 @@
 import { ProductsFilter } from "@/types/filters";
 import { Product, ReservedData } from "@/types/product";
 import { SiteMainSections } from "./helpers";
-import { ColorOptions } from "./productCaracteristics";
+import {
+	ClothSizesOptions,
+	ColorOptions,
+	SizeKey,
+} from "./productCaracteristics";
 
 export function capitalize(string: string) {
 	return `${string[0].toUpperCase()}${string.slice(1)}`;
@@ -15,7 +19,7 @@ export function applyFilters(
 	if (!products) return [];
 
 	const { sizeOptions, tags, brand } = filter || {};
-	const { usSize, color } = sizeOptions || {};
+	const { usSize, color, usSizeSelection } = sizeOptions || {};
 
 	const hasUsSizeFilter =
 		usSize && (usSize?.min !== null || usSize?.max !== null);
@@ -25,11 +29,31 @@ export function applyFilters(
 
 	return products.filter((product) => {
 		const passSizeFilter = (() => {
+			if (usSizeSelection && usSizeSelection.length > 0) {
+				return product.sizeOptions.some(
+					(option) =>
+						typeof option.usSize === "string" &&
+						usSizeSelection.includes(option.usSize)
+				);
+			}
+
 			if (!hasUsSizeFilter) return true;
 
 			return product.sizeOptions.some(({ usSize: size }) => {
-				if (usSize?.min != null && size < usSize.min) return false;
-				if (usSize?.max != null && size > usSize.max) return false;
+				if (
+					usSize?.min != null &&
+					typeof size === "number" &&
+					size < usSize.min
+				) {
+					return false;
+				}
+				if (
+					usSize?.max != null &&
+					typeof size === "number" &&
+					size > usSize.max
+				) {
+					return false;
+				}
 				return true;
 			});
 		})();
@@ -84,7 +108,14 @@ export function getReservedDataFromNameAndQtty(
 		.split("-")
 		.map((string) => string.replace(/\s+/g, ""));
 
-	const usSize = Number(splitedName[2].slice(0, -2));
+	const sizeValue = splitedName[2].endsWith("US")
+		? splitedName[2].slice(0, -2)
+		: splitedName[2];
+
+	const usSize = isNaN(Number(sizeValue))
+		? (sizeValue as ClothSizesOptions)
+		: Number(sizeValue);
+
 	const color = splitedName[1] as ColorOptions;
 
 	const quantityValue =
@@ -101,19 +132,21 @@ export function getAvailableQuantitiesBySizeAndColor(
 	product: Product,
 	color: string
 ) {
-	const sizeMap: Record<number, number> = {};
+	const sizeMap: Partial<Record<SizeKey, number>> = {};
 
 	product.sizeOptions
 		.filter((size) => size.color.toLowerCase() === color.toLowerCase())
 		.forEach((size) => {
-			sizeMap[size.usSize] = (sizeMap[size.usSize] || 0) + (size.quantity || 0);
+			const key = size.usSize as SizeKey;
+			sizeMap[key] = (sizeMap[key] || 0) + (size.quantity || 0);
 		});
 
 	product.reservedData
 		?.filter((reserved) => reserved.color.toLowerCase() === color.toLowerCase())
 		.forEach((reserved) => {
-			if (sizeMap[reserved.usSize] && reserved.quantity) {
-				sizeMap[reserved.usSize] -= reserved.quantity;
+			const key = reserved.usSize as SizeKey;
+			if (sizeMap[key] && reserved.quantity) {
+				sizeMap[key] -= reserved.quantity;
 			}
 		});
 

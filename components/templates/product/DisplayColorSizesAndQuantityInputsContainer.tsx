@@ -68,7 +68,7 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 													bg={"brand.white500"}
 													_hover={{ backgroundColor: "brand.color2" }}
 												>
-													{brand ? (
+													{brand && typeof sizeOption.usSize === "number" ? (
 														<Tooltip
 															fontSize={"small"}
 															hasArrow
@@ -82,7 +82,11 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 															<Text>{sizeOption.usSize} (US)</Text>
 														</Tooltip>
 													) : (
-														<Text>{sizeOption.usSize} (US)</Text>
+														<Text>{`${sizeOption.usSize} ${
+															typeof sizeOption.usSize === "number"
+																? "(US)"
+																: ""
+														}`}</Text>
 													)}
 												</Button>
 											</Text>

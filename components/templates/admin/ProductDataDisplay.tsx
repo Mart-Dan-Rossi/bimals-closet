@@ -1,7 +1,7 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import { SizeOptions } from "@/types/product";
 import { capitalize } from "@/utils/functions";
-import { Brand } from "@/utils/productCaracteristics";
+import { Brand, isValidBrand } from "@/utils/productCaracteristics";
 import { Flex, Stack, Tag, Text } from "@chakra-ui/react";
 import { DisplayColorSizesAndQuantityInputsContainer } from "../product/DisplayColorSizesAndQuantityInputsContainer";
 
@@ -19,6 +19,7 @@ interface Props {
 	padding?: string;
 	borderRaious?: string;
 	width?: string;
+	showPartialPrice?: boolean;
 }
 
 const ProductDataDisplay = ({
@@ -35,6 +36,7 @@ const ProductDataDisplay = ({
 	padding,
 	borderRaious,
 	width,
+	showPartialPrice,
 }: Props) => {
 	const { onOpenFiltersDrawer } = useGlobalContext();
 
@@ -53,6 +55,7 @@ const ProductDataDisplay = ({
 
 		return totalPrice.toFixed(2);
 	}
+
 	return (
 		<Stack
 			ml="2rem"
@@ -67,7 +70,7 @@ const ProductDataDisplay = ({
 		>
 			<Flex gap={"2rem"}>
 				<Text fontSize="1.8rem" fontWeight="600">
-					{name} {brand && capitalize(brand)}
+					{name} {brand && isValidBrand(brand) && capitalize(brand)}
 				</Text>
 				{tags &&
 					slug &&
@@ -83,11 +86,13 @@ const ProductDataDisplay = ({
 			</Flex>
 			{sizeOptions && price && (
 				<>
-					<Text fontSize="1.7rem" fontWeight="600">
-						Precio total de este tipo de producto:
-					</Text>
+					{!showPartialPrice && (
+						<Text fontSize="1.7rem" fontWeight="600">
+							Precio total de este tipo de producto:
+						</Text>
+					)}
 					<Text fontSize="1.7rem" fontWeight="600" ml={"2rem"}>
-						AR$ {getTotalPrice()}
+						AR$ {!showPartialPrice ? getTotalPrice() : price}
 					</Text>
 				</>
 			)}

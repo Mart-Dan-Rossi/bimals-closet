@@ -3,8 +3,10 @@ import { CartItemMPFormat } from "@/types/order";
 import { Product } from "@/types/product";
 import { getAvailableQuantitiesBySizeAndColor } from "@/utils/functions";
 import {
+	clothOptionsArray,
 	getProperSizeEquivalencies,
 	sizeEquivalencies,
+	SizeKey,
 	validBrands,
 } from "@/utils/productCaracteristics";
 import { Button, ButtonGroup, Tooltip } from "@chakra-ui/react";
@@ -25,13 +27,15 @@ export const SizeOptions = ({
 }: Props) => {
 	const cart = useHydratedCartState("cart");
 
-	const [finalProductSizes, setFinalProductSizes] = useState<number[]>([]);
+	const [finalProductSizes, setFinalProductSizes] = useState<
+		(number | string)[]
+	>([]);
 
 	function adjustAvailableQuantities(
-		availableSizes: Record<number, number>,
+		availableSizes: Partial<Record<SizeKey, number>>,
 		cartItems: CartItemMPFormat[],
 		color: string
-	): Record<number, number> {
+	): Partial<Record<SizeKey, number>> {
 		const updatedSizes = { ...availableSizes };
 
 		cartItems.forEach((cartItem) => {
@@ -56,7 +60,7 @@ export const SizeOptions = ({
 		});
 
 		return Object.fromEntries(
-			Object.entries(updatedSizes).filter(([, value]) => value > 0)
+			Object.entries(updatedSizes).filter(([, value]) => value && value > 0)
 		);
 	}
 
@@ -81,15 +85,19 @@ export const SizeOptions = ({
 			});
 
 			if (thisProductInCartBySizes) {
-				setFinalProductSizes(
-					Object.keys(
-						adjustAvailableQuantities(
-							availableProductSizes,
-							thisProductInCartBySizes,
-							selectedColor
-						)
-					).map(Number)
+				const productSizes = Object.keys(
+					adjustAvailableQuantities(
+						availableProductSizes,
+						thisProductInCartBySizes,
+						selectedColor
+					)
 				);
+
+				if (product.productType === "calzado") {
+					setFinalProductSizes(productSizes.map(Number));
+				} else {
+					setFinalProductSizes(productSizes);
+				}
 			} else {
 				setFinalProductSizes(Object.keys(availableProductSizes).map(Number));
 			}
@@ -113,39 +121,68 @@ export const SizeOptions = ({
 			colorScheme="blackAlpha"
 			borderRadius={"7px"}
 		>
-			{sizeEquivalenciesOrdered?.map((size, index) => {
-				const currentSizeOption = product.sizeOptions.find((sizeOption) => {
-					return sizeOption.usSize === Number(size);
-				});
-				return (
-					<Tooltip
-						key={`product-size-options-tooltip-tag-${index}`}
-						fontSize={"small"}
-						hasArrow
-						placement="top-start"
-						label={getProperSizeEquivalencies(
-							product.brand,
-							size,
-							currentSizeOption
-						)}
-					>
-						<Button
-							marginTop={".5rem"}
-							onClick={() =>
-								select &&
-								typeof selectedSize === "string" &&
-								select(size.toString())
-							}
-							p={[".8rem", ".8rem 1.5rem"]}
-							isDisabled={!finalProductSizes.includes(Number(size))}
-							color={selectedSize === size ? "white" : "black"}
-							bg={selectedSize === size ? "black" : "white"}
+			{product.productType === "calzado" ? (
+				sizeEquivalenciesOrdered?.map((size, index) => {
+					const currentSizeOption = product.sizeOptions.find((sizeOption) => {
+						return sizeOption.usSize === Number(size);
+					});
+
+					return (
+						<Tooltip
+							key={`product-size-options-tooltip-tag-${index}`}
+							fontSize={"small"}
+							hasArrow
+							placement="top-start"
+							label={getProperSizeEquivalencies(
+								product.brand,
+								size,
+								currentSizeOption
+							)}
 						>
-							{size.toString()}
-						</Button>
-					</Tooltip>
-				);
-			})}
+							<Button
+								marginTop={".5rem"}
+								onClick={() =>
+									select &&
+									typeof selectedSize === "string" &&
+									select(size.toString())
+								}
+								p={[".8rem", ".8rem 1.5rem"]}
+								isDisabled={!finalProductSizes.includes(Number(size))}
+								color={selectedSize === size ? "white" : "black"}
+								bg={selectedSize === size ? "black" : "white"}
+							>
+								{size.toString()}
+							</Button>
+						</Tooltip>
+					);
+				})
+			) : (
+				<>
+					{clothOptionsArray.map((size, index) => {
+						return (
+							<Button
+								key={`size-options-cloth-options-${size}-${index}`}
+								marginTop={".5rem"}
+								onClick={() =>
+									select &&
+									typeof selectedSize === "string" &&
+									select(size.toString())
+								}
+								p={[".8rem", ".8rem 1.5rem"]}
+								isDisabled={
+									product.productType === "calzado"
+										? !finalProductSizes.includes(Number(size))
+										: !finalProductSizes.includes(size)
+								}
+								color={selectedSize === size ? "white" : "black"}
+								bg={selectedSize === size ? "black" : "white"}
+							>
+								{size.toString()}
+							</Button>
+						);
+					})}
+				</>
+			)}
 		</ButtonGroup>
 	);
 };

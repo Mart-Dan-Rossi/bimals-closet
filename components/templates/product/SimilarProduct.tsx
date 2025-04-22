@@ -49,20 +49,24 @@ export const SimilarProduct = () => {
 			);
 
 			const sizeFiltering = product.sizeOptions.some(() => {
-				return currentProduct?.sizeOptions
-					?.map((sizeData1) => sizeData1.usSize)
-					.some((num) => {
-						const productSOMapped = product.sizeOptions?.map(
-							(sizeData2) => sizeData2.usSize
-						);
+				return currentProduct?.sizeOptions?.some((sizeData1) => {
+					const currentSize = sizeData1.usSize;
+					const productSizes = product.sizeOptions.map((s) => s.usSize);
 
+					if (typeof currentSize === "number") {
 						const range = Array.from(
 							{ length: 5 },
-							(_, i) => num - 1 + i * 0.5
+							(_, i) => currentSize - 1 + i * 0.5
 						);
+						return range.some((val) => productSizes.includes(val));
+					}
 
-						return range.some((val) => productSOMapped.includes(val));
-					});
+					if (typeof currentSize === "string") {
+						return productSizes.includes(currentSize);
+					}
+
+					return false;
+				});
 			});
 
 			return (

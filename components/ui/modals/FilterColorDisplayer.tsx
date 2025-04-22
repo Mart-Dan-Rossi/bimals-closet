@@ -19,7 +19,11 @@ export const FilterColorDisplayer = () => {
 			return {
 				...(prev ?? {}),
 				sizeOptions: {
-					usSize: prev?.sizeOptions?.usSize ?? { min: 0, max: 9999 },
+					usSize:
+						prev?.sizeOptions?.usSize ??
+						typeof prev?.sizeOptions?.usSize === "number"
+							? { min: 0, max: 9999 }
+							: { min: "XXS", max: "XXL" },
 					color: colorData.name as ColorOptions,
 				},
 			};

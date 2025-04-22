@@ -1,12 +1,13 @@
 import { SizeOptions } from "@/types/product";
+import { Brand, ProductType } from "@/utils/productCaracteristics";
 import { Box, Button, Flex, Icon } from "@chakra-ui/react";
-import { ColorSizesAndQuantityInputsEditionContainer } from "./ColorSizesAndQuantityInputsEditionContainer";
-import { Brand } from "@/utils/productCaracteristics";
 import { Dispatch, SetStateAction } from "react";
-import { inputStyles } from "./ProductEditionModal";
 import { RiAddCircleLine } from "react-icons/ri";
+import { ColorSizesAndQuantityInputsEditionContainer } from "./ColorSizesAndQuantityInputsEditionContainer";
+import { inputStyles } from "./ProductEditionModal";
 
 interface Props {
+	productType: ProductType;
 	sizeOptions: SizeOptions;
 	brand: Brand | "other";
 	setSizeOptions: Dispatch<SetStateAction<SizeOptions>>;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export const ProductStockEdited = ({
+	productType,
 	sizeOptions,
 	brand,
 	setSizeOptions,
@@ -40,6 +42,7 @@ export const ProductStockEdited = ({
 						marginTop={"2rem"}
 					>
 						<ColorSizesAndQuantityInputsEditionContainer
+							productType={productType}
 							brand={brand}
 							sizeOptions={sizeOptions}
 							index1={index1}

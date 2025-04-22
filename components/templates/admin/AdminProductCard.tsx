@@ -60,6 +60,7 @@ export const AdminProductCard = ({
 					tags={item.tags}
 					slug={item.slug}
 					allowTagFiltering={true}
+					showPartialPrice={true}
 				/>
 			</Flex>
 

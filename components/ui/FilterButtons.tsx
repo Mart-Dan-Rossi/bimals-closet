@@ -54,6 +54,9 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 
 	function getAllSizes() {
 		return finalProductsData
+			?.filter((product) => {
+				return product.productType === sectionFilter;
+			})
 			?.map((product) => {
 				return product.sizeOptions.map((sizeOption) => {
 					return sizeOption.usSize;
@@ -141,7 +144,9 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 						<MenuList>
 							<Flex flexDirection={"column"} gap={1} width={"100%"}>
 								<Flex justify={"start"} gap={2} align={"end"} m={"0 1rem"}>
-									<Text fontWeight={"600"}>Talles (US)</Text>
+									<Text fontWeight={"600"}>
+										Talles {`${sectionFilter === "calzado" ? "(US)" : ""}`}
+									</Text>
 								</Flex>
 								<Box margin={"0 2rem"}>
 									<FilterSizeDisplayer allSizes={getAllSizes()} />

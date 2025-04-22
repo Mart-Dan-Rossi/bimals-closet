@@ -2,8 +2,10 @@ import { SizeOptions } from "@/types/product";
 import { capitalize } from "@/utils/functions";
 import {
 	Brand,
+	clothOptionsArray,
 	colorOptionDataArray,
 	ColorOptions,
+	ProductType,
 } from "@/utils/productCaracteristics";
 import {
 	Box,
@@ -21,10 +23,11 @@ import {
 	NumberInputStepper,
 	Text,
 } from "@chakra-ui/react";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { AiOutlineCaretDown } from "react-icons/ai";
 
 interface Props {
+	productType: ProductType;
 	brand: Brand | "other";
 	sizeOptions: SizeOptions;
 	index1: number;
@@ -43,6 +46,7 @@ interface Props {
 }
 
 export const ColorSizesAndQuantityInputsEditionContainer = ({
+	productType,
 	brand,
 	sizeOptions,
 	index1,
@@ -69,7 +73,7 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 		sizeType?: "arg" | "eu" | "cm"
 	) => {
 		setSizeOptions((prevSizeOptions) => {
-			const newSize = size ? Number(size) : 0;
+			const newSize = size ? (!isNaN(Number(size)) ? Number(size) : size) : 0;
 			return prevSizeOptions.map((sizeOption, idx) => {
 				return idx === index
 					? {
@@ -95,6 +99,19 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 			);
 		});
 	};
+
+	useEffect(() => {
+		setSizeOptions((prevSizeOptions) => {
+			return prevSizeOptions.map((sizeOption, idx) => {
+				return idx === index1
+					? {
+							...sizeOption,
+							["usSize"]: productType === "calzado" ? 8 : "M",
+					  }
+					: sizeOption;
+			});
+		});
+	}, [productType]);
 
 	return (
 		<>
@@ -126,67 +143,99 @@ export const ColorSizesAndQuantityInputsEditionContainer = ({
 				</Menu>
 			</Box>
 
-			<Box margin={"0 1rem"}>
-				<Text>Talle(US):</Text>
-				<NumberInput
-					id={`productSizeOptionSize${index1}`}
-					value={sizeOptions[index1].usSize || ""}
-					step={0.5}
-					onChange={(e) => handleSizeChange(index1, e)}
-					border="1px solid #EAEAEA"
-					borderRadius="1rem"
-					size={"lg"}
-				>
-					<NumberInputField />
-					<NumberInputStepper>
-						<NumberIncrementStepper />
-						<NumberDecrementStepper />
-					</NumberInputStepper>
-				</NumberInput>
-				{showFormErrors &&
-					!isValidsizeOptionsData &&
-					sizeOptions[index1].usSize === 0 && (
+			{productType === "calzado" ? (
+				<Box margin={"0 1rem"}>
+					<Text>Talle(US):</Text>
+					<NumberInput
+						id={`productSizeOptionSize${index1}`}
+						value={sizeOptions[index1].usSize || ""}
+						step={0.5}
+						onChange={(e) => handleSizeChange(index1, e)}
+						border="1px solid #EAEAEA"
+						borderRadius="1rem"
+						size={"lg"}
+					>
+						<NumberInputField />
+						<NumberInputStepper>
+							<NumberIncrementStepper />
+							<NumberDecrementStepper />
+						</NumberInputStepper>
+					</NumberInput>
+					{showFormErrors &&
+						!isValidsizeOptionsData &&
+						sizeOptions[index1].usSize === 0 && (
+							<Text color="red" fontSize={"sm"}>
+								Este campo es requerido!
+							</Text>
+						)}
+					{brand === "other" && (
+						<>
+							{optionalSizes.map(
+								(optionalSize: "arg" | "eu" | "cm", index2) => {
+									return (
+										<Box
+											key={`edition-optionalSizes-add-${optionalSize}-${index1}`}
+										>
+											<Text>Talle({optionalSize.toUpperCase()}):</Text>
+											<NumberInput
+												id={`productSizeOptionSize${index2}-${optionalSize}`}
+												value={sizeOptions[index1][optionalSize] || ""}
+												step={0.5}
+												onChange={(e) =>
+													handleSizeChange(index1, e, optionalSize)
+												}
+												border="1px solid #EAEAEA"
+												borderRadius="1rem"
+												fontSize="1.6rem"
+												size={"lg"}
+											>
+												<NumberInputField />
+												<NumberInputStepper>
+													<NumberIncrementStepper />
+													<NumberDecrementStepper />
+												</NumberInputStepper>
+											</NumberInput>
+											{showFormErrors &&
+												!isValidsizeOptionsData &&
+												sizeOptions[index1][optionalSize] === 0 && (
+													<Text color="red" fontSize={"sm"}>
+														Este campo es requerido!
+													</Text>
+												)}
+										</Box>
+									);
+								}
+							)}
+						</>
+					)}
+				</Box>
+			) : (
+				<Box margin={"0 1rem"}>
+					<Box margin={"0 1rem"}>
+						<Text>Talle:</Text>
+						<Menu>
+							<MenuButton as={Button} rightIcon={<AiOutlineCaretDown />}>
+								{sizeOptions[index1].usSize || "M"}
+							</MenuButton>
+							<MenuList>
+								{clothOptionsArray.map((clothSizeOption, index) => (
+									<MenuItem
+										key={`color-${index}`}
+										onClick={() => handleSizeChange(index1, clothSizeOption)}
+									>
+										{clothSizeOption}
+									</MenuItem>
+								))}
+							</MenuList>
+						</Menu>
+					</Box>
+					{showFormErrors && !isValidsizeOptionsData && (
 						<Text color="red" fontSize={"sm"}>
 							Este campo es requerido!
 						</Text>
 					)}
-				{brand === "other" && (
-					<>
-						{optionalSizes.map((optionalSize: "arg" | "eu" | "cm", index2) => {
-							return (
-								<Box
-									key={`edition-optionalSizes-add-${optionalSize}-${index1}`}
-								>
-									<Text>Talle({optionalSize.toUpperCase()}):</Text>
-									<NumberInput
-										id={`productSizeOptionSize${index2}-${optionalSize}`}
-										value={sizeOptions[index1][optionalSize] || ""}
-										step={0.5}
-										onChange={(e) => handleSizeChange(index1, e, optionalSize)}
-										border="1px solid #EAEAEA"
-										borderRadius="1rem"
-										fontSize="1.6rem"
-										size={"lg"}
-									>
-										<NumberInputField />
-										<NumberInputStepper>
-											<NumberIncrementStepper />
-											<NumberDecrementStepper />
-										</NumberInputStepper>
-									</NumberInput>
-									{showFormErrors &&
-										!isValidsizeOptionsData &&
-										sizeOptions[index1][optionalSize] === 0 && (
-											<Text color="red" fontSize={"sm"}>
-												Este campo es requerido!
-											</Text>
-										)}
-								</Box>
-							);
-						})}
-					</>
-				)}
-			</Box>
+				</Box>
+			)}
 
 			<Box>
 				<Text>Cantidad:</Text>

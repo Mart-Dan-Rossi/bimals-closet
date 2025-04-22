@@ -2,6 +2,10 @@ export type Brand = "puma" | "nike" | "adidas" | "underarmour";
 
 export const validBrands = ["puma", "nike", "adidas", "underarmour"] as Brand[];
 
+export function isValidBrand(value: string): value is Brand {
+	return validBrands.includes(value as Brand);
+}
+
 export type ColorOptions =
 	| "negro"
 	| "blanco"
@@ -14,6 +18,10 @@ export type ColorOptions =
 	| "naranja"
 	| "rosa"
 	| "celeste";
+
+export type ClothSizesOptions = "XXS" | "XS" | "S" | "M" | "L" | "XL" | "XXL";
+
+export type SizeKey = number | ClothSizesOptions;
 
 //===========================THIS 2 CONSTS MUST BE EDITED TOGHETER===========================================
 const colorOptionArray = [
@@ -44,6 +52,8 @@ const colorOptionActualColorArray = [
 	"#99ccff",
 ];
 //===========================THIS 2 CONSTS MUST BE EDITED TOGHETER===========================================
+
+export const clothOptionsArray = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
 
 export const colorOptionDataArray = colorOptionArray.map((CO, index) => {
 	return { name: CO, hash: colorOptionActualColorArray[index] };
@@ -120,7 +130,7 @@ export function getProperSizeEquivalencies(
 	currentSize: string | number,
 	sizeOption:
 		| {
-				usSize: number;
+				usSize: number | ClothSizesOptions;
 				color: string;
 				quantity: number;
 				arg?: number;
