@@ -16,14 +16,13 @@ import {
 	TabPanel,
 	TabPanels,
 	Tabs,
-	Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import AdminOrderCard from "../admin/AdminOrderCard";
 import CartContent from "./CartContent";
 import CartFooter from "./CartFooter";
 import EmptyCartMessage from "./EmptyCartMessage";
 import ReservedProductsTab from "./ReservedProductsTab";
-import AdminOrderCard from "../admin/AdminOrderCard";
 
 export const CartItems = () => {
 	const { finalProductsData, ordersData } = useGlobalContext();
