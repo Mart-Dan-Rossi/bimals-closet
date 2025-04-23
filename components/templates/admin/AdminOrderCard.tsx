@@ -18,9 +18,10 @@ import ProductDataDisplay from "./ProductDataDisplay";
 
 interface Props {
 	orderData: OrderDataBEFormat;
+	hideAdminOrderCardUserData?: boolean;
 }
 
-const AdminOrderCard = ({ orderData }: Props) => {
+const AdminOrderCard = ({ orderData, hideAdminOrderCardUserData }: Props) => {
 	const { MPUserName, MPmail, products, user, isDelivered } = orderData;
 
 	const { mutateAsync: addMutateAsynceEditBEOrder, isLoading } =
@@ -89,13 +90,15 @@ const AdminOrderCard = ({ orderData }: Props) => {
 					wrap={"wrap-reverse"}
 					gap="1rem"
 				>
-					<AdminOrderCardUserData
-						user={user}
-						MPUserName={MPUserName}
-						MPmail={MPmail}
-						products={products}
-						orderId={orderData._id}
-					/>
+					{!hideAdminOrderCardUserData && (
+						<AdminOrderCardUserData
+							user={user}
+							MPUserName={MPUserName}
+							MPmail={MPmail}
+							products={products}
+							orderId={orderData._id}
+						/>
+					)}
 					<Flex alignSelf={"self-start"} gap={"5rem"} alignItems={"flex-start"}>
 						<VStack>
 							<Text fontWeight={"600"} alignSelf={"flex-start"}>
@@ -105,6 +108,7 @@ const AdminOrderCard = ({ orderData }: Props) => {
 								AR$ {getTotalPrice()}
 							</Text>
 						</VStack>
+
 						<HStack>
 							<Text fontWeight={"600"}>Entregado:</Text>
 							{isLoading || isModifiyingDeliveredValue ? (
@@ -112,8 +116,13 @@ const AdminOrderCard = ({ orderData }: Props) => {
 							) : (
 								<Switch
 									isChecked={isDelivered}
+									disabled={hideAdminOrderCardUserData}
 									size="lg"
-									onChange={() => uploadBEOrder()}
+									onChange={() => {
+										if (!hideAdminOrderCardUserData) {
+											uploadBEOrder();
+										}
+									}}
 								/>
 							)}
 						</HStack>

@@ -4,7 +4,7 @@ import {
 	useHydratedCartState,
 	useHydratedStoreState,
 } from "@/hooks/state/hydrated";
-import { CartItemMPFormat } from "@/types/order";
+import { CartItemMPFormat, OrderDataBEFormat } from "@/types/order";
 import { Product, SizeOptions } from "@/types/product";
 import { getTotalProductsReserved } from "@/utils/functions";
 import {
@@ -16,18 +16,22 @@ import {
 	TabPanel,
 	TabPanels,
 	Tabs,
+	Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import CartContent from "./CartContent";
 import CartFooter from "./CartFooter";
 import EmptyCartMessage from "./EmptyCartMessage";
 import ReservedProductsTab from "./ReservedProductsTab";
+import AdminOrderCard from "../admin/AdminOrderCard";
 
 export const CartItems = () => {
-	const { finalProductsData } = useGlobalContext();
+	const { finalProductsData, ordersData } = useGlobalContext();
 
 	const token = useHydratedStoreState("token");
 	const cart = useHydratedCartState("cart");
+
+	const [currentTab, setCurrentTab] = useState(0);
 
 	const [userReservedProducts, setUserReserverdProducts] = useState<Product[]>(
 		[]
@@ -35,6 +39,21 @@ export const CartItems = () => {
 
 	const [userReservedProductsMPFormated, setUserReservedProductsMPFormated] =
 		useState<CartItemMPFormat[]>([]);
+
+	const [userFinalOrders, setUserFinalOrders] = useState<
+		OrderDataBEFormat[] | undefined
+	>();
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem("MateoShoesUser");
+		const user = storedUser && token ? JSON.parse(storedUser) : null;
+
+		const ordersFiltered = ordersData?.filter((order) => {
+			return order.user.id === user.id;
+		});
+
+		setUserFinalOrders(ordersFiltered);
+	}, [ordersData]);
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
@@ -115,7 +134,11 @@ export const CartItems = () => {
 
 				<Tabs defaultIndex={0} variant={"enclosed-colored"}>
 					<TabList>
-						<Tab fontSize={"large"} value="products">
+						<Tab
+							fontSize={"large"}
+							value="products"
+							onClick={() => setCurrentTab(0)}
+						>
 							<Box as="span" pos="relative">
 								<Circle
 									bg={"brand.gold100"}
@@ -132,25 +155,50 @@ export const CartItems = () => {
 								<span>Carrito</span>
 							</Box>
 						</Tab>
-						{userReservedProducts.length > 0 && (
-							<Tab fontSize={"large"} value="orders">
-								<Box as="span" pos="relative">
-									<Circle
-										bg={"brand.gold100"}
-										p=".3rem .7rem"
-										pos="absolute"
-										right="-1.5rem"
-										top="-1rem"
-										fontSize=".9rem"
-										fontWeight="600"
-										color="white"
-									>
-										{getTotalProductsReserved(userReservedProducts)}
-									</Circle>
-									<span>Reservas</span>
-								</Box>
-							</Tab>
-						)}
+
+						<Tab
+							fontSize={"large"}
+							value="orders"
+							onClick={() => setCurrentTab(1)}
+						>
+							<Box as="span" pos="relative">
+								<Circle
+									bg={"brand.gold100"}
+									p=".3rem .7rem"
+									pos="absolute"
+									right="-1.5rem"
+									top="-1rem"
+									fontSize=".9rem"
+									fontWeight="600"
+									color="white"
+								>
+									{getTotalProductsReserved(userReservedProducts)}
+								</Circle>
+								<span>Reservas</span>
+							</Box>
+						</Tab>
+
+						<Tab
+							fontSize={"large"}
+							value="orders"
+							onClick={() => setCurrentTab(2)}
+						>
+							<Box as="span" pos="relative">
+								<Circle
+									bg={"brand.gold100"}
+									p=".3rem .7rem"
+									pos="absolute"
+									right="-1.5rem"
+									top="-1rem"
+									fontSize=".9rem"
+									fontWeight="600"
+									color="white"
+								>
+									{userFinalOrders ? userFinalOrders.length : 0}
+								</Circle>
+								<span>Mis compras</span>
+							</Box>
+						</Tab>
 					</TabList>
 					<TabPanels>
 						<TabPanel minW={"80vw"}>
@@ -162,14 +210,33 @@ export const CartItems = () => {
 								userReservedProducts={userReservedProducts}
 							/>
 						</TabPanel>
+
+						<TabPanel minW={"80vw"}>
+							<Flex flexDirection={"column"} gap={"2rem"}>
+								{userFinalOrders?.map((orderData, index) => {
+									return (
+										<Box
+											key={`user-cart-final-order-${orderData._id}-${index}`}
+										>
+											<AdminOrderCard
+												orderData={orderData}
+												hideAdminOrderCardUserData={true}
+											/>
+										</Box>
+									);
+								})}
+							</Flex>
+						</TabPanel>
 					</TabPanels>
 				</Tabs>
-				<Box minW={"80vw"}>
-					<CartFooter
-						userReservedProducts={userReservedProducts}
-						userReservedProductsMPFormated={userReservedProductsMPFormated}
-					/>
-				</Box>
+				{currentTab !== 2 && (
+					<Box minW={"80vw"}>
+						<CartFooter
+							userReservedProducts={userReservedProducts}
+							userReservedProductsMPFormated={userReservedProductsMPFormated}
+						/>
+					</Box>
+				)}
 			</Flex>
 		</Box>
 	);
