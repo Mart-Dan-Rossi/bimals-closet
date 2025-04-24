@@ -5,8 +5,8 @@ import {
 	useUpdateProduct,
 } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
-import { Product, SizeOptions } from "@/types/product";
-import { getAdminsIds } from "@/utils/functions";
+import { ImageData, Product, SizeOptions } from "@/types/product";
+import { getAdminsIds, getDefaultImage } from "@/utils/functions";
 import {
 	Brand,
 	ColorOptions,
@@ -60,6 +60,20 @@ export const inputStyles = {
 	},
 };
 
+const defaultImagesData = {
+	negro: [],
+	blanco: [],
+	gris: [],
+	azul: [],
+	rojo: [],
+	amarillo: [],
+	verde: [],
+	violeta: [],
+	naranja: [],
+	rosa: [],
+	celeste: [],
+};
+
 export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 	const { finalProductsData, isAddNewProductOpen, onCloseAddNewProduct } =
 		useGlobalContext();
@@ -69,7 +83,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 	const [productType, setProductType] = useState<ProductType>("calzado");
 	const [name, setName] = useState<string>("");
 	const [slug, setSlug] = useState<string>("");
-	const [images, setImages] = useState<string[]>([""]);
+	const [images, setImages] = useState<ImageData>(defaultImagesData);
 	const [price, setPrice] = useState<number>(0);
 	const [brand, setBrand] = useState<Brand | "other">("other");
 	const [sizeOptions, setSizeOptions] = useState<SizeOptions>([]);
@@ -104,7 +118,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 		setProductType((editingProduct && item?.productType) || "calzado");
 		setName((editingProduct && item?.name) || "");
 		setSlug((editingProduct && item?.slug) || "");
-		setImages((editingProduct && item?.images) || [""]);
+		setImages((editingProduct && item?.images) || defaultImagesData);
 		setPrice((editingProduct && item?.price) || 0);
 		setBrand((editingProduct && item?.brand) || "other");
 		setSizeOptions(
@@ -123,7 +137,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 			if (item.slug) {
 				setValidSlugData();
 			}
-			if (item.images[0]) {
+			if (getDefaultImage(item.images)) {
 				setValidImagesData();
 			}
 			if (item.price > 0) {
@@ -183,7 +197,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 					productType,
 					name,
 					slug,
-					images: images.filter((urlImg) => urlImg.length > 0),
+					images,
 					price,
 					sizeOptions: sizeOptions.filter(
 						(sizeOption) =>
@@ -208,7 +222,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 				if (res) {
 					setName("");
 					setSlug("");
-					setImages([""]);
+					setImages(defaultImagesData);
 					setPrice(0);
 					setBrand("other");
 					setSizeOptions([{ usSize: 0, color: "negro", quantity: 0 }]);
@@ -276,23 +290,20 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 	}
 
 	function handleSetImageIndex(
+		color: keyof ImageData,
 		index: number,
 		e: ChangeEvent<HTMLInputElement>
 	) {
+		const value = e.target.value;
 		setImages((prevImages) => {
-			const newImages = [...prevImages];
-			newImages[index] = e.target.value;
-
-			const anyNotEmptyImageURL = newImages.some(
-				(imageURL) => imageURL.length > 0
+			const updated = { ...prevImages };
+			updated[color][index] = value;
+			const hasAnyValid = Object.values(updated).some((arr) =>
+				arr.some((url) => url.length > 0)
 			);
-
-			if (anyNotEmptyImageURL) {
-				setValidImagesData();
-			} else {
-				setInvalidImagesData();
-			}
-			return newImages;
+			if (hasAnyValid) setValidImagesData();
+			else setInvalidImagesData();
+			return updated;
 		});
 	}
 
@@ -351,23 +362,21 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 		});
 	}
 
-	function handleDeleteImageInput(index: number) {
-		setImages((prevImagesData) => {
-			let newImagesData;
-			if (prevImagesData.length === 1) {
-				newImagesData = [""];
-			} else {
-				newImagesData = [...prevImagesData].filter((__, i) => i !== index);
-			}
-			return newImagesData;
+	function handleDeleteImageInput(color: keyof ImageData, index: number) {
+		setImages((prev) => {
+			const updated = { ...prev };
+			const newArray = [...updated[color]];
+			newArray.splice(index, 1);
+			updated[color] = newArray.length ? newArray : [""];
+			return updated;
 		});
 	}
 
-	function handleAddImageInput() {
-		setImages((prevImagesData) => {
-			const newImagesData = [...prevImagesData, ""];
-			return newImagesData;
-		});
+	function handleAddImageInput(color: keyof ImageData) {
+		setImages((prev) => ({
+			...prev,
+			[color]: [...prev[color], ""],
+		}));
 	}
 
 	function handleDeleteTagInput(index: number) {

@@ -24,7 +24,7 @@ export type ClothSizesOptions = "XXS" | "XS" | "S" | "M" | "L" | "XL" | "XXL";
 export type SizeKey = number | ClothSizesOptions;
 
 //===========================THIS 2 CONSTS MUST BE EDITED TOGHETER===========================================
-const colorOptionArray = [
+export const colorOptionArray = [
 	"negro",
 	"blanco",
 	"gris",

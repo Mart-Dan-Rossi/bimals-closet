@@ -1,6 +1,6 @@
 import { useUpdateBEOrder } from "@/hooks/orders/useBEOrders";
 import { OrderDataBEFormat } from "@/types/order";
-import { getAdminsIds } from "@/utils/functions";
+import { getAdminsIds, getDefaultImage } from "@/utils/functions";
 import {
 	Box,
 	Flex,
@@ -15,6 +15,8 @@ import {
 import axios from "axios";
 import AdminOrderCardUserData from "./AdminOrderCardUserData";
 import ProductDataDisplay from "./ProductDataDisplay";
+import Image from "next/image";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 interface Props {
 	orderData: OrderDataBEFormat;
@@ -23,6 +25,7 @@ interface Props {
 
 const AdminOrderCard = ({ orderData, hideAdminOrderCardUserData }: Props) => {
 	const { MPUserName, MPmail, products, user, isDelivered } = orderData;
+	const { finalProductsData } = useGlobalContext();
 
 	const { mutateAsync: addMutateAsynceEditBEOrder, isLoading } =
 		useUpdateBEOrder();
@@ -129,33 +132,56 @@ const AdminOrderCard = ({ orderData, hideAdminOrderCardUserData }: Props) => {
 					</Flex>
 				</Flex>
 			</Flex>
-			<Flex
-				flexDirection={"column"}
-				gap={"2rem"}
-				borderRadius={"0 0 20px 20px"}
-				mb={"2rem"}
-			>
-				{orderData.products.map((item) => {
-					return (
-						<Box
-							key={`admin-order-card-key-${item._id || "a"}-${item.id || "b"}`}
-						>
-							<ProductDataDisplay
-								name={item.name}
-								sizeOptions={item.sizeOptions}
-								price={Number(item.price)}
-								allowTagFiltering={false}
-								fontColor={"brand.white100"}
-								bgColor={"brand.cartFooterBG"}
-								width={"50%"}
-								minWidth={"300px"}
-								padding={"2rem"}
-								borderRaious={"20px"}
-							/>
-						</Box>
-					);
-				})}
-			</Flex>
+			<Box>
+				<Flex
+					flexDirection={"column"}
+					gap={"2rem"}
+					borderRadius={"0 0 20px 20px"}
+					mb={"2rem"}
+				>
+					{finalProductsData &&
+						orderData.products.map((item) => {
+							const productData = finalProductsData.find((product) => {
+								return product.name === item.name;
+							});
+
+							const productImageURL = getDefaultImage(productData?.images);
+
+							return (
+								<Flex
+									key={`admin-order-card-key-${item._id || "a"}-${
+										item.id || "b"
+									}`}
+									justifyContent="space-evenly"
+									bg={"brand.white400"}
+									borderRadius={"20px"}
+									margin={"2rem"}
+									padding={"1rem"}
+								>
+									<Image
+										src={`/assets/images/${productImageURL}`}
+										width={300}
+										height={200}
+										objectFit="cover"
+										alt="Imágen del producto"
+									/>
+									<ProductDataDisplay
+										name={item.name}
+										sizeOptions={item.sizeOptions}
+										price={Number(item.price)}
+										allowTagFiltering={false}
+										fontColor={"brand.white100"}
+										bgColor={"brand.cartFooterBG"}
+										width={"50%"}
+										minWidth={"300px"}
+										padding={"2rem"}
+										borderRaious={"20px"}
+									/>
+								</Flex>
+							);
+						})}
+				</Flex>
+			</Box>
 		</Flex>
 	);
 };

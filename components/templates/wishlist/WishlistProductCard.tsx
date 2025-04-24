@@ -1,6 +1,7 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 import { Product } from "@/types/product";
+import { getDefaultImage } from "@/utils/functions";
 import { Box, Circle, Flex, Icon, Img, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import {
@@ -40,7 +41,7 @@ export const WishlistProductCard = ({ product }: Props) => {
 						<Img
 							width="140px"
 							height="140px"
-							src={`/assets/images/${product?.images[0]}`}
+							src={`/assets/images/${getDefaultImage(product.images)}`}
 							alt="Imágen del producto"
 						/>
 					</Box>

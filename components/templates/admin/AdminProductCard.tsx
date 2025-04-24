@@ -3,6 +3,7 @@ import { Box, Flex, Icon, Img } from "@chakra-ui/react";
 import { SetStateAction } from "react";
 import { RiDeleteBinLine, RiPencilLine } from "react-icons/ri";
 import ProductDataDisplay from "./ProductDataDisplay";
+import { getDefaultImage } from "@/utils/functions";
 
 interface Props {
 	item: Product;
@@ -47,7 +48,7 @@ export const AdminProductCard = ({
 					<Img
 						width="140px"
 						height="140px"
-						src={`/assets/images/${item?.images[0]}`}
+						src={`/assets/images/${getDefaultImage(item.images)}`}
 						alt="Imágen de producto"
 					/>
 				</Box>

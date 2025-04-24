@@ -1,8 +1,9 @@
 import { FilterTagsDisplayer } from "@/components/ui/modals/FilterTagsDisplayer";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
-import { Product } from "@/types/product";
-import { capitalize } from "@/utils/functions";
+import { ImageData, Product } from "@/types/product";
+import { capitalize, getDefaultImage } from "@/utils/functions";
+import { validBrands } from "@/utils/productCaracteristics";
 import { Box, Circle, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -10,7 +11,6 @@ import { useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { ColorOptions } from "./ColorOptions";
 import { SizeOptions } from "./SizeOptions";
-import { validBrands } from "@/utils/productCaracteristics";
 
 interface Props {
 	product: Product;
@@ -64,7 +64,11 @@ export const ProductCard = ({ product }: Props) => {
 				>
 					<Box onClick={handleOpenProductPage} cursor="pointer">
 						<Image
-							src={`/assets/images/${product?.images[0]}`}
+							src={`/assets/images/${
+								selectedColor
+									? product?.images[selectedColor as keyof ImageData][0]
+									: getDefaultImage(product.images)
+							}`}
 							width={300}
 							height={200}
 							objectFit="cover"

@@ -4,6 +4,7 @@ import { capitalize } from "@/utils/functions";
 import { Brand, isValidBrand } from "@/utils/productCaracteristics";
 import { Flex, Stack, Tag, Text } from "@chakra-ui/react";
 import { DisplayColorSizesAndQuantityInputsContainer } from "../product/DisplayColorSizesAndQuantityInputsContainer";
+import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
 
 interface Props {
 	sizeOptions: SizeOptions;
@@ -67,6 +68,7 @@ const ProductDataDisplay = ({
 			padding={padding || undefined}
 			borderRadius={borderRaious || undefined}
 			width={width || undefined}
+			boxShadow={standardBoxShadow}
 		>
 			<Flex gap={"2rem"}>
 				<Text fontSize="1.8rem" fontWeight="600">

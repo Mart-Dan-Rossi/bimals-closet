@@ -11,7 +11,7 @@ import { useCartState } from "@/hooks/state/storage";
 import { useShowToast } from "@/hooks/toast/useShowToast";
 import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
 import { CartItemMPFormat } from "@/types/order";
-import { Product } from "@/types/product";
+import { ImageData, Product } from "@/types/product";
 import {
 	Box,
 	Button,
@@ -22,21 +22,26 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { FaArrowRight } from "react-icons/fa";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { ColorOptions } from "./ColorOptions";
 import { SizeOptions } from "./SizeOptions";
 import SizeTableComparation from "./SizeTableComparation";
+import { getDefaultImage } from "@/utils/functions";
 
 interface Props {
 	isLoadingParticulaProductData: boolean;
+	setSelectedColor: Dispatch<SetStateAction<string | undefined>>;
+	selectedColor?: string;
 	product?: Product;
 }
 
 export const ProductDetailMainData = ({
 	isLoadingParticulaProductData,
+	setSelectedColor,
+	selectedColor,
 	product,
 }: Props) => {
 	const { finalProductsData } = useGlobalContext();
@@ -47,7 +52,6 @@ export const ProductDetailMainData = ({
 	const { addToCart } = useCartState((state) => state);
 
 	const [selectedSize, setSelectedSize] = useState<string>("");
-	const [selectedColor, setSelectedColor] = useState<string | undefined>("");
 
 	const {
 		isOpen: isSizeTableShown,
@@ -82,7 +86,11 @@ export const ProductDetailMainData = ({
 
 		if (selectedSizeIndex || typeof selectedSizeIndex === "number") {
 			const sizeOption = product?.sizeOptions[selectedSizeIndex];
-			const image = product?.images[0];
+			const image = selectedColor
+				? product?.images[selectedColor as keyof ImageData][0]
+				: product
+				? getDefaultImage(product.images)
+				: "";
 
 			if (id && name && price && image) {
 				if (!sizeOption) {

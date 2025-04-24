@@ -1,5 +1,5 @@
 import { ProductsFilter } from "@/types/filters";
-import { Product, ReservedData } from "@/types/product";
+import { ImageData, Product, ReservedData } from "@/types/product";
 import { SiteMainSections } from "./helpers";
 import {
 	ClothSizesOptions,
@@ -161,4 +161,20 @@ export function getTotalProductsReserved(userReservedProducts: Product[]) {
 		);
 		return acc + productTotal;
 	}, 0);
+}
+
+export function getDefaultImage(
+	images: ImageData | undefined
+): string | undefined {
+	if (images) {
+		for (const imageArray of Object.entries(images) as [
+			keyof ImageData,
+			string[],
+		][]) {
+			if (imageArray.length > 0) {
+				return imageArray[0];
+			}
+		}
+	}
+	return undefined;
 }

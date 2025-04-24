@@ -1,19 +1,23 @@
 import { BoxCardLoader } from "@/components/animations/CustomLoader";
-import { Product } from "@/types/product";
+import { ImageData, Product } from "@/types/product";
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import Image from "next/image";
 import { useState } from "react";
 
 interface Props {
 	isLoadingParticulaProductData: boolean;
+	selectedColor?: string;
 	product?: Product;
 }
 
 export const ProductDetailImages = ({
 	isLoadingParticulaProductData,
+	selectedColor,
 	product,
 }: Props) => {
-	const [selectedImage, setSelectedImage] = useState<string>("");
+	const [selectedImage, setSelectedImage] = useState<number>(0);
+
+	console.log("selectedImage:", selectedImage);
 
 	return (
 		<>
@@ -31,45 +35,52 @@ export const ProductDetailImages = ({
 			) : (
 				<Box>
 					<Box w="100%" borderRadius="1rem" overflow="hidden">
-						<Image
-							src={`/assets/images/${
-								!selectedImage && product ? product.images[0] : selectedImage
-							}`}
-							height={500}
-							width={500}
-							alt="Imágen del producto"
-						/>
+						{selectedColor && (
+							<Image
+								src={`/assets/images/${
+									product
+										? product.images[selectedColor as keyof ImageData][
+												selectedImage
+										  ]
+										: ""
+								}`}
+								height={500}
+								width={500}
+								alt="Imágen del producto"
+							/>
+						)}
 					</Box>
 
 					<Flex my="2rem" w="65%" mx="auto">
-						{product?.images.map((item: string, idx: number) => (
-							<Box
-								key={idx}
-								onClick={() =>
-									setSelectedImage(product ? product.images[0] : "")
-								}
-								p=".8rem 1.5rem"
-								fontSize="1.5rem"
-								fontWeight="500"
-								bg="transparent"
-								border="1px solid"
-								cursor="pointer"
-								borderColor={
-									product &&
-									(selectedImage === item || (!selectedImage && idx === 0))
-										? "brand.secondaryColor1"
-										: "transparent"
-								}
-								borderRadius=".5rem"
-							>
-								<Image
-									src={`/assets/images/${item}`}
-									height={70}
-									width={70}
-									alt="Imágen del producto"
-								/>
-							</Box>
-						))}
+						{selectedColor &&
+							product?.images[selectedColor as keyof ImageData].map(
+								(imageUrl: string, idx: number) => (
+									<Box
+										key={`image-selecor-${product?._id}-${idx}`}
+										onClick={() => setSelectedImage(idx)}
+										p=".8rem 1.5rem"
+										fontSize="1.5rem"
+										fontWeight="500"
+										bg="transparent"
+										border="1px solid"
+										cursor="pointer"
+										borderColor={
+											product &&
+											(selectedImage === idx || (!selectedImage && idx === 0))
+												? "brand.secondaryColor1"
+												: "transparent"
+										}
+										borderRadius=".5rem"
+									>
+										<Image
+											src={`/assets/images/${imageUrl}`}
+											height={70}
+											width={70}
+											alt="Imágen del producto"
+										/>
+									</Box>
+								)
+							)}
 					</Flex>
 				</Box>
 			)}

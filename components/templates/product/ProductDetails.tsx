@@ -4,6 +4,7 @@ import { Box, SimpleGrid, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ProductDetailImages } from "./ProductDetailImages";
 import { ProductDetailMainData } from "./ProductDetailMainData";
+import { useEffect, useState } from "react";
 
 export const ProductDetails = () => {
 	const router = useRouter();
@@ -11,6 +12,12 @@ export const ProductDetails = () => {
 
 	const { data: product, isLoading: isLoadingParticulaProductData } =
 		useParticularProduct(slug as string);
+
+	const [selectedColor, setSelectedColor] = useState<string | undefined>();
+
+	useEffect(() => {
+		setSelectedColor(product?.sizeOptions[0].color);
+	}, [product]);
 
 	return (
 		<Box pt="15rem" minH={"65vh"} bg={"brand.lightGrey"}>
@@ -28,11 +35,14 @@ export const ProductDetails = () => {
 						<ProductDetailImages
 							isLoadingParticulaProductData={isLoadingParticulaProductData}
 							product={product}
+							selectedColor={selectedColor}
 						/>
 
 						<ProductDetailMainData
 							isLoadingParticulaProductData={isLoadingParticulaProductData}
 							product={product}
+							selectedColor={selectedColor}
+							setSelectedColor={setSelectedColor}
 						/>
 					</SimpleGrid>
 				</Box>

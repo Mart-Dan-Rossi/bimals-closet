@@ -30,11 +30,25 @@ export type ReservedData = {
 	hide?: boolean;
 };
 
+export type ImageData = {
+	negro: string[];
+	blanco: string[];
+	gris: string[];
+	azul: string[];
+	rojo: string[];
+	amarillo: string[];
+	verde: string[];
+	violeta: string[];
+	naranja: string[];
+	rosa: string[];
+	celeste: string[];
+};
+
 export type Product = {
 	productType: ProductType;
 	name: string;
 	slug: string;
-	images: string[];
+	images: ImageData;
 	price: number;
 	sizeOptions: SizeOptions;
 	brand: Brand;

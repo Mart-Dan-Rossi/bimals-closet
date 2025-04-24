@@ -6,7 +6,7 @@ import {
 } from "@/hooks/state/hydrated";
 import { CartItemMPFormat, OrderDataBEFormat } from "@/types/order";
 import { Product, SizeOptions } from "@/types/product";
-import { getTotalProductsReserved } from "@/utils/functions";
+import { getDefaultImage, getTotalProductsReserved } from "@/utils/functions";
 import {
 	Box,
 	Circle,
@@ -23,6 +23,7 @@ import CartContent from "./CartContent";
 import CartFooter from "./CartFooter";
 import EmptyCartMessage from "./EmptyCartMessage";
 import ReservedProductsTab from "./ReservedProductsTab";
+import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
 
 export const CartItems = () => {
 	const { finalProductsData, ordersData } = useGlobalContext();
@@ -46,18 +47,17 @@ export const CartItems = () => {
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
 		const user = storedUser && token ? JSON.parse(storedUser) : null;
-
-		const ordersFiltered = ordersData?.filter((order) => {
-			return order.user.id === user.id;
-		});
-
-		setUserFinalOrders(ordersFiltered);
-	}, [ordersData]);
+		if (user) {
+			const ordersFiltered = ordersData?.filter((order) => {
+				return order.user.id === user.id;
+			});
+			setUserFinalOrders(ordersFiltered);
+		}
+	}, [ordersData, token]);
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
 		const user = storedUser && token ? JSON.parse(storedUser) : null;
-
 		if (user) {
 			const URP: Product[] = finalProductsData
 				?.map((product) => {
@@ -111,7 +111,7 @@ export const CartItems = () => {
 						name: product.name,
 						unit_price: product.price,
 						quantity: totalUserReservations ?? 0,
-						image: product.images[0],
+						image: getDefaultImage(product.images),
 					});
 
 					return acc;
@@ -216,6 +216,8 @@ export const CartItems = () => {
 									return (
 										<Box
 											key={`user-cart-final-order-${orderData._id}-${index}`}
+											borderRadius={"20px"}
+											boxShadow={standardBoxShadow}
 										>
 											<AdminOrderCard
 												orderData={orderData}

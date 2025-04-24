@@ -1,6 +1,7 @@
 import { Product } from "@/types/product";
 import { Box, Flex, Img } from "@chakra-ui/react";
 import ProductDataDisplay from "../admin/ProductDataDisplay";
+import { getDefaultImage } from "@/utils/functions";
 
 interface Props {
 	userReservedProducts: Product[];
@@ -25,7 +26,7 @@ const ReservedProductsTab = ({ userReservedProducts }: Props) => {
 								<Img
 									width="140px"
 									height="140px"
-									src={`/assets/images/${item?.images[0]}`}
+									src={`/assets/images/${getDefaultImage(item.images)}`}
 									alt="Imágen de producto"
 								/>
 							</Box>
