@@ -15,19 +15,15 @@ export const FilterColorDisplayer = () => {
 	function handleColorSelection(colorData: { name: string; hash: string }) {
 		setColor(colorData.name as ColorOptions);
 
-		setFilter((prev) => {
-			return {
-				...(prev ?? {}),
-				sizeOptions: {
-					usSize:
-						prev?.sizeOptions?.usSize ??
-						typeof prev?.sizeOptions?.usSize === "number"
-							? { min: 0, max: 9999 }
-							: { min: "XXS", max: "XXL" },
-					color: colorData.name as ColorOptions,
-				},
-			};
-		});
+		setFilter((prev) => ({
+			...(prev ?? {}),
+			sizeOptions: {
+				...(prev?.sizeOptions ?? {}),
+				usSize: { min: 0, max: 9999 },
+				color: colorData.name as ColorOptions,
+				usSizeSelection: ["XXS", "XXL"],
+			},
+		}));
 
 		localStorage.setItem(
 			"mateosShoes-shoesSizeFilterColor",

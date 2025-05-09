@@ -145,7 +145,7 @@ export function getAvailableQuantitiesBySizeAndColor(
 		?.filter((reserved) => reserved.color.toLowerCase() === color.toLowerCase())
 		.forEach((reserved) => {
 			const key = reserved.usSize as SizeKey;
-			if (sizeMap[key] && reserved.quantity) {
+			if (sizeMap[key] && sizeMap[key] !== undefined && reserved.quantity) {
 				sizeMap[key] -= reserved.quantity;
 			}
 		});
