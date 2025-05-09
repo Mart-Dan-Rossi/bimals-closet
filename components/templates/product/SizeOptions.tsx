@@ -48,13 +48,15 @@ export const SizeOptions = ({
 			const productColor = nameParts[1].toLowerCase();
 			const usSize = Number(nameParts[2].replace("US", ""));
 
+			const currentUpdatedUsSize = updatedSizes[usSize];
+
 			if (
 				productColor === color.toLowerCase() &&
-				updatedSizes[usSize] !== undefined
+				currentUpdatedUsSize !== undefined
 			) {
 				updatedSizes[usSize] = Math.max(
 					0,
-					updatedSizes[usSize] - cartItem.quantity
+					currentUpdatedUsSize - cartItem.quantity
 				);
 			}
 		});
