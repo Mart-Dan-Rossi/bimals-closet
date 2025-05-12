@@ -169,12 +169,15 @@ export function getDefaultImage(
 	images: ImageData | undefined
 ): string | undefined {
 	if (images) {
-		for (const [__, imageList] of Object.entries(images) as [
+		for (const [_, imageList] of Object.entries(images) as [
 			keyof ImageData,
 			string[],
 		][]) {
 			if (imageList.length > 0) {
 				return imageList[0];
+			}
+			if (_) {
+				/*Prevent warnings in compilation*/
 			}
 		}
 	}
