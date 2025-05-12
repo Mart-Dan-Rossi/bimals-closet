@@ -215,7 +215,27 @@ const CartFooter = ({
 				>
 					<Box overflow="hidden" borderRadius="1rem">
 						<Text fontWeight="600">Total de Items</Text>
-						<Text textAlign="center">{getTotalItemsAmount()}</Text>
+						<Text fontWeight="600" mt="1rem">
+							Precio Total
+						</Text>
+
+						<Box onClick={onOpenConfirmEmptyCartModal}>
+							<CustomButton
+								{...{
+									text: "Vaciar Carrito",
+									py: ["2rem", "2rem"],
+									isDisabled: cart?.length === 0,
+									boxShadow: standardBoxShadow,
+								}}
+							/>
+						</Box>
+					</Box>
+
+					<Box overflow="hidden" borderRadius="1rem">
+						<Text textAlign="end">{getTotalItemsAmount()}</Text>
+						<Text textAlign="end" mt="1rem">
+							AR$ {getTotalCartPrice()}
+						</Text>
 						<CustomButton
 							{...{
 								text: isLoadingPurchaseRequest ? "Procesando..." : "Comprar",
@@ -229,21 +249,6 @@ const CartFooter = ({
 							}}
 						/>
 						{preferenceId && <Wallet initialization={{ preferenceId }} />}
-					</Box>
-
-					<Box overflow="hidden" borderRadius="1rem">
-						<Text fontWeight="600">Precio Total</Text>
-						<Text textAlign="center">AR$ {getTotalCartPrice()}</Text>
-						<Box onClick={onOpenConfirmEmptyCartModal}>
-							<CustomButton
-								{...{
-									text: "Vaciar Carrito",
-									py: ["2rem", "2rem"],
-									isDisabled: cart?.length === 0,
-									boxShadow: standardBoxShadow,
-								}}
-							/>
-						</Box>
 					</Box>
 				</Flex>
 			)}

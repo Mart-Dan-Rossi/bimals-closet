@@ -13,7 +13,13 @@ const CartContent = () => {
 				return (
 					<CartProductCard
 						key={`cart-item-${index}-key`}
-						item={item}
+						name={item.name.split("-")[0]}
+						unit_price={item.unit_price}
+						id={item.id}
+						quantity={item.quantity}
+						usSize={item.size || 0}
+						slug={item.slug}
+						image={item.image}
 						color={item.name.split("-")[1]}
 						// quantityCount={quantityCount}
 						removeFromCart={removeFromCart}

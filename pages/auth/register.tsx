@@ -15,6 +15,7 @@ import { IFormRegisterInput } from "@/types/auth";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { withAuth } from "../../components/templates/withAuth";
+import PreviousPageButton from "@/components/ui/buttons/PreviousPageButton";
 
 const Register = () => {
 	const [phoneInput, setPhoneInput] = useState("");
@@ -62,6 +63,7 @@ const Register = () => {
 					flexDir="column"
 					justifyContent="space-between"
 				>
+					<PreviousPageButton />
 					<Box>
 						<Image
 							w="100%"
@@ -115,6 +117,10 @@ const Register = () => {
 									type: "text",
 									formHook: register("email", {
 										required: "Por favor introduce tu mail",
+										pattern: {
+											value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+											message: "Formato de mail inválido",
+										},
 									}),
 									errorMessage: errors.email?.message as string,
 								}}
@@ -132,6 +138,8 @@ const Register = () => {
 									return (
 										<PhoneInput
 											country="ar"
+											onlyCountries={["ar"]}
+											disableDropdown
 											value={phoneInput}
 											autoFormat={true}
 											onChange={(e) => {
@@ -179,11 +187,6 @@ const Register = () => {
 									type: showPassword ? "text" : "password",
 									formHook: register("password", {
 										required: "Por favor introduce la contraseña",
-										pattern: {
-											value: /^(?=.*[A-Z])(?=.*\d)[^\s]{8,}$/,
-											message:
-												"La contraseña debe tener un mínimo de ocho caracteres, al menos una mayúscula, un número y una minúscula. Los espacios no están permitidos.",
-										},
 									}),
 									handlePasswordClick: () => setShowPassword(!showPassword),
 									passwordIcon: (
@@ -199,6 +202,11 @@ const Register = () => {
 									errorMessage: errors.password?.message as string,
 								}}
 							/>
+							<Text fontSize="lg" as="i">
+								* La contraseña debe tener un mínimo de ocho caracteres, al
+								menos una mayúscula, un número y una minúscula. Los espacios no
+								están permitidos *
+							</Text>
 						</Box>
 						<Box my="2rem">
 							<CustomInput

@@ -8,7 +8,9 @@ import {
 } from "./productCaracteristics";
 
 export function capitalize(string: string) {
-	return `${string[0].toUpperCase()}${string.slice(1)}`;
+	const trimmed = string.trimStart();
+	if (trimmed.length === 0) return "";
+	return `${trimmed[0].toUpperCase()}${trimmed.slice(1)}`;
 }
 
 export function applyFilters(
@@ -167,12 +169,12 @@ export function getDefaultImage(
 	images: ImageData | undefined
 ): string | undefined {
 	if (images) {
-		for (const imageArray of Object.entries(images) as [
+		for (const [_, imageList] of Object.entries(images) as [
 			keyof ImageData,
 			string[],
 		][]) {
-			if (imageArray.length > 0) {
-				return imageArray[0];
+			if (imageList.length > 0) {
+				return imageList[0];
 			}
 		}
 	}

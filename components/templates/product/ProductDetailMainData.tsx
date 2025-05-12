@@ -106,6 +106,7 @@ export const ProductDetailMainData = ({
 						typeof sizeOption.usSize === "number" ? "US" : ""
 					}`,
 					unit_price: price,
+					slug: product.slug,
 					size: sizeOption.usSize,
 					image: image,
 					quantity: sizeOption.quantity,

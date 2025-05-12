@@ -15,7 +15,7 @@ export const BurguerIcon = ({ setOpenModal }: Props) => {
 	return (
 		<Flex
 			onClick={handleToggle}
-			display={["block", "none", "none", "none"]}
+			display={["block", "block", "block", "none"]}
 			cursor="pointer"
 		>
 			<Box

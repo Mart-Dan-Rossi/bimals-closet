@@ -4,11 +4,19 @@ import { useToggleFavorite } from "@/hooks/favorite/useToggleFavorite";
 import { ImageData, Product } from "@/types/product";
 import { capitalize, getDefaultImage } from "@/utils/functions";
 import { validBrands } from "@/utils/productCaracteristics";
-import { Box, Circle, Flex, HStack, Icon, Text } from "@chakra-ui/react";
+import {
+	Box,
+	Circle,
+	Collapse,
+	Flex,
+	HStack,
+	Icon,
+	Text,
+} from "@chakra-ui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { GoHeart, GoHeartFill } from "react-icons/go";
+import { GoChevronDown, GoHeart, GoHeartFill } from "react-icons/go";
 import { ColorOptions } from "./ColorOptions";
 import { SizeOptions } from "./SizeOptions";
 
@@ -25,6 +33,7 @@ export const ProductCard = ({ product }: Props) => {
 	);
 
 	const [selectedColor, setSelectedColor] = useState<string | undefined>("");
+	const [isExpanded, setIsExpanded] = useState(false);
 
 	function handleOpenProductPage() {
 		router.push(`/product/${product?.slug}`);
@@ -58,9 +67,10 @@ export const ProductCard = ({ product }: Props) => {
 			<Box>
 				<Box
 					bg={"brand.lightGrey"}
-					boxShadow="0px 4px 24px rgba(240, 240, 240, 0.6)"
+					boxShadow="0px -2px 10px rgba(240, 240, 240, 0.2)"
 					borderRadius="1rem"
 					overflow="hidden"
+					minHeight="425.156px"
 				>
 					<Box onClick={handleOpenProductPage} cursor="pointer">
 						<Image
@@ -143,6 +153,36 @@ export const ProductCard = ({ product }: Props) => {
 								</Text>
 							)}
 						</Flex>
+						{product.desc && (
+							<Box mt="1rem">
+								<Flex
+									align="center"
+									cursor="pointer"
+									onClick={() => setIsExpanded(!isExpanded)}
+								>
+									<Text fontSize="1.2rem" fontWeight="500" mr="0.5rem">
+										{isExpanded ? "Ocultar descripción" : "Ver descripción"}
+									</Text>
+									<Icon
+										as={GoChevronDown}
+										boxSize={4}
+										transition="transform 0.3s ease"
+										transform={isExpanded ? "rotate(180deg)" : "rotate(0deg)"}
+									/>
+								</Flex>
+
+								<Collapse in={isExpanded} animateOpacity>
+									<Text
+										fontSize="1.2rem"
+										color="gray.600"
+										mt="0.5rem"
+										whiteSpace="pre-wrap"
+									>
+										{product.desc}
+									</Text>
+								</Collapse>
+							</Box>
+						)}
 					</Box>
 				</Box>
 			</Box>

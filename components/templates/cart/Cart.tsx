@@ -6,7 +6,7 @@ import {
 } from "@/hooks/state/hydrated";
 import { CartItemMPFormat, OrderDataBEFormat } from "@/types/order";
 import { Product, SizeOptions } from "@/types/product";
-import { getDefaultImage, getTotalProductsReserved } from "@/utils/functions";
+import { getDefaultImage } from "@/utils/functions";
 import {
 	Box,
 	Circle,
@@ -18,12 +18,10 @@ import {
 	Tabs,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import AdminOrderCard from "../admin/AdminOrderCard";
 import CartContent from "./CartContent";
 import CartFooter from "./CartFooter";
 import EmptyCartMessage from "./EmptyCartMessage";
-import ReservedProductsTab from "./ReservedProductsTab";
-import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
+import { MyPurchases } from "./MyPurchases";
 
 export const CartItems = () => {
 	const { finalProductsData, ordersData } = useGlobalContext();
@@ -110,6 +108,7 @@ export const CartItems = () => {
 						id: product._id,
 						name: product.name,
 						unit_price: product.price,
+						slug: product.slug,
 						quantity: totalUserReservations ?? 0,
 						image: getDefaultImage(product.images),
 					});
@@ -155,7 +154,7 @@ export const CartItems = () => {
 							</Box>
 						</Tab>
 
-						<Tab
+						{/* <Tab
 							fontSize={"large"}
 							value="orders"
 							onClick={() => setCurrentTab(1)}
@@ -175,12 +174,12 @@ export const CartItems = () => {
 								</Circle>
 								<span>Reservas</span>
 							</Box>
-						</Tab>
+						</Tab> */}
 
 						<Tab
 							fontSize={"large"}
 							value="orders"
-							onClick={() => setCurrentTab(2)}
+							onClick={() => setCurrentTab(1)}
 						>
 							<Box as="span" pos="relative">
 								<Circle
@@ -204,29 +203,16 @@ export const CartItems = () => {
 							<EmptyCartMessage />
 							<CartContent />
 						</TabPanel>
-						<TabPanel minW={"80vw"}>
+						{/* <TabPanel minW={"80vw"}>
 							<ReservedProductsTab
 								userReservedProducts={userReservedProducts}
 							/>
-						</TabPanel>
+						</TabPanel> */}
 
 						<TabPanel minW={"80vw"}>
-							<Flex flexDirection={"column"} gap={"2rem"}>
-								{userFinalOrders?.map((orderData, index) => {
-									return (
-										<Box
-											key={`user-cart-final-order-${orderData._id}-${index}`}
-											borderRadius={"20px"}
-											boxShadow={standardBoxShadow}
-										>
-											<AdminOrderCard
-												orderData={orderData}
-												hideAdminOrderCardUserData={true}
-											/>
-										</Box>
-									);
-								})}
-							</Flex>
+							{userFinalOrders && (
+								<MyPurchases userFinalOrders={userFinalOrders} />
+							)}
 						</TabPanel>
 					</TabPanels>
 				</Tabs>

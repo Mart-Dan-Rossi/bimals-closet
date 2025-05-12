@@ -58,6 +58,9 @@ export const MobileNavbar = ({ loggedIsAdmin, subHeaderName }: Props) => {
 					)}
 
 					{AuthModalData.map((item, idx) => {
+						if (!token && item.link === "/auth/edit-profile") {
+							return <></>;
+						}
 						return (
 							<Fragment key={idx}>
 								{item.link ? (

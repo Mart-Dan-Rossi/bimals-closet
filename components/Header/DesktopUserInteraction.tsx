@@ -33,7 +33,7 @@ export const DesktopUserInteraction = ({
 	const [openDropDown, setOpenDropDown] = useBoolean();
 
 	return (
-		<Box position={"relative"} display={["none", "flex"]}>
+		<Box position={"relative"} display={["none", "none", "none", "flex"]}>
 			<Stack
 				spacing="2rem"
 				direction={["row"]}
@@ -65,32 +65,38 @@ export const DesktopUserInteraction = ({
 					</Box>
 				</Box>
 
-				<Flex
-					onClick={setOpenDropDown.toggle}
-					alignItems="center"
-					cursor="pointer"
-				>
-					<Box>
-						<Icon cursor="pointer" as={BiUserCircle} />
-					</Box>
-					<Flex align="center">
-						<Box mt="-.5rem">
-							{name ? (
+				{name ? (
+					<Flex
+						onClick={setOpenDropDown.toggle}
+						alignItems="center"
+						cursor="pointer"
+					>
+						<Box>
+							<Icon cursor="pointer" as={BiUserCircle} />
+						</Box>
+						<Flex align="center">
+							<Box mt="-.5rem">
 								<Text ml=".2rem" fontSize="1.5rem">
 									{name}
 								</Text>
-							) : (
-								<Text ml=".2rem" fontSize="1.5rem" userSelect={"none"}>
-									Invitado
-								</Text>
-							)}
-						</Box>
+							</Box>
 
-						<Box fontSize="1.5rem" pos="relative">
-							{openDropDown ? <MdArrowDropUp /> : <MdArrowDropDown />}
-						</Box>
+							<Box fontSize="1.5rem" pos="relative">
+								{openDropDown ? <MdArrowDropUp /> : <MdArrowDropDown />}
+							</Box>
+						</Flex>
 					</Flex>
-				</Flex>
+				) : (
+					<Text
+						cursor="pointer"
+						ml=".2rem"
+						fontSize="1.5rem"
+						fontWeight="bold"
+						onClick={() => router.push("/auth/login")}
+					>
+						Log in
+					</Text>
+				)}
 			</Stack>
 			{openDropDown && <AuthModal />}
 		</Box>

@@ -25,6 +25,10 @@ export const AuthModal = () => {
 		>
 			<Stack w="13rem" justifyContent="center" overflow="hidden">
 				{AuthModalData.map((item, idx) => {
+					if (item.link === "/auth/edit-profile" && !token) {
+						return <></>;
+					}
+
 					return (
 						<Fragment key={idx}>
 							{item.link ? (
@@ -58,7 +62,7 @@ export const AuthModal = () => {
 												display="flex"
 												alignItems="center"
 											>
-												{item.text === "Desconectar" && token === null
+												{item.text === "Desconectar" && token
 													? "Conectar"
 													: item.text}
 											</Text>

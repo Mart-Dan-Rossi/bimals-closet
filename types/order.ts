@@ -1,3 +1,4 @@
+import { ClothSizesOptions } from "@/utils/productCaracteristics";
 import { StoredUserData } from "./auth";
 import { Product, SizeOption } from "./product";
 
@@ -6,8 +7,9 @@ export type CartItemMPFormat = {
 	name: string;
 	unit_price: number;
 	quantity: number;
+	slug: string;
 	image?: string;
-	size?: number | string;
+	size?: number | ClothSizesOptions;
 };
 
 export type OrderDataMPFormat = {

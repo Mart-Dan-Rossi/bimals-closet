@@ -57,7 +57,7 @@ const PaySuccess = () => {
 					w={["100%", "100%", "50%"]}
 					bg={["#fff"]}
 					display="flex"
-					alignItems="center"
+					alignItems="flex-start"
 					justifyContent="center"
 					flexDir="column"
 					ms="0rem"
@@ -69,7 +69,7 @@ const PaySuccess = () => {
 						Por favor, comunicate por nuestras redes sociales adjuntando el
 						comprobante de pago para que podamos coordinar la entrega.
 					</Text>
-					<Text fontWeight={"600"}>
+					<Text fontWeight={"600"} pl={"2rem"}>
 						(Puedes encontrar nuestras redes sociales en el pié de página)
 					</Text>
 					<Text p={"2rem"} fontSize={"x-large"} fontWeight={"600"}>

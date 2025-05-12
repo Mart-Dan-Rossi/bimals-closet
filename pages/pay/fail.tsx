@@ -42,7 +42,7 @@ export const PayFailed = () => {
 					w={["100%", "100%", "50%"]}
 					bg={["#fff"]}
 					display="flex"
-					alignItems="center"
+					alignItems="flex-start"
 					justifyContent="center"
 					flexDir="column"
 					ms="0rem"
@@ -59,17 +59,18 @@ export const PayFailed = () => {
 					<Text p={"2rem"} fontSize={"xx-large"} fontWeight={"600"}>
 						Por favor, intenta nuevamente más tarde.
 					</Text>
-					<CustomButton
-						{...{
-							text: "Volver al inicio",
-							py: ["2rem", "2rem"],
-							border: ".2rem solid",
-							borderColor: "transparent",
-							onClickFunction: () => {
-								router.push("/");
-							},
-						}}
-					/>
+					<Box pl="2rem">
+						<CustomButton
+							{...{
+								text: "Volver al inicio",
+								border: ".2rem solid",
+								borderColor: "transparent",
+								onClickFunction: () => {
+									router.push("/");
+								},
+							}}
+						/>
+					</Box>
 				</Box>
 			</Stack>
 		</Box>

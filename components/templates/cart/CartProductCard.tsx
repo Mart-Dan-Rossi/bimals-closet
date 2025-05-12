@@ -1,24 +1,55 @@
-import { CartItemMPFormat } from "@/types/order";
-import { Box, Flex, Icon, Img, Stack, Text } from "@chakra-ui/react";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { capitalize } from "@/utils/functions";
+import { ClothSizesOptions } from "@/utils/productCaracteristics";
+import { Box, Flex, Icon, Img, Switch, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { RiDeleteBinLine, RiPencilLine } from "react-icons/ri";
 
 interface Props {
-	item: CartItemMPFormat;
+	name: string;
+	unit_price: number;
+	quantity: number;
+	usSize: number | ClothSizesOptions;
 	color: string;
-	// quantityCount: (id: string, type: "increament" | "decreament") => void;
-	removeFromCart: (
+	removeFromCart?: (
 		id: string | string[],
 		name: string,
 		isMultiple?: boolean
 	) => void;
+	id?: string;
+	slug?: string;
+	image?: string;
+	showDeliveredIndicator?: boolean;
+	isDelivered?: boolean | undefined;
 }
 
 export const CartProductCard = ({
-	item,
+	name,
+	unit_price,
+	quantity,
+	usSize,
 	color,
-	// quantityCount,
 	removeFromCart,
+	id,
+	slug,
+	image,
+	showDeliveredIndicator,
+	isDelivered,
 }: Props) => {
+	const router = useRouter();
+
+	function handleTrashButton() {
+		if (removeFromCart && id) {
+			removeFromCart(id, name);
+		}
+	}
+
+	function handleEditButton() {
+		if (removeFromCart && id) {
+			removeFromCart(id, name);
+			router.push(`/product/${slug}`);
+		}
+	}
+
 	return (
 		<Flex
 			bg={"brand.cartCardBG"}
@@ -28,61 +59,80 @@ export const CartProductCard = ({
 			mb="2rem"
 			color="brand.white200"
 		>
-			<Flex>
-				<Box overflow="hidden" borderRadius="1rem">
-					<Img
-						width="140px"
-						height="140px"
-						src={`/assets/images/${item?.image}`}
-						alt="Imágen de producto"
-					/>
-				</Box>
+			<Flex alignItems="center">
+				{image && (
+					<Box overflow="hidden">
+						<Img
+							width="140px"
+							height="140px"
+							src={`/assets/images/${image}`}
+							alt="Imágen de producto"
+							borderRadius="1rem"
+						/>
+					</Box>
+				)}
 
-				<Stack ml="2rem" flexDir="column" spacing="1.2rem">
-					<Text fontSize="1.8rem" fontWeight="300">
-						{item?.name.split("-")[0]}
+				<Flex ml="2rem" flexDir="column">
+					<Text fontSize="1.8rem" fontWeight="bolder">
+						{name.split("-")[0]}
 					</Text>
-					<Flex align="center">
-						<Text fontSize="1.7rem" fontWeight="600">
-							AR$ {item?.unit_price?.toFixed(2)}{" "}
+					<Flex align="center" mt="1.2rem">
+						<Text fontSize="1.6rem" fontWeight="normal">
+							AR$ {unit_price?.toFixed(2)}{" "}
 						</Text>
-						<Text ml=".5rem" fontSize="1.5rem" fontWeight="300">
-							{item?.quantity &&
-								item?.quantity > 1 &&
-								`x ${item?.quantity} = AR$ ${(
-									item?.unit_price * item?.quantity
-								).toFixed(2)}`}
+						<Text ml=".5rem" fontSize="1.5rem" fontWeight="normal">
+							{quantity &&
+								quantity > 1 &&
+								`x ${quantity} = AR$ ${(unit_price * quantity).toFixed(2)}`}
 						</Text>
 					</Flex>
 					<Flex align="center">
-						<Text fontSize="1.4rem" fontWeight="600">
+						<Text fontSize="1.4rem" fontWeight="normal">
 							Talle (US):
 						</Text>
-						<Text as="span" fontWeight="400" ml=".5rem">
-							{item?.size}
+						<Text as="span" fontWeight="normal" ml=".5rem">
+							{usSize}
 						</Text>
 					</Flex>
 
+					<Flex alignItems={"center"}>
+						<Text fontSize="1.4rem" fontWeight="normal">
+							Color:
+						</Text>
+						<Text ml={"0.5rem"}>{capitalize(color)}</Text>
+					</Flex>
 					<Flex align="center">
-						<Text display={"inline-block"} fontSize="1.4rem" fontWeight="600">
+						<Text
+							display={"inline-block"}
+							fontSize="1.4rem"
+							fontWeight="normal"
+						>
 							Cantidad:{" "}
-							<Text display={"inline-block"} fontWeight="300">
-								{item.quantity}
+							<Text display={"inline-block"} fontWeight="normal">
+								{quantity}
 							</Text>
 						</Text>
 					</Flex>
-					<Flex alignItems={"center"}>
-						<Text fontSize="1.4rem" fontWeight="600">
-							Color:
-						</Text>
-						<Text ml={"0.5rem"}>{color}</Text>
-					</Flex>
-				</Stack>
+				</Flex>
 			</Flex>
 
-			<Box onClick={() => removeFromCart(item?.id, item.name)}>
-				<Icon as={RiDeleteBinLine} fontSize="2rem" cursor="pointer" />
-			</Box>
+			<Flex alignItems="flex-start">
+				{showDeliveredIndicator ? (
+					<Flex alignItems="center">
+						<Text mr="1rem">Enviado:</Text>
+						<Switch isChecked={isDelivered} disabled={true} size="lg" />
+					</Flex>
+				) : (
+					<>
+						<Box onClick={handleEditButton}>
+							<Icon as={RiPencilLine} fontSize="2rem" cursor="pointer" />
+						</Box>
+						<Box onClick={handleTrashButton}>
+							<Icon as={RiDeleteBinLine} fontSize="2rem" cursor="pointer" />
+						</Box>
+					</>
+				)}
+			</Flex>
 		</Flex>
 	);
 };

@@ -38,9 +38,7 @@ export const Products = ({ hideFilter, section }: Props) => {
 	useEffect(() => {
 		if (finalProductsData && finalProductsData.length > 0) {
 			filtersLoading();
-
 			const filtered = applyFilters(finalProductsData, filter, section);
-
 			setFilteredProductsData(filtered);
 			setCurrentPage(1);
 			filtersLoaded();
@@ -71,36 +69,43 @@ export const Products = ({ hideFilter, section }: Props) => {
 		<Box
 			p="0"
 			pt={!hideFilter ? "15rem" : ""}
-			minH={"65vh"}
-			bg={"brand.mainContenetBG"}
+			minH="65vh"
+			bg="brand.mainContenetBG"
 			position="relative"
 			h="100%"
-			overflow="hidden"
 		>
 			<Box maxW="1280px" mx="auto" pb="4rem">
-				<Box p="3rem" pos="relative">
-					<Box>
-						{!hideFilter ? (
-							<FilterButtons
-								filteredProductsData={filteredProductsData}
-								section={section}
-								sectionFilter={sectionFilter}
-								setSectionFilter={setSectionFilter}
-							/>
-						) : (
-							<Flex align="center">
-								<Text
-									color={"brand.white100"}
-									fontWeight="600"
-									ml="1rem"
-									userSelect={"none"}
-								>
-									ÚLTIMOS LANZAMIENTOS
-								</Text>
-							</Flex>
-						)}
+				{!hideFilter ? (
+					<Box
+						position="sticky"
+						top="10vh"
+						zIndex="sticky"
+						bg="brand.white200"
+						p="1rem"
+						borderRadius="20px"
+						maxW="max-content"
+					>
+						<FilterButtons
+							filteredProductsData={filteredProductsData}
+							section={section}
+							sectionFilter={sectionFilter}
+							setSectionFilter={setSectionFilter}
+						/>
 					</Box>
+				) : (
+					<Flex align="center">
+						<Text
+							color="brand.white100"
+							fontWeight="600"
+							ml="1rem"
+							userSelect="none"
+						>
+							ÚLTIMOS LANZAMIENTOS
+						</Text>
+					</Flex>
+				)}
 
+				<Box p="3rem">
 					<SimpleGrid columns={[2, 3, 3, 4]} gap="2rem" mt="1rem">
 						{isLoadingFilters || isLoadingProductData ? (
 							<Fragment>
@@ -118,33 +123,29 @@ export const Products = ({ hideFilter, section }: Props) => {
 							<Fragment>
 								{paginatedProducts.length === 0 ? (
 									<Text
-										width={"100vw"}
-										fontWeight={"600"}
-										color={"brand.white100"}
-										textAlign={"center"}
+										width="100vw"
+										fontWeight="600"
+										color="brand.white100"
+										textAlign="center"
 									>
 										No se encontraron productos
 									</Text>
 								) : (
-									paginatedProducts.map(
-										(product: Product) =>
-											product._id && (
-												<ProductCard
-													key={`products-general-view-${product._id}-${product.slug}`}
-													product={product}
-												/>
-											)
+									paginatedProducts.map((product: Product) =>
+										product._id ? (
+											<ProductCard
+												key={`products-general-view-${product._id}-${product.slug}`}
+												product={product}
+											/>
+										) : null
 									)
 								)}
 							</Fragment>
 						)}
 					</SimpleGrid>
+
 					{!hideFilter && totalPages > 1 && (
-						<Flex
-							justifyContent={"center"}
-							gap={"1rem"}
-							alignItems={"flex-end"}
-						>
+						<Flex justifyContent="center" gap="1rem" alignItems="flex-end">
 							<Button
 								onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
 								isDisabled={currentPage === 1}
@@ -175,6 +176,7 @@ export const Products = ({ hideFilter, section }: Props) => {
 									);
 								})}
 							</Flex>
+
 							<Button
 								onClick={() => setCurrentPage((prev) => Math.max(prev + 1, 1))}
 								isDisabled={currentPage === totalPages}

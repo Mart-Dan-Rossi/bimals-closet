@@ -72,8 +72,8 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 	}
 
 	return (
-		<Flex gap={"2rem"}>
-			<BsFilterLeft color="white" />
+		<Flex gap={"2rem"} alignItems={"flex-end"}>
+			<BsFilterLeft color="black" />
 			{(section === "todo" || section === "sale") && setSectionFilter && (
 				<Menu>
 					<MenuButton as={Button} rightIcon={<GoChevronDown />}>
@@ -104,36 +104,54 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 					</MenuList>
 				</Menu>
 			)}
-			<Flex>
-				<Menu>
-					<MenuButton as={Button} rightIcon={<GoChevronDown />}>
+			<Flex direction="column" position="relative">
+				{filter?.brand && (
+					<Text
+						fontSize="0.9rem"
+						fontWeight="500"
+						color="gray.500"
+						mb="0.3rem"
+						ml="0.2rem"
+					>
 						Marca
-					</MenuButton>
-					<MenuList>
-						{validBrands.map((brand, index) => {
-							return (
+					</Text>
+				)}
+
+				<Flex alignItems={"center"}>
+					<Menu>
+						<MenuButton
+							as={Button}
+							rightIcon={<GoChevronDown />}
+							textAlign="left"
+							width="100%"
+						>
+							{filter?.brand ? capitalize(filter.brand) : "Marca"}
+						</MenuButton>
+						<MenuList>
+							{validBrands.map((brand, index) => (
 								<MenuItem
 									key={`filter-buttons-brand-${brand}-${index}`}
 									onClick={() => handleSetBrandFilter(brand)}
 								>
 									{capitalize(brand)}
 								</MenuItem>
-							);
-						})}
-					</MenuList>
-				</Menu>
-				{filter?.brand && (
-					<TinyCloseButton
-						onClickFunction={() => {
-							setFilter((prev) => {
-								return {
-									...(prev ?? {}),
-									brand: undefined,
-								};
-							});
-						}}
-					/>
-				)}
+							))}
+						</MenuList>
+					</Menu>
+
+					{filter?.brand && (
+						<Box>
+							<TinyCloseButton
+								onClickFunction={() => {
+									setFilter((prev) => ({
+										...(prev ?? {}),
+										brand: undefined,
+									}));
+								}}
+							/>
+						</Box>
+					)}
+				</Flex>
 			</Flex>
 			{sectionFilter === "calzado" || sectionFilter === "indumentaria" ? (
 				<Flex>
@@ -185,30 +203,50 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 					</MenuList>
 				</Menu>
 			)}
-			<Flex>
-				<Menu>
-					<MenuButton as={Button} rightIcon={<GoChevronDown />}>
-						Color
-					</MenuButton>
-					<MenuList>
-						<FilterColorDisplayer />
-					</MenuList>
-				</Menu>
+			<Flex direction="column" position="relative">
 				{filter?.sizeOptions?.color && (
-					<TinyCloseButton
-						onClickFunction={() => {
-							setFilter((prev) => {
-								return {
-									...(prev ?? {}),
-									sizeOptions: {
-										usSize: prev?.sizeOptions?.usSize,
-										color: undefined,
-									},
-								};
-							});
-						}}
-					/>
+					<Text
+						fontSize="0.9rem"
+						fontWeight="500"
+						color="gray.500"
+						mb="0.3rem"
+						ml="0.2rem"
+					>
+						Color
+					</Text>
 				)}
+				<Flex alignItems="center">
+					<Menu>
+						<MenuButton
+							as={Button}
+							rightIcon={<GoChevronDown />}
+							textAlign="left"
+							width="100%"
+						>
+							{filter?.sizeOptions?.color
+								? capitalize(filter.sizeOptions?.color)
+								: "Color"}
+						</MenuButton>
+						<MenuList>
+							<FilterColorDisplayer />
+						</MenuList>
+					</Menu>
+					{filter?.sizeOptions?.color && (
+						<TinyCloseButton
+							onClickFunction={() => {
+								setFilter((prev) => {
+									return {
+										...(prev ?? {}),
+										sizeOptions: {
+											usSize: prev?.sizeOptions?.usSize,
+											color: undefined,
+										},
+									};
+								});
+							}}
+						/>
+					)}
+				</Flex>
 			</Flex>
 			<Flex>
 				<Menu>

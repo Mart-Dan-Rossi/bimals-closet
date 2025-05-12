@@ -14,8 +14,8 @@ const MainSectionsNavigation = ({ subHeaderName, isMobile }: Props) => {
 			gap="2rem"
 			display={
 				isMobile
-					? ["block", "none", "none", "none"]
-					: ["none", "flex", "flex", "flex"]
+					? ["block", "block", "block", "none"]
+					: ["none", "none", "none", "flex"]
 			}
 			bg={isMobile ? "brand.white100" : ""}
 			p={isMobile ? ".9rem 1.5rem" : ""}

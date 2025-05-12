@@ -6,8 +6,13 @@ const SitePresentation = () => {
 	const router = useRouter();
 
 	return (
-		<Flex justifyContent={"center"} margin="4rem 0">
-			<Flex width={"60%"} minW={"420px"} maxW={"1200px"} gap={"2rem"}>
+		<Flex justifyContent={"center"} margin="4rem 4rem">
+			<Flex
+				width={["100%", "80%", "60%"]}
+				maxW={"1200px"}
+				gap={"2rem"}
+				flexDir={["column", "column", "row"]}
+			>
 				<VStack
 					maxW={"50%"}
 					justifyContent={"center"}

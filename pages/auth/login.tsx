@@ -21,6 +21,12 @@ const Login = () => {
 	const { mutateAsync, isLoading } = useLoginUser();
 	const { setToken } = useStoreState((state) => state);
 
+	const [passwordPatternError, setPasswordPatternError] = useState<
+		string | null
+	>(null);
+
+	const [mailError, setMailError] = useState<string | null>(null);
+
 	const {
 		register,
 		handleSubmit,
@@ -31,6 +37,9 @@ const Login = () => {
 
 	const onSubmit: SubmitHandler<IFormLoginInput> = async (data) => {
 		try {
+			setMailError(null);
+			setPasswordPatternError(null);
+
 			const res = await mutateAsync(data);
 			setToken(res?.data?.token);
 			localStorage.setItem(
@@ -44,12 +53,31 @@ const Login = () => {
 			router.push("/");
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
-				toast({
-					status: "error",
-					title:
-						error?.response?.data?.message ||
-						"Ocurrió un error, intenta de nuevo luego",
-				});
+				const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[^\s]{8,}$/;
+				if (error.response?.data.message.includes("Usuario no encontrado")) {
+					setMailError(
+						"Usuario no encontrado. No hay cuenta asociada a este mail."
+					);
+
+					if (data.password && !passwordRegex.test(data.password)) {
+						setPasswordPatternError(
+							"La contraseña debe tener un mínimo de ocho caracteres, al menos una mayúscula, un número y una minúscula. Los espacios no están permitidos."
+						);
+					}
+				} else {
+					if (data.password && !passwordRegex.test(data.password)) {
+						setPasswordPatternError(
+							"La contraseña debe tener un mínimo de ocho caracteres, al menos una mayúscula, un número y una minúscula. Los espacios no están permitidos."
+						);
+					} else {
+						toast({
+							status: "error",
+							title:
+								error?.response?.data?.message ||
+								"Ocurrió un error, intenta de nuevo luego",
+						});
+					}
+				}
 			}
 		}
 	};
@@ -130,7 +158,8 @@ const Login = () => {
 									formHook: register("email", {
 										required: "Por favor introduce tu mail",
 									}),
-									errorMessage: errors.email?.message as string,
+									errorMessage:
+										(errors.email?.message as string) || mailError || "",
 								}}
 							/>
 						</Box>
@@ -143,11 +172,6 @@ const Login = () => {
 									type: showPassword ? "text" : "password",
 									formHook: register("password", {
 										required: "Introduce la contraseña",
-										pattern: {
-											value: /^(?=.*[A-Z])(?=.*\d)[^\s]{8,}$/,
-											message:
-												"La contraseña debe tener un mínimo de ocho caracteres, al menos una mayúscula, un número y una minúscula. Los espacios no están permitidos.",
-										},
 									}),
 									handlePasswordClick: () => setShowPassword(!showPassword),
 									passwordIcon: (
@@ -160,7 +184,10 @@ const Login = () => {
 										</Box>
 									),
 
-									errorMessage: errors.password?.message as string,
+									errorMessage:
+										(errors.password?.message as string) ||
+										passwordPatternError ||
+										"",
 								}}
 							/>
 						</Box>
