@@ -169,7 +169,7 @@ export function getDefaultImage(
 	images: ImageData | undefined
 ): string | undefined {
 	if (images) {
-		for (const [_, imageList] of Object.entries(images) as [
+		for (const [__, imageList] of Object.entries(images) as [
 			keyof ImageData,
 			string[],
 		][]) {
