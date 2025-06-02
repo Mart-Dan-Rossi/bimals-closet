@@ -6,7 +6,7 @@ import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product, SizeOptions } from "@/types/product";
 import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import MainSectionsNavigation from "./MainSectionNavigation";
 
 export const Header = ({
