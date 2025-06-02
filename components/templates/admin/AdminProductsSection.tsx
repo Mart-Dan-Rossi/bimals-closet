@@ -52,7 +52,7 @@ const AdminProductsSection = () => {
 		const base64 = base64Url && base64Url.replace(/-/g, "+").replace(/_/g, "/");
 		const tokenData = base64 && JSON.parse(atob(base64));
 
-		if (tokenData.role !== "admin") {
+		if (tokenData && tokenData.role !== "admin") {
 			console.log(
 				"El panel de admin es sólo accesible para administradores. Logueate con una cuenta admin para poder entrar."
 			);

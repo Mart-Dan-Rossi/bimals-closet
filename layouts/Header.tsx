@@ -42,7 +42,7 @@ export const Header = ({
 			setName(fullName);
 		}
 
-		setLoggedIsAdmin(tokenData.role === "admin");
+		setLoggedIsAdmin(tokenData && tokenData.role === "admin");
 	}, [name, token]);
 
 	useEffect(() => {
