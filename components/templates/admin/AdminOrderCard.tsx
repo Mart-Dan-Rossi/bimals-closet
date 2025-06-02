@@ -1,6 +1,6 @@
 import { useUpdateBEOrder } from "@/hooks/orders/useBEOrders";
 import { OrderDataBEFormat } from "@/types/order";
-import { getAdminsIds, getDefaultImage } from "@/utils/functions";
+import { getDefaultImage } from "@/utils/functions";
 import {
 	Box,
 	Flex,
@@ -47,7 +47,7 @@ const AdminOrderCard = ({ orderData, hideAdminOrderCardUserData }: Props) => {
 			const res = await addMutateAsynceEditBEOrder(order);
 			modifiedDeliveredValue();
 
-			if (res?.status === "success" && getAdminsIds().includes(user.id)) {
+			if (res?.status === "success") {
 				toast({ status: "success", title: "Órden cargada correctamente" });
 			}
 		} catch (error) {

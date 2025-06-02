@@ -23,13 +23,6 @@ export const Header = ({
 	const [openModal, setOpenModal] = useBoolean();
 	const [name, setName] = useState<string>("");
 
-	function getAdminsIds() {
-		const allIds = process.env.NEXT_PUBLIC_ADMINS_IDS || "0";
-		return allIds?.split("/");
-	}
-
-	const adminIds = useRef(getAdminsIds()).current as string[];
-
 	const [loggedIsAdmin, setLoggedIsAdmin] = useState(false);
 
 	const [userReservedProducts, setUserReserverdProducts] = useState<Product[]>(
@@ -40,15 +33,16 @@ export const Header = ({
 		const storedUser = localStorage.getItem("MateoShoesUser");
 		const user = storedUser && token ? JSON.parse(storedUser) : undefined;
 		const fullName = user ? user.name : undefined;
-		const userId = user ? user.id : undefined;
+
+		const base64Url = token && token.split(".")[1];
+		const base64 = base64Url && base64Url.replace(/-/g, "+").replace(/_/g, "/");
+		const tokenData = base64 && JSON.parse(atob(base64));
 
 		if (JSON.stringify(name) !== JSON.stringify(fullName)) {
 			setName(fullName);
 		}
 
-		if (userId) {
-			setLoggedIsAdmin(adminIds.includes(userId));
-		}
+		setLoggedIsAdmin(tokenData.role === "admin");
 	}, [name, token]);
 
 	useEffect(() => {

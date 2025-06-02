@@ -1,4 +1,5 @@
 import { AdminHome } from "@/components/templates/admin/AdminHome";
+import { withAdminAuth } from "@/components/templates/withAdminAuth";
 import MainLayout from "@/layouts/MainLayout";
 import { Box } from "@chakra-ui/react";
 
@@ -12,4 +13,4 @@ const AdminPanel = () => {
 	);
 };
 
-export default AdminPanel;
+export default withAdminAuth(AdminPanel);

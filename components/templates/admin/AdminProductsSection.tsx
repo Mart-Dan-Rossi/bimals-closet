@@ -1,16 +1,16 @@
+import FilterButtons from "@/components/ui/FilterButtons";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useDeleteProduct } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product } from "@/types/product";
-import { applyFilters, getAdminsIds } from "@/utils/functions";
+import { applyFilters } from "@/utils/functions";
+import { SiteMainSections } from "@/utils/helpers";
 import { Box, Button, Flex, TabPanel, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { AdminProductCard } from "./AdminProductCard";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { ProductEditionModal } from "./ProductEditionModal";
-import FilterButtons from "@/components/ui/FilterButtons";
-import { SiteMainSections } from "@/utils/helpers";
 
 const AdminProductsSection = () => {
 	const { finalProductsData, filter, onOpenAddNewProduct } = useGlobalContext();
@@ -41,8 +41,6 @@ const AdminProductsSection = () => {
 
 	const router = useRouter();
 
-	const adminIds = useRef(getAdminsIds()).current as string[];
-
 	useEffect(() => {
 		setFilteredProductsData(
 			applyFilters(finalProductsData, filter, sectionFilter)
@@ -50,11 +48,11 @@ const AdminProductsSection = () => {
 	}, [finalProductsData, filter, sectionFilter]);
 
 	useEffect(() => {
-		const storedUser = localStorage.getItem("MateoShoesUser");
-		const user = storedUser && token ? JSON.parse(storedUser) : undefined;
-		const userId = user ? user.id : undefined;
+		const base64Url = token && token.split(".")[1];
+		const base64 = base64Url && base64Url.replace(/-/g, "+").replace(/_/g, "/");
+		const tokenData = base64 && JSON.parse(atob(base64));
 
-		if (userId && !adminIds.includes(userId)) {
+		if (tokenData.role !== "admin") {
 			console.log(
 				"El panel de admin es sólo accesible para administradores. Logueate con una cuenta admin para poder entrar."
 			);

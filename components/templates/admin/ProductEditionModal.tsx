@@ -6,7 +6,7 @@ import {
 } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { ImageData, Product, SizeOptions } from "@/types/product";
-import { getAdminsIds, getDefaultImage } from "@/utils/functions";
+import { getDefaultImage } from "@/utils/functions";
 import {
 	Brand,
 	ColorOptions,
@@ -188,11 +188,12 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 
 	async function handleUploadProduct() {
 		try {
-			const storedUser = localStorage.getItem("MateoShoesUser");
-			const user = storedUser && token ? JSON.parse(storedUser) : undefined;
-			const userId = user ? user.id : undefined;
+			const base64Url = token && token.split(".")[1];
+			const base64 =
+				base64Url && base64Url.replace(/-/g, "+").replace(/_/g, "/");
+			const tokenData = base64 && JSON.parse(atob(base64));
 
-			if (getAdminsIds().includes(userId)) {
+			if (tokenData.role === "admin") {
 				const product: Product = {
 					productType,
 					name,

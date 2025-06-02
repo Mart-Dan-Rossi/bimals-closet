@@ -96,11 +96,6 @@ export function applyFilters(
 	});
 }
 
-export function getAdminsIds() {
-	const allIds = process.env.NEXT_PUBLIC_ADMINS_IDS || "0";
-	return allIds?.split("/");
-}
-
 export function getReservedDataFromNameAndQtty(
 	name: string,
 	quantity?: number | string,
