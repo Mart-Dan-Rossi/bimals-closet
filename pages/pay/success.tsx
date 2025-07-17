@@ -1,3 +1,4 @@
+import SocialMedia from "@/components/ui/SocialMedia";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { Footer } from "@/layouts/Footer";
 import { BasketBall } from "@/public/assets/images/BasketBall";
@@ -69,9 +70,14 @@ const PaySuccess = () => {
 						Por favor, comunicate por nuestras redes sociales adjuntando el
 						comprobante de pago para que podamos coordinar la entrega.
 					</Text>
-					<Text fontWeight={"600"} pl={"2rem"}>
-						(Puedes encontrar nuestras redes sociales en el pié de página)
-					</Text>
+					<Box
+						border="1px solid black"
+						margin="0 auto"
+						borderRadius="20px"
+						p="2rem"
+					>
+						<SocialMedia iconsColor={"brand.black"} successSection={true} />
+					</Box>
 					<Text p={"2rem"} fontSize={"x-large"} fontWeight={"600"}>
 						Esperamos disfrutes la compra ❤️
 					</Text>
