@@ -111,12 +111,16 @@ const CartFooter = ({
 	function getTotalItemsAmount() {
 		const totalCartItemsAmount = cart?.length ?? 0;
 
-		const totalReservedProductsAmount =
-			userReservedProductsMPFormated.reduce((total, item) => {
-				return total + item.quantity;
-			}, 0) ?? 0;
+		return totalCartItemsAmount;
+	}
 
-		return totalCartItemsAmount + totalReservedProductsAmount;
+	interface ErrorResponse {
+		response: {
+			data: {
+				error: string;
+				message: string;
+			};
+		};
 	}
 
 	const handleReserveProducts = async (
@@ -145,11 +149,24 @@ const CartFooter = ({
 
 			return { successfulReserves: results, failedReserves: [] };
 		} catch (error) {
-			console.error("Error reservando productos:", error);
+			console.error("Error reservando productos: ", error);
+			let errorMessage = "Ocurrió un error desconocido";
+
+			if (
+				typeof error === "object" &&
+				error !== null &&
+				"response" in error &&
+				typeof (error as any).response === "object" &&
+				"data" in (error as any).response &&
+				(error as any).response.data?.error
+			) {
+				errorMessage = `Error: ${(error as any).response.data.error}`;
+			}
+
 			toast({
 				status: "error",
 				title: "Error en la reserva",
-				description: `Error: ${error}`,
+				description: errorMessage,
 			});
 
 			return { successfulReserves: [], failedReserves: [{ error }] };
@@ -167,16 +184,6 @@ const CartFooter = ({
 
 		processingPurchaseRequest();
 
-		const createMPOrderRes = await addMutateAsyncCreateOrder({
-			cartItems: [...cart, ...userReservedProductsMPFormated],
-			metadata: {
-				userId: localStoredUser?.id,
-				products: userReservedProducts,
-			},
-		});
-
-		const id = createMPOrderRes.id;
-
 		const productsDataToReserve = cart.map((item) => {
 			return {
 				id: item.id,
@@ -189,15 +196,26 @@ const CartFooter = ({
 			};
 		});
 
-		await handleReserveProducts(productsDataToReserve).then((res) => {
+		await handleReserveProducts(productsDataToReserve).then(async (res) => {
 			if (res?.failedReserves.length !== 0) {
 				purchaseRequestLoaded();
-			} else if (id) {
-				purchaseRequestLoaded();
-				setPreferenceId(id);
+			} else {
+				const createMPOrderRes = await addMutateAsyncCreateOrder({
+					cartItems: [...cart, ...userReservedProductsMPFormated],
+					metadata: {
+						userId: localStoredUser?.id,
+						products: userReservedProducts,
+					},
+				});
 
-				refreshProducts();
-				emptyCart();
+				const id = createMPOrderRes.id;
+
+				if (id) {
+					purchaseRequestLoaded();
+					setPreferenceId(id);
+
+					refreshProducts();
+				}
 			}
 		});
 	}

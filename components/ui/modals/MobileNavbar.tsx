@@ -28,7 +28,7 @@ export const MobileNavbar = ({ loggedIsAdmin, subHeaderName }: Props) => {
 			left="0"
 			w="100%"
 			zIndex="99"
-			display={["block", "none", "none", "none"]}
+			display={["block", "block", "block", "none"]}
 		>
 			<Box
 				bg={"brand.lightGrey"}

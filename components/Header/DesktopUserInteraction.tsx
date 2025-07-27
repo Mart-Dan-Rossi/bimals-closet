@@ -58,8 +58,7 @@ export const DesktopUserInteraction = ({
 							fontSize=".9rem"
 							fontWeight="600"
 						>
-							{cart &&
-								cart?.length + getTotalProductsReserved(userReservedProducts)}
+							{cart && cart?.length}
 						</Circle>
 						<Icon cursor="pointer" as={TiShoppingCart} />
 					</Box>

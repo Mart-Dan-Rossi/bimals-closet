@@ -27,6 +27,7 @@ export type ReservedData = {
 	color: ColorOptions;
 	userId: string | undefined;
 	quantity: number;
+	timestamp: number;
 	hide?: boolean;
 };
 

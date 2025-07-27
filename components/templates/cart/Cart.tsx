@@ -6,7 +6,7 @@ import {
 } from "@/hooks/state/hydrated";
 import { CartItemMPFormat, OrderDataBEFormat } from "@/types/order";
 import { Product, SizeOptions } from "@/types/product";
-import { getDefaultImage } from "@/utils/functions";
+import { getDefaultImage, isReservationOnTime } from "@/utils/functions";
 import {
 	Box,
 	Circle,
@@ -22,6 +22,7 @@ import CartContent from "./CartContent";
 import CartFooter from "./CartFooter";
 import EmptyCartMessage from "./EmptyCartMessage";
 import { MyPurchases } from "./MyPurchases";
+import { useQueryClient } from "react-query";
 
 export const CartItems = () => {
 	const { finalProductsData, ordersData } = useGlobalContext();
@@ -41,6 +42,16 @@ export const CartItems = () => {
 	const [userFinalOrders, setUserFinalOrders] = useState<
 		OrderDataBEFormat[] | undefined
 	>();
+
+	const queryClient = useQueryClient();
+
+	const refreshProducts = () => {
+		queryClient.invalidateQueries({ queryKey: ["getAllProducts"] });
+	};
+
+	useEffect(() => {
+		refreshProducts();
+	}, []);
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
@@ -64,7 +75,7 @@ export const CartItems = () => {
 							const sameUserId = reserve.userId === user.id;
 							const isHidden = reserve.hide;
 
-							return sameUserId && !isHidden;
+							return sameUserId && !isHidden && isReservationOnTime(reserve);
 						}) || [];
 
 					if (userReservations.length === 0) return null;
@@ -154,28 +165,6 @@ export const CartItems = () => {
 							</Box>
 						</Tab>
 
-						{/* <Tab
-							fontSize={"large"}
-							value="orders"
-							onClick={() => setCurrentTab(1)}
-						>
-							<Box as="span" pos="relative">
-								<Circle
-									bg={"brand.gold100"}
-									p=".3rem .7rem"
-									pos="absolute"
-									right="-1.5rem"
-									top="-1rem"
-									fontSize=".9rem"
-									fontWeight="600"
-									color="white"
-								>
-									{getTotalProductsReserved(userReservedProducts)}
-								</Circle>
-								<span>Reservas</span>
-							</Box>
-						</Tab> */}
-
 						<Tab
 							fontSize={"large"}
 							value="orders"
@@ -203,11 +192,6 @@ export const CartItems = () => {
 							<EmptyCartMessage />
 							<CartContent />
 						</TabPanel>
-						{/* <TabPanel minW={"80vw"}>
-							<ReservedProductsTab
-								userReservedProducts={userReservedProducts}
-							/>
-						</TabPanel> */}
 
 						<TabPanel minW={"80vw"}>
 							{userFinalOrders && (

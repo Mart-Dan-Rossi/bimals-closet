@@ -122,7 +122,13 @@ export function getReservedDataFromNameAndQtty(
 			? quantity
 			: 0;
 
-	return { usSize, color, quantity: quantityValue, userId };
+	return {
+		usSize,
+		color,
+		quantity: quantityValue,
+		userId,
+		timestamp: Date.now(),
+	};
 }
 
 export function getAvailableQuantitiesBySizeAndColor(
@@ -139,7 +145,11 @@ export function getAvailableQuantitiesBySizeAndColor(
 		});
 
 	product.reservedData
-		?.filter((reserved) => reserved.color.toLowerCase() === color.toLowerCase())
+		?.filter(
+			(reserved) =>
+				!isReservationOnTime(reserved) &&
+				reserved.color.toLowerCase() === color.toLowerCase()
+		)
 		.forEach((reserved) => {
 			const key = reserved.usSize as SizeKey;
 			if (sizeMap[key] !== undefined && sizeMap[key] && reserved.quantity) {
@@ -177,4 +187,10 @@ export function getDefaultImage(
 		}
 	}
 	return undefined;
+}
+
+export function isReservationOnTime(reserve: ReservedData) {
+	const reservationDurationTimestamp = 5 * 60 * 60 * 1000; // 60*60*1000 = 1 hs
+
+	return Date.now() < reserve.timestamp + reservationDurationTimestamp;
 }

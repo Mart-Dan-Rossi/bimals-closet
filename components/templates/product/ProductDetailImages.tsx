@@ -17,8 +17,6 @@ export const ProductDetailImages = ({
 }: Props) => {
 	const [selectedImage, setSelectedImage] = useState<number>(0);
 
-	console.log("selectedImage:", selectedImage);
-
 	return (
 		<>
 			{isLoadingParticulaProductData ? (

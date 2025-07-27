@@ -8,6 +8,7 @@ import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import MainSectionsNavigation from "./MainSectionNavigation";
+import { isReservationOnTime } from "@/utils/functions";
 
 export const Header = ({
 	subHeaderName,
@@ -57,7 +58,7 @@ export const Header = ({
 							const sameUserId = reserve.userId === user.id;
 							const isHidden = reserve.hide;
 
-							return sameUserId && !isHidden;
+							return sameUserId && !isHidden && isReservationOnTime(reserve);
 						}) || [];
 
 					if (userReservations.length === 0) return null;
@@ -89,7 +90,13 @@ export const Header = ({
 	}, [finalProductsData, token]);
 
 	return (
-		<Box bg={"brand.headerBG"} pos="fixed" w="100%" zIndex="99">
+		<Box
+			bg={"brand.headerBG"}
+			pos="fixed"
+			w="100%"
+			zIndex="99"
+			userSelect="none"
+		>
 			<Box maxW="1280px" mx="auto" p="2rem 0 0 0">
 				<Stack
 					spacing="0"
