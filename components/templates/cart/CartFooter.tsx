@@ -97,15 +97,7 @@ const CartFooter = ({
 				return total + itemTotal;
 			}, 0) ?? 0;
 
-		const totalReservedPrice =
-			userReservedProductsMPFormated?.reduce((total, item) => {
-				const itemTotal = Number(item.unit_price) * Number(item.quantity);
-				return total + itemTotal;
-			}, 0) ?? 0;
-
-		return (
-			Number(totalCartPrice.toFixed(2)) + Number(totalReservedPrice.toFixed(2))
-		);
+		return Number(totalCartPrice.toFixed(2));
 	}
 
 	function getTotalItemsAmount() {
