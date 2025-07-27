@@ -3,8 +3,6 @@ import { DesktopUserInteraction } from "@/components/Header/DesktopUserInteracti
 import { ExtraInfo } from "@/components/Header/ExtraInfo";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
-import { Product, SizeOptions } from "@/types/product";
-import { isReservationOnTime } from "@/utils/functions";
 import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -26,10 +24,6 @@ export const Header = ({
 
 	const [loggedIsAdmin, setLoggedIsAdmin] = useState(false);
 
-	const [userReservedProducts, setUserReserverdProducts] = useState<Product[]>(
-		[]
-	);
-
 	useEffect(() => {
 		const storedUser = localStorage.getItem("MateoShoesUser");
 		const user = storedUser && token ? JSON.parse(storedUser) : undefined;
@@ -45,49 +39,6 @@ export const Header = ({
 
 		setLoggedIsAdmin(tokenData && tokenData.role === "admin");
 	}, [name, token]);
-
-	useEffect(() => {
-		const storedUser = localStorage.getItem("MateoShoesUser");
-		const user = storedUser && token ? JSON.parse(storedUser) : null;
-
-		if (user) {
-			const URP: Product[] = finalProductsData
-				?.map((product) => {
-					const userReservations =
-						product.reservedData?.filter((reserve) => {
-							const sameUserId = reserve.userId === user.id;
-							const isHidden = reserve.hide;
-
-							return sameUserId && !isHidden && isReservationOnTime(reserve);
-						}) || [];
-
-					if (userReservations.length === 0) return null;
-
-					const filteredSizeOptions = product.sizeOptions
-						.map((sizeOption) => {
-							const matchingReservation = userReservations.find(
-								(reserve) =>
-									reserve.usSize === sizeOption.usSize &&
-									reserve.color === sizeOption.color
-							);
-
-							return matchingReservation
-								? { ...sizeOption, quantity: matchingReservation.quantity }
-								: null;
-						})
-						.filter(Boolean) as SizeOptions;
-
-					return {
-						...product,
-						sizeOptions: filteredSizeOptions,
-						reservedData: product.reservedData,
-					};
-				})
-				.filter(Boolean) as Product[];
-
-			setUserReserverdProducts(URP || []);
-		}
-	}, [finalProductsData, token]);
 
 	return (
 		<Box
