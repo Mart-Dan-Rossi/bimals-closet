@@ -1,7 +1,6 @@
 import { BurguerIcon } from "@/components/Header/BurguerIcon";
 import { DesktopUserInteraction } from "@/components/Header/DesktopUserInteraction";
 import { ExtraInfo } from "@/components/Header/ExtraInfo";
-import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -14,8 +13,6 @@ export const Header = ({
 	subHeaderName: string | undefined;
 }) => {
 	const router = useRouter();
-
-	const { finalProductsData } = useGlobalContext();
 
 	const token = useHydratedStoreState("token");
 

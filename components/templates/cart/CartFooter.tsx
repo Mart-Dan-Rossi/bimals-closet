@@ -6,6 +6,7 @@ import {
 	useHydratedStoreState,
 } from "@/hooks/state/hydrated";
 import { useCartState } from "@/hooks/state/storage";
+import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
 import { StoredUserData } from "@/types/auth";
 import { CartItemMPFormat } from "@/types/order";
 import { Product, ReserveProductData } from "@/types/product";
@@ -22,7 +23,6 @@ import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { ConfirmDeleteModal } from "../admin/ConfirmDeleteModal";
-import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
 
 interface Props {
 	userReservedProducts: Product[];
@@ -112,15 +112,6 @@ const CartFooter = ({
 		const totalCartItemsAmount = cart?.length ?? 0;
 
 		return totalCartItemsAmount;
-	}
-
-	interface ErrorResponse {
-		response: {
-			data: {
-				error: string;
-				message: string;
-			};
-		};
 	}
 
 	const handleReserveProducts = async (
