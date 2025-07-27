@@ -9,8 +9,6 @@ import {
 	useBoolean,
 } from "@chakra-ui/react";
 
-import { Product } from "@/types/product";
-import { getTotalProductsReserved } from "@/utils/functions";
 import { useRouter } from "next/router";
 import { BiUserCircle } from "react-icons/bi";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
@@ -19,14 +17,9 @@ import { AuthModal } from "../ui/modals";
 interface Props {
 	name: string;
 	loggedIsAdmin: boolean;
-	userReservedProducts: Product[];
 }
 
-export const DesktopUserInteraction = ({
-	name,
-	loggedIsAdmin,
-	userReservedProducts,
-}: Props) => {
+export const DesktopUserInteraction = ({ name, loggedIsAdmin }: Props) => {
 	const router = useRouter();
 
 	const cart = useHydratedCartState("cart");

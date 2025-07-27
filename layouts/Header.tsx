@@ -4,11 +4,11 @@ import { ExtraInfo } from "@/components/Header/ExtraInfo";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product, SizeOptions } from "@/types/product";
+import { isReservationOnTime } from "@/utils/functions";
 import { Box, Stack, Text, useBoolean } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import MainSectionsNavigation from "./MainSectionNavigation";
-import { isReservationOnTime } from "@/utils/functions";
 
 export const Header = ({
 	subHeaderName,
@@ -121,11 +121,7 @@ export const Header = ({
 
 					<BurguerIcon setOpenModal={setOpenModal} />
 
-					<DesktopUserInteraction
-						name={name}
-						loggedIsAdmin={loggedIsAdmin}
-						userReservedProducts={userReservedProducts}
-					/>
+					<DesktopUserInteraction name={name} loggedIsAdmin={loggedIsAdmin} />
 				</Stack>
 			</Box>
 
