@@ -9,21 +9,28 @@ import {
 	ModalOverlay,
 	Text,
 } from "@chakra-ui/react";
+import { Dispatch, SetStateAction } from "react";
 
 interface Props {
 	isOpen: boolean;
 	onClose: () => void;
+	setPreferenceId: Dispatch<SetStateAction<null>>;
+	setBuyButtonClicked: Dispatch<SetStateAction<boolean>>;
 	handler: () => void;
 	text: string;
 }
 
 export const ConfirmDeleteModal = ({
-	handler,
 	isOpen,
 	onClose,
+	setPreferenceId,
+	setBuyButtonClicked,
+	handler,
 	text,
 }: Props) => {
 	function confirmDelete() {
+		setPreferenceId(null);
+		setBuyButtonClicked(false);
 		handler();
 		onClose();
 	}

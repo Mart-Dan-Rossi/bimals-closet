@@ -8,7 +8,6 @@ import {
 import { useCartState } from "@/hooks/state/storage";
 import { standardBoxShadow } from "@/styles/themes/foundation/globalStyles";
 import { StoredUserData } from "@/types/auth";
-import { CartItemMPFormat } from "@/types/order";
 import { Product, ReserveProductData } from "@/types/product";
 import { getReservedDataFromNameAndQtty } from "@/utils/functions";
 import {
@@ -20,18 +19,24 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { ConfirmDeleteModal } from "../admin/ConfirmDeleteModal";
 
 interface Props {
 	userReservedProducts: Product[];
-	userReservedProductsMPFormated: CartItemMPFormat[];
+	preferenceId: null | any;
+	setPreferenceId: Dispatch<SetStateAction<null | any>>;
+	buyButtonClicked: boolean;
+	setBuyButtonClicked: Dispatch<SetStateAction<boolean>>;
 }
 
 const CartFooter = ({
 	userReservedProducts,
-	userReservedProductsMPFormated,
+	preferenceId,
+	setPreferenceId,
+	buyButtonClicked,
+	setBuyButtonClicked,
 }: Props) => {
 	const token = useHydratedStoreState("token");
 
@@ -44,7 +49,6 @@ const CartFooter = ({
 		useReserveMultipleProducts();
 
 	const toast = useToast();
-	const [preferenceId, setPreferenceId] = useState(null);
 	const [
 		isLoadingPurchaseRequest,
 		{ on: processingPurchaseRequest, off: purchaseRequestLoaded },
@@ -114,14 +118,6 @@ const CartFooter = ({
 				productsDataToReserve
 			);
 
-			if (productsDataToReserve) {
-				toast({
-					isClosable: true,
-					status: "success",
-					title: "Puedes ver tus reservas en la pestaña 'Reservas'.",
-				});
-			}
-
 			toast({
 				isClosable: true,
 				status: "success",
@@ -165,6 +161,8 @@ const CartFooter = ({
 			return;
 		}
 
+		setBuyButtonClicked(true);
+
 		processingPurchaseRequest();
 
 		const productsDataToReserve = cart.map((item) => {
@@ -184,7 +182,7 @@ const CartFooter = ({
 				purchaseRequestLoaded();
 			} else {
 				const createMPOrderRes = await addMutateAsyncCreateOrder({
-					cartItems: [...cart, ...userReservedProductsMPFormated],
+					cartItems: [...cart],
 					metadata: {
 						userId: localStoredUser?.id,
 						products: userReservedProducts,
@@ -194,8 +192,8 @@ const CartFooter = ({
 				const id = createMPOrderRes.id;
 
 				if (id) {
-					purchaseRequestLoaded();
 					setPreferenceId(id);
+					purchaseRequestLoaded();
 
 					refreshProducts();
 				}
@@ -206,20 +204,30 @@ const CartFooter = ({
 	return (
 		<>
 			{cart && (
-				<Flex
+				<Box
 					bg={"brand.cartFooterBG"}
 					borderRadius="1rem"
 					p="2rem"
-					justify="space-between"
 					mt="5rem"
 					color={"brand.white200"}
 				>
-					<Box overflow="hidden" borderRadius="1rem">
+					<Flex justify="space-between">
 						<Text fontWeight="600">Total de Items</Text>
+						<Text textAlign="end">{getTotalItemsAmount()}</Text>
+					</Flex>
+					<Flex justify="space-between">
 						<Text fontWeight="600" mt="1rem">
 							Precio Total
 						</Text>
-
+						<Text textAlign="end" mt="1rem">
+							AR$ {getTotalCartPrice()}
+						</Text>
+					</Flex>
+					<Text textAlign="center" m="0.5rem 1rem">
+						*El precio no incluye el envío, el mismo se coordina luego por
+						mensaje directo a travez de nuestras redes*
+					</Text>
+					<Flex justify="space-between">
 						<Box onClick={onOpenConfirmEmptyCartModal}>
 							<CustomButton
 								{...{
@@ -230,32 +238,29 @@ const CartFooter = ({
 								}}
 							/>
 						</Box>
-					</Box>
-
-					<Box overflow="hidden" borderRadius="1rem">
-						<Text textAlign="end">{getTotalItemsAmount()}</Text>
-						<Text textAlign="end" mt="1rem">
-							AR$ {getTotalCartPrice()}
-						</Text>
-						<CustomButton
-							{...{
-								text: isLoadingPurchaseRequest ? "Procesando..." : "Comprar",
-								py: ["2rem", "2rem"],
-								isDisabled:
-									isLoadingPurchaseRequest ||
-									(cart?.length === 0 &&
-										userReservedProductsMPFormated.length === 0),
-								onClickFunction: handleConfirmPay,
-								boxShadow: standardBoxShadow,
-							}}
-						/>
-						{preferenceId && <Wallet initialization={{ preferenceId }} />}
-					</Box>
-				</Flex>
+						<Box>
+							<CustomButton
+								{...{
+									text: isLoadingPurchaseRequest ? "Procesando..." : "Comprar",
+									py: ["2rem", "2rem"],
+									isDisabled:
+										isLoadingPurchaseRequest ||
+										cart?.length === 0 ||
+										buyButtonClicked,
+									onClickFunction: handleConfirmPay,
+									boxShadow: standardBoxShadow,
+								}}
+							/>
+							{preferenceId && <Wallet initialization={{ preferenceId }} />}
+						</Box>
+					</Flex>
+				</Box>
 			)}
 			<ConfirmDeleteModal
 				isOpen={isConfirmEmptyCartModalOpen}
 				onClose={onCloseConfirmEmptyCartModal}
+				setPreferenceId={setPreferenceId}
+				setBuyButtonClicked={setBuyButtonClicked}
 				handler={emptyCart}
 				text={"Desea vaciar el carrito?"}
 			/>

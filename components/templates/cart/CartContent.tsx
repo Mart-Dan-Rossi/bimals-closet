@@ -1,11 +1,15 @@
 import { useHydratedCartState } from "@/hooks/state/hydrated";
-import { useCartState } from "@/hooks/state/storage";
 import { CartItemMPFormat } from "@/types/order";
+import { Dispatch, SetStateAction } from "react";
 import { CartProductCard } from "./CartProductCard";
 
-const CartContent = () => {
+interface Props {
+	setPreferenceId: Dispatch<SetStateAction<null | any>>;
+	setBuyButtonClicked: Dispatch<SetStateAction<boolean>>;
+}
+
+const CartContent = ({ setPreferenceId, setBuyButtonClicked }: Props) => {
 	const cart = useHydratedCartState("cart");
-	const { removeFromCart } = useCartState((state) => state);
 
 	return (
 		<>
@@ -21,8 +25,8 @@ const CartContent = () => {
 						slug={item.slug}
 						image={item.image}
 						color={item.name.split("-")[1]}
-						// quantityCount={quantityCount}
-						removeFromCart={removeFromCart}
+						setPreferenceId={setPreferenceId}
+						setBuyButtonClicked={setBuyButtonClicked}
 					/>
 				);
 			})}

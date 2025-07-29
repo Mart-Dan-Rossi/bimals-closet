@@ -4,9 +4,9 @@ import {
 	useHydratedCartState,
 	useHydratedStoreState,
 } from "@/hooks/state/hydrated";
-import { CartItemMPFormat, OrderDataBEFormat } from "@/types/order";
+import { OrderDataBEFormat } from "@/types/order";
 import { Product, SizeOptions } from "@/types/product";
-import { getDefaultImage, isReservationOnTime } from "@/utils/functions";
+import { isReservationOnTime } from "@/utils/functions";
 import {
 	Box,
 	Circle,
@@ -18,11 +18,11 @@ import {
 	Tabs,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
 import CartContent from "./CartContent";
 import CartFooter from "./CartFooter";
 import EmptyCartMessage from "./EmptyCartMessage";
 import { MyPurchases } from "./MyPurchases";
-import { useQueryClient } from "react-query";
 
 export const CartItems = () => {
 	const { finalProductsData, ordersData } = useGlobalContext();
@@ -36,8 +36,9 @@ export const CartItems = () => {
 		[]
 	);
 
-	const [userReservedProductsMPFormated, setUserReservedProductsMPFormated] =
-		useState<CartItemMPFormat[]>([]);
+	const [preferenceId, setPreferenceId] = useState<null | any>(null);
+
+	const [buyButtonClicked, setBuyButtonClicked] = useState(false);
 
 	const [userFinalOrders, setUserFinalOrders] = useState<
 		OrderDataBEFormat[] | undefined
@@ -102,35 +103,7 @@ export const CartItems = () => {
 				})
 				.filter(Boolean) as Product[];
 
-			const URPCartItemMPFormat: CartItemMPFormat[] | undefined = URP?.reduce(
-				(acc: CartItemMPFormat[], product) => {
-					if (!product?._id) return acc;
-
-					const thisUserReservedData = product.reservedData?.filter(
-						(reservedData) => reservedData.userId === user.id
-					);
-
-					const totalUserReservations = thisUserReservedData?.reduce(
-						(sum, reservation) => sum + reservation.quantity,
-						0
-					);
-
-					acc.push({
-						id: product._id,
-						name: product.name,
-						unit_price: product.price,
-						slug: product.slug,
-						quantity: totalUserReservations ?? 0,
-						image: getDefaultImage(product.images),
-					});
-
-					return acc;
-				},
-				[]
-			);
-
 			setUserReserverdProducts(URP || []);
-			setUserReservedProductsMPFormated(URPCartItemMPFormat || []);
 		}
 	}, [finalProductsData, token]);
 
@@ -190,7 +163,10 @@ export const CartItems = () => {
 					<TabPanels>
 						<TabPanel minW={"80vw"}>
 							<EmptyCartMessage />
-							<CartContent />
+							<CartContent
+								setPreferenceId={setPreferenceId}
+								setBuyButtonClicked={setBuyButtonClicked}
+							/>
 						</TabPanel>
 
 						<TabPanel minW={"80vw"}>
@@ -204,7 +180,10 @@ export const CartItems = () => {
 					<Box minW={"80vw"}>
 						<CartFooter
 							userReservedProducts={userReservedProducts}
-							userReservedProductsMPFormated={userReservedProductsMPFormated}
+							preferenceId={preferenceId}
+							setPreferenceId={setPreferenceId}
+							buyButtonClicked={buyButtonClicked}
+							setBuyButtonClicked={setBuyButtonClicked}
 						/>
 					</Box>
 				)}

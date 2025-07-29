@@ -1,7 +1,9 @@
+import { useCartState } from "@/hooks/state/storage";
 import { capitalize } from "@/utils/functions";
 import { ClothSizesOptions } from "@/utils/productCaracteristics";
 import { Box, Flex, Icon, Img, Switch, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { Dispatch, SetStateAction } from "react";
 import { RiDeleteBinLine, RiPencilLine } from "react-icons/ri";
 
 interface Props {
@@ -11,15 +13,18 @@ interface Props {
 	usSize: number | ClothSizesOptions;
 	color: string;
 	removeFromCart?: (
-		id: string | string[],
-		name: string,
-		isMultiple?: boolean
+		id: string,
+		color: string,
+		size: string,
+		name: string
 	) => void;
 	id?: string;
 	slug?: string;
 	image?: string;
 	showDeliveredIndicator?: boolean;
 	isDelivered?: boolean | undefined;
+	setPreferenceId: Dispatch<SetStateAction<null | any>>;
+	setBuyButtonClicked: Dispatch<SetStateAction<boolean>>;
 }
 
 export const CartProductCard = ({
@@ -28,24 +33,29 @@ export const CartProductCard = ({
 	quantity,
 	usSize,
 	color,
-	removeFromCart,
 	id,
 	slug,
 	image,
 	showDeliveredIndicator,
 	isDelivered,
+	setPreferenceId,
+	setBuyButtonClicked,
 }: Props) => {
 	const router = useRouter();
 
+	const { removeFromCart } = useCartState((state) => state);
+
 	function handleTrashButton() {
 		if (removeFromCart && id) {
-			removeFromCart(id, name);
+			setBuyButtonClicked(false);
+			setPreferenceId(null);
+			removeFromCart(id, color, usSize.toString(), name);
 		}
 	}
 
 	function handleEditButton() {
 		if (removeFromCart && id) {
-			removeFromCart(id, name);
+			removeFromCart(id, color, usSize.toString(), name);
 			router.push(`/product/${slug}`);
 		}
 	}

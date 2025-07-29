@@ -60,20 +60,31 @@ export const useCartState = create<TCartState>()(
 				},
 
 				removeFromCart: (
-					id: string | string[],
-					name: string,
-					isMultiple?: boolean
+					id: string,
+					color: string,
+					size: string,
+					name: string
 				) => {
-					const cartClone = [...get().cart];
-					const updatedCart = cartClone.filter((item) =>
-						isMultiple
-							? !(id as string[]).includes(item.id) || item.name !== name
-							: item.id !== id || item.name !== name
-					);
+					const spacelessColor = color.replace(/\s+/g, "");
 
-					// if (!isToast) {
-					//  toast.warn("Item removed from cart ☹️", { autoClose: 750 });
-					// }
+					const cartClone = [...get().cart];
+					const updatedCart = cartClone.filter((item) => {
+						const nameWithoutSpaces = name.replace(/\s+/g, "");
+
+						const nameColorAndSizeArray = item.name
+							.replace(/\s+/g, "")
+							.split("-");
+
+						const actualProductName = nameColorAndSizeArray[0];
+						const productColor = nameColorAndSizeArray[1];
+						const productSize = nameColorAndSizeArray[2].replace("US", "");
+
+						return !(
+							(item.id === id || actualProductName === nameWithoutSpaces) &&
+							productColor === spacelessColor &&
+							productSize === size
+						);
+					});
 
 					return set({
 						cart: updatedCart,

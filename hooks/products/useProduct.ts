@@ -68,17 +68,12 @@ export const useUpdateProduct = () => {
 
 export const useReserveMultipleProducts = () => {
 	const queryClient = useQueryClient();
-	const toast = useShowToast();
 	return useMutation({
 		mutationFn: (payload: ReserveProductData[]) => {
 			return reserveProducts(payload);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();
-			toast({
-				status: "success",
-				title: "Producto modificado exitosamente.",
-			});
 		},
 		onError,
 	});

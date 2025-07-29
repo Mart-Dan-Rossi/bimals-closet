@@ -13,9 +13,10 @@ export type TCartState = {
 	addToCart: (payload: CartItemMPFormat) => void;
 	quantityCount: (id: string, type: "increament" | "decreament") => void;
 	removeFromCart: (
-		id: string | string[],
-		name: string,
-		isMultiple?: boolean
+		id: string,
+		color: string,
+		size: string,
+		name: string
 	) => void;
 	emptyCart: () => void;
 };
