@@ -65,6 +65,7 @@ export const useCartState = create<TCartState>()(
 					size: string,
 					name: string
 				) => {
+					console.log("removing");
 					const spacelessColor = color.replace(/\s+/g, "");
 
 					const cartClone = [...get().cart];

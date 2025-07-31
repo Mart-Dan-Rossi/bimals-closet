@@ -1,5 +1,9 @@
 import { AxiosInstance } from "@/config";
-import { Product, ReserveProductData } from "@/types/product";
+import {
+	CancelReservationData,
+	Product,
+	ReserveProductData,
+} from "@/types/product";
 
 export const getAllProducts = async (): Promise<Product[]> => {
 	const { data } = await AxiosInstance.get("/api/products");
@@ -55,6 +59,15 @@ export const deleteProduct = async (payload: Product) => {
 	const { data } = await AxiosInstance.delete("api/products/remove", {
 		data: payload,
 	});
+
+	return data;
+};
+
+export const cancelReservation = async (payload: CancelReservationData) => {
+	const { data } = await AxiosInstance.post(
+		"/api/products/cancelReservation",
+		payload
+	);
 
 	return data;
 };

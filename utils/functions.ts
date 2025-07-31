@@ -147,7 +147,7 @@ export function getAvailableQuantitiesBySizeAndColor(
 	product.reservedData
 		?.filter(
 			(reserved) =>
-				!isReservationOnTime(reserved) &&
+				isReservationOnTime(reserved) &&
 				reserved.color.toLowerCase() === color.toLowerCase()
 		)
 		.forEach((reserved) => {

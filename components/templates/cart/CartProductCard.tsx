@@ -1,3 +1,5 @@
+import { useCancelReservation } from "@/hooks/products/useProduct";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { useCartState } from "@/hooks/state/storage";
 import { capitalize } from "@/utils/functions";
 import { ClothSizesOptions } from "@/utils/productCaracteristics";
@@ -43,18 +45,39 @@ export const CartProductCard = ({
 }: Props) => {
 	const router = useRouter();
 
-	const { removeFromCart } = useCartState((state) => state);
+	const token = useHydratedStoreState("token");
 
-	function handleTrashButton() {
-		if (removeFromCart && id) {
+	const storedUser = localStorage.getItem("MateoShoesUser");
+	const user = storedUser && token ? JSON.parse(storedUser) : undefined;
+
+	const { removeFromCart } = useCartState((state) => state);
+	const { mutateAsync: addMutateAsyncCancelReservation } =
+		useCancelReservation();
+
+	async function handleTrashButton() {
+		if (removeFromCart && id && user && slug) {
+			await addMutateAsyncCancelReservation({
+				slug,
+				userId: user.id as string,
+				usSize,
+				color,
+			});
+
 			setBuyButtonClicked(false);
 			setPreferenceId(null);
 			removeFromCart(id, color, usSize.toString(), name);
 		}
 	}
 
-	function handleEditButton() {
-		if (removeFromCart && id) {
+	async function handleEditButton() {
+		if (removeFromCart && id && user && slug) {
+			await addMutateAsyncCancelReservation({
+				slug,
+				userId: user.id as string,
+				usSize,
+				color,
+			});
+
 			removeFromCart(id, color, usSize.toString(), name);
 			router.push(`/product/${slug}`);
 		}

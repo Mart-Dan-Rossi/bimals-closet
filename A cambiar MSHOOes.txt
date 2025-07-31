@@ -40,8 +40,10 @@ registrar:
 °Revisar lógica de reservas. Si borro del carrito un producto debería desaparecer el botón de pago con MP y volver a activar el botón de comprar.
 
 °Al hacer la reserva que no desaparezcan los productos del carrito.
--Al concretar la compra reducir el stock. (Antes se hacía al realizar la reserva).
+°Al concretar la compra reducir el stock. (Antes se hacía al realizar la reserva).
+-Agregar opción para que un admin pueda gestionar los productos pagados por fuera de MP.
 
--Al contar productos del carrito si tengo 2 del mismo me cuenta sólo 1 porque no cuenta la cantidad de productos del mismo sino que la cantidad de productos distintos.
+°Al contar productos del carrito si tengo 2 del mismo me cuenta sólo 1 porque no cuenta la cantidad de productos del mismo sino que la cantidad de productos distintos.
 
--Flujo sugerido: Al volver a la pantalla de pay/success quitar un producto del stock (Si es el último no borrarlo, ponerlo en 0) y quitar las reservas del usuario. Al acreditarse el pago permitir al admin borrar el producto y si el pago rebota volver a agregar el producto al stock borrando de la lista de comprados del usuario el producto.
+Flujo sugerido: 
+-Al acreditarse el pago permitir al admin borrar el producto y si el pago rebota volver a agregar el producto al stock borrando de la lista de comprados del usuario el producto.

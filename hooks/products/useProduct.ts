@@ -1,4 +1,5 @@
 import {
+	cancelReservation,
 	createProduct,
 	deleteProduct,
 	getAllProducts,
@@ -8,7 +9,11 @@ import {
 	updateMultipleProducts,
 	updateProduct,
 } from "@/queries/product";
-import { Product, ReserveProductData } from "@/types/product";
+import {
+	CancelReservationData,
+	Product,
+	ReserveProductData,
+} from "@/types/product";
 import { onError } from "@/utils/error";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useShowToast } from "../toast/useShowToast";
@@ -125,6 +130,19 @@ export const useDeleteProduct = () => {
 				status: "success",
 				title: "Producto borrado exitosamente.",
 			});
+		},
+		onError,
+	});
+};
+
+export const useCancelReservation = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (payload: CancelReservationData) => {
+			return cancelReservation(payload);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries();
 		},
 		onError,
 	});

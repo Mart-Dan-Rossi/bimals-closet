@@ -105,8 +105,10 @@ const CartFooter = ({
 	}
 
 	function getTotalItemsAmount() {
-		const totalCartItemsAmount = cart?.length ?? 0;
-
+		const totalCartItemsAmount =
+			cart?.reduce((accumulator, item) => {
+				return accumulator + item.quantity;
+			}, 0) ?? 0;
 		return totalCartItemsAmount;
 	}
 
@@ -212,7 +214,7 @@ const CartFooter = ({
 					color={"brand.white200"}
 				>
 					<Flex justify="space-between">
-						<Text fontWeight="600">Total de Items</Text>
+						<Text fontWeight="600">Total de Productos</Text>
 						<Text textAlign="end">{getTotalItemsAmount()}</Text>
 					</Flex>
 					<Flex justify="space-between">

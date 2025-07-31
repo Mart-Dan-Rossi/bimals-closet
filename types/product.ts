@@ -6,9 +6,9 @@ import {
 } from "@/utils/productCaracteristics";
 
 export type ReserveProductData = {
-	id: string;
-	userId: string | undefined;
 	reservedData: ReservedData;
+	id?: string;
+	userId?: string;
 };
 
 export type SizeOption = {
@@ -21,6 +21,13 @@ export type SizeOption = {
 };
 
 export type SizeOptions = SizeOption[];
+
+export type CancelReservationData = {
+	slug: string;
+	userId: string;
+	usSize: number | ClothSizesOptions;
+	color: string;
+};
 
 export type ReservedData = {
 	usSize: number | ClothSizesOptions;
