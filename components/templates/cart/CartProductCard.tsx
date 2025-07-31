@@ -25,8 +25,8 @@ interface Props {
 	image?: string;
 	showDeliveredIndicator?: boolean;
 	isDelivered?: boolean | undefined;
-	setPreferenceId: Dispatch<SetStateAction<null | any>>;
-	setBuyButtonClicked: Dispatch<SetStateAction<boolean>>;
+	setPreferenceId?: Dispatch<SetStateAction<null | any>>;
+	setBuyButtonClicked?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const CartProductCard = ({
@@ -63,8 +63,12 @@ export const CartProductCard = ({
 				color,
 			});
 
-			setBuyButtonClicked(false);
-			setPreferenceId(null);
+			if (setBuyButtonClicked) {
+				setBuyButtonClicked(false);
+			}
+			if (setPreferenceId) {
+				setPreferenceId(null);
+			}
 			removeFromCart(id, color, usSize.toString(), name);
 		}
 	}
