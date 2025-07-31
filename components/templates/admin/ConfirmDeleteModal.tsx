@@ -14,10 +14,10 @@ import { Dispatch, SetStateAction } from "react";
 interface Props {
 	isOpen: boolean;
 	onClose: () => void;
-	setPreferenceId: Dispatch<SetStateAction<null>>;
-	setBuyButtonClicked: Dispatch<SetStateAction<boolean>>;
 	handler: () => void;
 	text: string;
+	setPreferenceId?: Dispatch<SetStateAction<null>>;
+	setBuyButtonClicked?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const ConfirmDeleteModal = ({
@@ -29,8 +29,12 @@ export const ConfirmDeleteModal = ({
 	text,
 }: Props) => {
 	function confirmDelete() {
-		setPreferenceId(null);
-		setBuyButtonClicked(false);
+		if (setPreferenceId) {
+			setPreferenceId(null);
+		}
+		if (setBuyButtonClicked) {
+			setBuyButtonClicked(false);
+		}
 		handler();
 		onClose();
 	}
