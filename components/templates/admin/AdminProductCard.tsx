@@ -4,6 +4,7 @@ import { SetStateAction } from "react";
 import { RiDeleteBinLine, RiPencilLine } from "react-icons/ri";
 import ProductDataDisplay from "./ProductDataDisplay";
 import { getDefaultImage } from "@/utils/functions";
+import ProductReservationsManaggement from "./ProductReservationsManaggement";
 
 interface Props {
 	item: Product;
@@ -43,26 +44,29 @@ export const AdminProductCard = ({
 			mb="2rem"
 			color={"brand.white100"}
 		>
-			<Flex>
-				<Box overflow="hidden" borderRadius="1rem">
-					<Img
-						width="140px"
-						height="140px"
-						src={`/assets/images/${getDefaultImage(item.images)}`}
-						alt="Imágen de producto"
-					/>
-				</Box>
+			<Flex wrap="wrap">
+				<Flex>
+					<Box overflow="hidden" borderRadius="1rem">
+						<Img
+							width="140px"
+							height="140px"
+							src={`/assets/images/${getDefaultImage(item.images)}`}
+							alt="Imágen de producto"
+						/>
+					</Box>
 
-				<ProductDataDisplay
-					name={item.name}
-					sizeOptions={item.sizeOptions}
-					price={item.price}
-					brand={item.brand}
-					tags={item.tags}
-					slug={item.slug}
-					allowTagFiltering={true}
-					showPartialPrice={true}
-				/>
+					<ProductDataDisplay
+						name={item.name}
+						sizeOptions={item.sizeOptions}
+						price={item.price}
+						brand={item.brand}
+						tags={item.tags}
+						slug={item.slug}
+						allowTagFiltering={true}
+						showPartialPrice={true}
+					/>
+				</Flex>
+				{item.reservedData && <ProductReservationsManaggement item={item} />}
 			</Flex>
 
 			<Flex>

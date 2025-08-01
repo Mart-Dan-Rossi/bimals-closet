@@ -5,12 +5,14 @@ import {
 	getAllProducts,
 	getParticularProduct,
 	hideUserReservations,
+	manualPurchaseHanlding,
 	reserveProducts,
 	updateMultipleProducts,
 	updateProduct,
 } from "@/queries/product";
 import {
 	CancelReservationData,
+	ManualOrderDataFormat,
 	Product,
 	ReserveProductData,
 } from "@/types/product";
@@ -140,6 +142,19 @@ export const useCancelReservation = () => {
 	return useMutation({
 		mutationFn: (payload: CancelReservationData) => {
 			return cancelReservation(payload);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries();
+		},
+		onError,
+	});
+};
+
+export const useManualPurchaseHanlding = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (payload: ManualOrderDataFormat) => {
+			return manualPurchaseHanlding(payload);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();

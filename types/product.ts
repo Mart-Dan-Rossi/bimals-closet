@@ -79,3 +79,8 @@ export type ProductListProps = {
 export type CheckedProducts = {
 	[productId: string]: boolean;
 };
+
+export type ManualOrderDataFormat = {
+	userId: string;
+	products: Product[];
+};

@@ -189,8 +189,25 @@ export function getDefaultImage(
 	return undefined;
 }
 
-export function isReservationOnTime(reserve: ReservedData) {
-	const reservationDurationTimestamp = 5 * 60 * 60 * 1000; // 60*60*1000 = 1 hs
+export const reservationDurationTimestamp = 5 * 60 * 60 * 1000; // 60*60*1000 = 1 hs
 
+export function isReservationOnTime(reserve: ReservedData) {
 	return Date.now() < reserve.timestamp + reservationDurationTimestamp;
 }
+
+export function calculateReservationTimeLeft(timestamp: number) {
+	const now = Date.now();
+	const timeLeftInMs = timestamp - now + reservationDurationTimestamp;
+
+	const hours = Math.floor(timeLeftInMs / (1000 * 60 * 60));
+	const mins = Math.floor((timeLeftInMs % (1000 * 60 * 60)) / (1000 * 60));
+	return `${hours}:${mins} hs`;
+}
+
+export const copyToClipboard = async (value: string) => {
+	try {
+		await navigator.clipboard.writeText(value);
+	} catch (err) {
+		console.error("Error al copiar:", err);
+	}
+};

@@ -41,9 +41,11 @@ registrar:
 
 °Al hacer la reserva que no desaparezcan los productos del carrito.
 °Al concretar la compra reducir el stock. (Antes se hacía al realizar la reserva).
--Agregar opción para que un admin pueda gestionar los productos pagados por fuera de MP.
 
 °Al contar productos del carrito si tengo 2 del mismo me cuenta sólo 1 porque no cuenta la cantidad de productos del mismo sino que la cantidad de productos distintos.
 
 Flujo sugerido: 
--Al acreditarse el pago permitir al admin borrar el producto y si el pago rebota volver a agregar el producto al stock borrando de la lista de comprados del usuario el producto.
+(Test) Si el pago rebota volver a agregar el producto al stock borrando de la lista de comprados del usuario el producto.
+°Permitir al admin gestionar las reservas vigentes.
+
+-Revisar seguridad!

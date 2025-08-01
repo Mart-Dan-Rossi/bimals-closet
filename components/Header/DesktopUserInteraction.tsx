@@ -51,7 +51,10 @@ export const DesktopUserInteraction = ({ name, loggedIsAdmin }: Props) => {
 							fontSize=".9rem"
 							fontWeight="600"
 						>
-							{cart && cart?.length}
+							{cart &&
+								cart.reduce((acc, product) => {
+									return acc + product.quantity;
+								}, 0)}
 						</Circle>
 						<Icon cursor="pointer" as={TiShoppingCart} />
 					</Box>

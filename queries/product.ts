@@ -1,6 +1,7 @@
 import { AxiosInstance } from "@/config";
 import {
 	CancelReservationData,
+	ManualOrderDataFormat,
 	Product,
 	ReserveProductData,
 } from "@/types/product";
@@ -66,6 +67,17 @@ export const deleteProduct = async (payload: Product) => {
 export const cancelReservation = async (payload: CancelReservationData) => {
 	const { data } = await AxiosInstance.post(
 		"/api/products/cancelReservation",
+		payload
+	);
+
+	return data;
+};
+
+export const manualPurchaseHanlding = async (
+	payload: ManualOrderDataFormat
+) => {
+	const { data } = await AxiosInstance.post(
+		"/api/products/manualPurchaseHanlding",
 		payload
 	);
 
