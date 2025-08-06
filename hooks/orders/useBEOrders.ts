@@ -1,33 +1,33 @@
 import {
-	createBEOrder,
+	adminUpdateBEOrder,
+	// createBEOrder,
 	getAllBEOrders,
-	updateBEOrder,
 } from "@/queries/beOrder";
 import { OrderDataBEFormat } from "@/types/order";
 import { onError } from "@/utils/error";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useShowToast } from "../toast/useShowToast";
 
-export const useCreateBEOrder = () => {
-	const queryClient = useQueryClient();
+// export const useCreateBEOrder = () => {
+// 	const queryClient = useQueryClient();
 
-	return useMutation({
-		mutationFn: (payload: OrderDataBEFormat) => {
-			return createBEOrder(payload);
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries();
-		},
-		onError,
-	});
-};
+// 	return useMutation({
+// 		mutationFn: (payload: OrderDataBEFormat) => {
+// 			return createBEOrder(payload);
+// 		},
+// 		onSuccess: () => {
+// 			queryClient.invalidateQueries();
+// 		},
+// 		onError,
+// 	});
+// };
 
-export const useUpdateBEOrder = () => {
+export const useAdminUpdateBEOrder = () => {
 	const queryClient = useQueryClient();
 	const toast = useShowToast();
 	return useMutation({
-		mutationFn: (payload: OrderDataBEFormat) => {
-			return updateBEOrder(payload);
+		mutationFn: (variables: { payload: OrderDataBEFormat; token: string }) => {
+			return adminUpdateBEOrder(variables.payload, variables.token);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();

@@ -1,16 +1,18 @@
 import {
+	adminCancelReservation,
 	cancelReservation,
 	createProduct,
 	deleteProduct,
 	getAllProducts,
 	getParticularProduct,
-	hideUserReservations,
+	// hideUserReservations,
 	manualPurchaseHanlding,
 	reserveProducts,
 	updateMultipleProducts,
 	updateProduct,
 } from "@/queries/product";
 import {
+	AdminCancelReservationData,
 	CancelReservationData,
 	ManualOrderDataFormat,
 	Product,
@@ -41,8 +43,8 @@ export const useCreateProduct = () => {
 	const queryClient = useQueryClient();
 	const toast = useShowToast();
 	return useMutation({
-		mutationFn: (payload: Product) => {
-			return createProduct(payload);
+		mutationFn: (variables: { payload: Product; token: string }) => {
+			return createProduct(variables.payload, variables.token);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();
@@ -59,8 +61,8 @@ export const useUpdateProduct = () => {
 	const queryClient = useQueryClient();
 	const toast = useShowToast();
 	return useMutation({
-		mutationFn: (payload: Product) => {
-			return updateProduct(payload);
+		mutationFn: (variables: { payload: Product; token: string }) => {
+			return updateProduct(variables.payload, variables.token);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();
@@ -76,8 +78,11 @@ export const useUpdateProduct = () => {
 export const useReserveMultipleProducts = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: (payload: ReserveProductData[]) => {
-			return reserveProducts(payload);
+		mutationFn: (variables: {
+			payload: ReserveProductData[];
+			token: string;
+		}) => {
+			return reserveProducts(variables.payload, variables.token);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();
@@ -86,23 +91,24 @@ export const useReserveMultipleProducts = () => {
 	});
 };
 
-export const useHideUserReservations = () => {
-	const queryClient = useQueryClient();
-	return useMutation({
-		mutationFn: (userId: string) => hideUserReservations(userId),
-		onSuccess: () => {
-			queryClient.invalidateQueries();
-		},
-		onError,
-	});
-};
+// export const useHideUserReservations = () => {
+// 	const queryClient = useQueryClient();
+// 	return useMutation({
+// 		mutationFn: (userId: string) => hideUserReservations(userId),
+// 		onSuccess: () => {
+// 			queryClient.invalidateQueries();
+// 		},
+// 		onError,
+// 	});
+// };
 
 export const useUpdateMultipleProducts = () => {
 	const queryClient = useQueryClient();
 	const toast = useShowToast();
 
 	return useMutation({
-		mutationFn: (products: Product[]) => updateMultipleProducts(products),
+		mutationFn: (variables: { products: Product[]; token: string }) =>
+			updateMultipleProducts(variables.products, variables.token),
 		onSuccess: () => {
 			queryClient.invalidateQueries();
 			toast({
@@ -125,7 +131,8 @@ export const useDeleteProduct = () => {
 	const toast = useShowToast();
 
 	return useMutation({
-		mutationFn: (payload: Product) => deleteProduct(payload),
+		mutationFn: (variables: { payload: Product; token: string }) =>
+			deleteProduct(variables.payload, variables.token),
 		onSuccess: () => {
 			queryClient.invalidateQueries();
 			toast({
@@ -140,8 +147,27 @@ export const useDeleteProduct = () => {
 export const useCancelReservation = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: (payload: CancelReservationData) => {
-			return cancelReservation(payload);
+		mutationFn: (variables: {
+			payload: CancelReservationData;
+			token: string;
+		}) => {
+			return cancelReservation(variables.payload);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries();
+		},
+		onError,
+	});
+};
+
+export const useAdminCancelReservation = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (variables: {
+			payload: AdminCancelReservationData;
+			token: string;
+		}) => {
+			return adminCancelReservation(variables.payload, variables.token);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();
@@ -153,8 +179,11 @@ export const useCancelReservation = () => {
 export const useManualPurchaseHanlding = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: (payload: ManualOrderDataFormat) => {
-			return manualPurchaseHanlding(payload);
+		mutationFn: (variables: {
+			payload: ManualOrderDataFormat;
+			token: string;
+		}) => {
+			return manualPurchaseHanlding(variables.payload, variables.token);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();

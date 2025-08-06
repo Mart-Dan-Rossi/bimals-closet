@@ -24,6 +24,12 @@ export type SizeOptions = SizeOption[];
 
 export type CancelReservationData = {
 	slug: string;
+	usSize: number | ClothSizesOptions;
+	color: string;
+};
+
+export type AdminCancelReservationData = {
+	slug: string;
 	userId: string;
 	usSize: number | ClothSizesOptions;
 	color: string;
@@ -32,9 +38,9 @@ export type CancelReservationData = {
 export type ReservedData = {
 	usSize: number | ClothSizesOptions;
 	color: ColorOptions;
-	userId: string | undefined;
 	quantity: number;
 	timestamp: number;
+	userId?: string | undefined;
 	hide?: boolean;
 };
 

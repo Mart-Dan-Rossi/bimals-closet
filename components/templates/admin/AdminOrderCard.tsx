@@ -1,4 +1,4 @@
-import { useUpdateBEOrder } from "@/hooks/orders/useBEOrders";
+import { useAdminUpdateBEOrder } from "@/hooks/orders/useBEOrders";
 import { OrderDataBEFormat } from "@/types/order";
 import { getDefaultImage } from "@/utils/functions";
 import {
@@ -17,6 +17,7 @@ import AdminOrderCardUserData from "./AdminOrderCardUserData";
 import ProductDataDisplay from "./ProductDataDisplay";
 import Image from "next/image";
 import { useGlobalContext } from "@/context/GlobalContext";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 
 interface Props {
 	orderData: OrderDataBEFormat;
@@ -24,11 +25,13 @@ interface Props {
 }
 
 const AdminOrderCard = ({ orderData, hideAdminOrderCardUserData }: Props) => {
+	const token = useHydratedStoreState("token");
+
 	const { MPUserName, MPmail, products, user, isDelivered } = orderData;
 	const { finalProductsData } = useGlobalContext();
 
 	const { mutateAsync: addMutateAsynceEditBEOrder, isLoading } =
-		useUpdateBEOrder();
+		useAdminUpdateBEOrder();
 
 	const toast = useToast();
 	const [
@@ -37,29 +40,36 @@ const AdminOrderCard = ({ orderData, hideAdminOrderCardUserData }: Props) => {
 	] = useBoolean(false);
 
 	async function uploadBEOrder() {
-		try {
-			const order: OrderDataBEFormat = {
-				...orderData,
-				isDelivered: !isDelivered,
-			};
+		if (token) {
+			try {
+				const order: OrderDataBEFormat = {
+					...orderData,
+					isDelivered: !isDelivered,
+				};
 
-			modifiyingDeliveredValue();
-			const res = await addMutateAsynceEditBEOrder(order);
-			modifiedDeliveredValue();
-
-			if (res?.status === "success") {
-				toast({ status: "success", title: "Órden cargada correctamente" });
-			}
-		} catch (error) {
-			if (axios.isAxiosError(error)) {
-				toast({
-					status: "error",
-					title:
-						error?.response?.data?.message ||
-						"Ha ocurrido un error! Intenta nuevamente más tarde",
-				});
+				modifiyingDeliveredValue();
+				const res = await addMutateAsynceEditBEOrder({ payload: order, token });
 				modifiedDeliveredValue();
+
+				if (res?.status === "success") {
+					toast({ status: "success", title: "Órden cargada correctamente" });
+				}
+			} catch (error) {
+				if (axios.isAxiosError(error)) {
+					toast({
+						status: "error",
+						title:
+							error?.response?.data?.error.message ||
+							"Ha ocurrido un error! Intenta nuevamente más tarde",
+					});
+					modifiedDeliveredValue();
+				}
 			}
+		} else {
+			toast({
+				status: "error",
+				title: "Debes estar logueado para realizar esta acción",
+			});
 		}
 	}
 
@@ -93,7 +103,7 @@ const AdminOrderCard = ({ orderData, hideAdminOrderCardUserData }: Props) => {
 					wrap={"wrap-reverse"}
 					gap="1rem"
 				>
-					{!hideAdminOrderCardUserData && (
+					{!hideAdminOrderCardUserData && user && (
 						<AdminOrderCardUserData
 							user={user}
 							MPUserName={MPUserName}

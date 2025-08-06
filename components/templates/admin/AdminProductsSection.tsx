@@ -61,8 +61,8 @@ const AdminProductsSection = () => {
 	}, [token]);
 
 	function handleDeleteProduct() {
-		if (productToInteractWith) {
-			removeMutateAsync(productToInteractWith);
+		if (productToInteractWith && token) {
+			removeMutateAsync({ payload: productToInteractWith, token });
 		}
 	}
 

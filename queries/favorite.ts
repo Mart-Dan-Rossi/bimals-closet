@@ -1,15 +1,26 @@
 import { AuthAxiosInstance, AxiosInstance } from "@/config";
-import { FavoriteProps } from "@/types/favorite";
 
-export const addFavorite = async (payload: FavoriteProps) => {
-	const { data } = await AxiosInstance.post("api/favorite/add", payload);
+export const addFavorite = async (
+	payload: { productId: string },
+	token: string
+) => {
+	const { data } = await AxiosInstance.post("api/favorite/add", payload, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
 
 	return data;
 };
 
-export const removeFavorite = async (payload: FavoriteProps) => {
-	const { data } = await AxiosInstance.delete("api/favorite/remove", {
-		data: payload,
+export const removeFavorite = async (
+	payload: { productId: string },
+	token: string
+) => {
+	const { data } = await AxiosInstance.post("api/favorite/remove", payload, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
 	});
 
 	return data;

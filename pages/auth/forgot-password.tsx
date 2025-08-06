@@ -35,7 +35,7 @@ const ForgotPassword = () => {
 				toast({
 					status: "error",
 					title:
-						error?.response?.data?.message ||
+						error?.response?.data?.error.message ||
 						"Ocurrió un error. Intente nuevamente luego.",
 				});
 			}

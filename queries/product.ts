@@ -18,47 +18,76 @@ export const getParticularProduct = async (slug: string): Promise<Product> => {
 	return data.data.product;
 };
 
-export const createProduct = async (payload: Product) => {
-	const { data } = await AxiosInstance.post("/api/products/add", payload);
-
-	return data;
-};
-
-export const updateProduct = async (payload: Product) => {
-	const { data } = await AxiosInstance.post("/api/products/update", payload);
-
-	return data;
-};
-
-export const reserveProducts = async (payload: ReserveProductData[]) => {
-	const { data } = await AxiosInstance.post(
-		"/api/products/reserveProducts",
-		payload
-	);
-
-	return data;
-};
-
-export const hideUserReservations = async (userId: string) => {
-	const { data } = await AxiosInstance.post(
-		"/api/products/hideUserReservations",
-		{ userId }
-	);
-
-	return data;
-};
-
-export const updateMultipleProducts = async (products: Product[]) => {
-	const { data } = await AxiosInstance.post("/api/products/update-multiple", {
-		products,
+export const createProduct = async (payload: Product, token: string) => {
+	const { data } = await AxiosInstance.post("/api/products/add", payload, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
 	});
 
 	return data;
 };
 
-export const deleteProduct = async (payload: Product) => {
-	const { data } = await AxiosInstance.delete("api/products/remove", {
-		data: payload,
+export const updateProduct = async (payload: Product, token: string) => {
+	const { data } = await AxiosInstance.post("/api/products/update", payload, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+	return data;
+};
+
+export const updateMultipleProducts = async (
+	products: Product[],
+	token: string
+) => {
+	const { data } = await AxiosInstance.post(
+		"/api/products/update-multiple",
+		{
+			products,
+		},
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		}
+	);
+
+	return data;
+};
+
+export const reserveProducts = async (
+	payload: ReserveProductData[],
+	token: string
+) => {
+	const { data } = await AxiosInstance.post(
+		"/api/products/reserveProducts",
+		payload,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		}
+	);
+
+	return data;
+};
+
+// export const hideUserReservations = async (userId: string) => {
+// 	const { data } = await AxiosInstance.post(
+// 		"/api/products/hideUserReservations",
+// 		{ userId }
+// 	);
+
+// 	return data;
+// };
+
+export const deleteProduct = async (payload: Product, token: string) => {
+	const { data } = await AxiosInstance.post("api/products/remove", payload, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
 	});
 
 	return data;
@@ -73,12 +102,35 @@ export const cancelReservation = async (payload: CancelReservationData) => {
 	return data;
 };
 
+export const adminCancelReservation = async (
+	payload: CancelReservationData,
+	token: string
+) => {
+	const { data } = await AxiosInstance.post(
+		"/api/products/adminCancelReservation",
+		payload,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		}
+	);
+
+	return data;
+};
+
 export const manualPurchaseHanlding = async (
-	payload: ManualOrderDataFormat
+	payload: ManualOrderDataFormat,
+	token: string
 ) => {
 	const { data } = await AxiosInstance.post(
 		"/api/products/manualPurchaseHanlding",
-		payload
+		payload,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		}
 	);
 
 	return data;

@@ -44,7 +44,7 @@ export const AdminProductCard = ({
 			mb="2rem"
 			color={"brand.white100"}
 		>
-			<Flex wrap="wrap">
+			<Flex wrap="wrap" justify="space-between" w="100%" mr="1rem">
 				<Flex>
 					<Box overflow="hidden" borderRadius="1rem">
 						<Img

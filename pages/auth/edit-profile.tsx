@@ -67,7 +67,7 @@ const ResetPassword = () => {
 				toast({
 					status: "error",
 					title:
-						error?.response?.data?.message ||
+						error?.response?.data?.error.message ||
 						"Ocurrió un error. Intenta nuevamente luego",
 				});
 			}

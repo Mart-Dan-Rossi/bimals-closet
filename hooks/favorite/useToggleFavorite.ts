@@ -45,15 +45,14 @@ export const useToggleFavorite = (mapProducts: Product[] | Product) => {
 		}
 
 		const data = {
-			userId,
 			productId,
 		};
 
 		try {
 			if (isProductChecked(productId)) {
-				await removeMutateAsync(data);
+				await removeMutateAsync({ payload: data, token });
 			} else {
-				await addMutateAsync(data);
+				await addMutateAsync({ payload: data, token });
 			}
 		} catch (error) {
 			const responseData = (error as ErrorResponse).response?.data;

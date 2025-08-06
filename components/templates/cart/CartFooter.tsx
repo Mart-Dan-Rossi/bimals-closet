@@ -116,9 +116,29 @@ const CartFooter = ({
 		productsDataToReserve: ReserveProductData[]
 	) => {
 		try {
-			const results = await addMutateAsyncReserveMultipleProducts(
-				productsDataToReserve
-			);
+			if (!token) {
+				toast({
+					isClosable: true,
+					status: "error",
+					title: "Debes estar logeado para realizar esta acción.",
+				});
+				return {
+					successfulReserves: [],
+					failedReserves: [
+						{
+							response: {
+								data: {
+									error: "Debes estar logeado para realizar esta acción.",
+								},
+							},
+						},
+					],
+				};
+			}
+			const results = await addMutateAsyncReserveMultipleProducts({
+				payload: productsDataToReserve,
+				token,
+			});
 
 			toast({
 				isClosable: true,
@@ -180,15 +200,18 @@ const CartFooter = ({
 		});
 
 		await handleReserveProducts(productsDataToReserve).then(async (res) => {
-			if (res?.failedReserves.length !== 0) {
+			if ((res?.failedReserves.length !== 0, !token)) {
 				purchaseRequestLoaded();
 			} else {
 				const createMPOrderRes = await addMutateAsyncCreateOrder({
-					cartItems: [...cart],
-					metadata: {
-						userId: localStoredUser?.id,
-						products: userReservedProducts,
+					payload: {
+						cartItems: [...cart],
+						metadata: {
+							userId: localStoredUser?.id,
+							products: userReservedProducts,
+						},
 					},
+					token,
 				});
 
 				const id = createMPOrderRes.id;

@@ -59,7 +59,9 @@ export const CartItems = () => {
 		const user = storedUser && token ? JSON.parse(storedUser) : null;
 		if (user) {
 			const ordersFiltered = ordersData?.filter((order) => {
-				return order.user.id === user.id;
+				if (order && order.user) {
+					return order.user.id === user.id;
+				}
 			});
 			setUserFinalOrders(ordersFiltered);
 		}

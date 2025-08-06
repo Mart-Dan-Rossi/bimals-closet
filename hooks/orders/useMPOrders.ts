@@ -7,8 +7,8 @@ export const useCreateMPOrder = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (payload: OrderDataMPFormat) => {
-			return createMPOrder(payload);
+		mutationFn: (variables: { payload: OrderDataMPFormat; token: string }) => {
+			return createMPOrder(variables.payload, variables.token);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();

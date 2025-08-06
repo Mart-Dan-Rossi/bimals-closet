@@ -47,20 +47,19 @@ export const CartProductCard = ({
 
 	const token = useHydratedStoreState("token");
 
-	const storedUser = localStorage.getItem("MateoShoesUser");
-	const user = storedUser && token ? JSON.parse(storedUser) : undefined;
-
 	const { removeFromCart } = useCartState((state) => state);
 	const { mutateAsync: addMutateAsyncCancelReservation } =
 		useCancelReservation();
 
 	async function handleTrashButton() {
-		if (removeFromCart && id && user && slug) {
+		if (removeFromCart && id && token && slug) {
 			await addMutateAsyncCancelReservation({
-				slug,
-				userId: user.id as string,
-				usSize,
-				color,
+				payload: {
+					slug,
+					usSize,
+					color,
+				},
+				token,
 			});
 
 			if (setBuyButtonClicked) {
@@ -74,12 +73,14 @@ export const CartProductCard = ({
 	}
 
 	async function handleEditButton() {
-		if (removeFromCart && id && user && slug) {
+		if (removeFromCart && id && token && slug) {
 			await addMutateAsyncCancelReservation({
-				slug,
-				userId: user.id as string,
-				usSize,
-				color,
+				payload: {
+					slug,
+					usSize,
+					color,
+				},
+				token,
 			});
 
 			removeFromCart(id, color, usSize.toString(), name);

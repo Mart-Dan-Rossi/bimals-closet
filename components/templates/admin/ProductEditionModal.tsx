@@ -192,46 +192,52 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 			const base64 =
 				base64Url && base64Url.replace(/-/g, "+").replace(/_/g, "/");
 			const tokenData = base64 && JSON.parse(atob(base64));
+			if (!token) {
+				throw new Error("No se ha encontrado un token");
+			}
 
-			if (tokenData.role === "admin") {
-				const product: Product = {
-					productType,
-					name,
-					slug,
-					images,
-					price,
-					sizeOptions: sizeOptions.filter(
-						(sizeOption) =>
-							sizeOption.quantity > 0 &&
-							sizeOption.usSize &&
-							((productType === "calzado" && Number(sizeOption.usSize) > 0) ||
-								(productType === "indumentaria" &&
-									typeof sizeOption.usSize !== "number")) &&
-							(brand !== "other" ||
-								(sizeOption.arg && sizeOption.cm) ||
-								sizeOption.eu)
-					),
-					brand: brand.toLocaleLowerCase() as Brand,
-					desc,
-					tags: tags ? tags.filter((tag) => tag !== "") : undefined,
-				};
+			if (tokenData.role !== "admin") {
+				throw new Error(
+					"No tienes roles suficientes para realizar esta acción"
+				);
+			}
+			const product: Product = {
+				productType,
+				name,
+				slug,
+				images,
+				price,
+				sizeOptions: sizeOptions.filter(
+					(sizeOption) =>
+						sizeOption.quantity > 0 &&
+						sizeOption.usSize &&
+						((productType === "calzado" && Number(sizeOption.usSize) > 0) ||
+							(productType === "indumentaria" &&
+								typeof sizeOption.usSize !== "number")) &&
+						(brand !== "other" ||
+							(sizeOption.arg && sizeOption.cm) ||
+							sizeOption.eu)
+				),
+				brand: brand.toLocaleLowerCase() as Brand,
+				desc,
+				tags: tags ? tags.filter((tag) => tag !== "") : undefined,
+			};
 
-				const res = editingProduct
-					? await addMutateAsynceEditProduct(product)
-					: await addMutateAsyncCreateProduct(product);
+			const res = editingProduct
+				? await addMutateAsynceEditProduct({ payload: product, token })
+				: await addMutateAsyncCreateProduct({ payload: product, token });
 
-				if (res) {
-					setName("");
-					setSlug("");
-					setImages(defaultImagesData);
-					setPrice(0);
-					setBrand("other");
-					setSizeOptions([{ usSize: 0, color: "negro", quantity: 0 }]);
-					setDesc("");
-					setTags([""]);
+			if (res) {
+				setName("");
+				setSlug("");
+				setImages(defaultImagesData);
+				setPrice(0);
+				setBrand("other");
+				setSizeOptions([{ usSize: 0, color: "negro", quantity: 0 }]);
+				setDesc("");
+				setTags([""]);
 
-					toast({ status: "success", title: res.message });
-				}
+				toast({ status: "success", title: res.message });
 			}
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
@@ -239,7 +245,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 				toast({
 					status: "error",
 					title:
-						error?.response?.data?.message ||
+						error?.response?.data?.error.message ??
 						"Ha ocurrido un error! Intenta nuevamente más tarde",
 				});
 			}

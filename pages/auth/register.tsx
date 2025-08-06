@@ -45,7 +45,7 @@ const Register = () => {
 				toast({
 					status: "error",
 					title:
-						error?.response?.data?.message ||
+						error?.response?.data?.error.message ||
 						"Ha ocurrido un error! Intenta nuevamente más tarde",
 				});
 			}

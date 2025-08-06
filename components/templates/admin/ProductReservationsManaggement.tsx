@@ -1,7 +1,8 @@
 import {
-	useCancelReservation,
+	useAdminCancelReservation,
 	useManualPurchaseHanlding,
 } from "@/hooks/products/useProduct";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product, ReservedData } from "@/types/product";
 import {
 	calculateReservationTimeLeft,
@@ -27,10 +28,10 @@ import {
 	useToast,
 	VStack,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
-import { useState } from "react";
 
 interface Props {
 	item: Product;
@@ -39,9 +40,10 @@ interface Props {
 const ProductReservationsManaggement = ({ item }: Props) => {
 	const { reservedData, slug } = item;
 	const toast = useToast();
+	const token = useHydratedStoreState("token");
 
-	const { mutateAsync: addMutateAsyncCancelReservation } =
-		useCancelReservation();
+	const { mutateAsync: addMutateAsyncAdminCancelReservation } =
+		useAdminCancelReservation();
 	const { mutateAsync: addMutateAsyncManualPurchase } =
 		useManualPurchaseHanlding();
 
@@ -74,12 +76,15 @@ const ProductReservationsManaggement = ({ item }: Props) => {
 	async function handleCancelReservation() {
 		if (interactedReservation) {
 			const { userId, usSize, color } = interactedReservation;
-			if (userId) {
-				await addMutateAsyncCancelReservation({
-					slug,
-					userId,
-					usSize,
-					color,
+			if (userId && token) {
+				await addMutateAsyncAdminCancelReservation({
+					payload: {
+						slug,
+						userId,
+						usSize,
+						color,
+					},
+					token,
 				});
 			}
 		}
@@ -89,11 +94,14 @@ const ProductReservationsManaggement = ({ item }: Props) => {
 		if (interactedReservation) {
 			const { userId, usSize, color, quantity } = interactedReservation;
 
-			if (userId) {
+			if (userId && token) {
 				const itemCopy = { ...item };
 				itemCopy.sizeOptions = [{ usSize, color, quantity }];
 
-				await addMutateAsyncManualPurchase({ userId, products: [itemCopy] });
+				await addMutateAsyncManualPurchase({
+					payload: { userId, products: [itemCopy] },
+					token,
+				});
 			}
 		}
 	}

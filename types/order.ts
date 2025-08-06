@@ -44,7 +44,7 @@ export type OrderDataBEFormat = {
 	status: string;
 	statusDetail: string;
 	updatedAt: string;
-	user: StoredUserData;
 	_id: string;
 	isDelivered?: boolean;
+	user?: StoredUserData;
 };

@@ -73,7 +73,7 @@ const Login = () => {
 						toast({
 							status: "error",
 							title:
-								error?.response?.data?.message ||
+								error?.response?.data?.error.message ||
 								"Ocurrió un error, intenta de nuevo luego",
 						});
 					}

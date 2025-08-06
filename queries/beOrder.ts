@@ -1,14 +1,21 @@
 import { AxiosInstance } from "@/config";
 import { OrderDataBEFormat } from "@/types/order";
 
-export const createBEOrder = async (payload: OrderDataBEFormat) => {
-	const { data } = await AxiosInstance.post("/api/order/add", payload);
+// export const createBEOrder = async (payload: OrderDataBEFormat) => {
+// 	const { data } = await AxiosInstance.post("/api/order/add", payload);
 
-	return data;
-};
+// 	return data;
+// };
 
-export const updateBEOrder = async (payload: OrderDataBEFormat) => {
-	const { data } = await AxiosInstance.post("/api/order/update", payload);
+export const adminUpdateBEOrder = async (
+	payload: OrderDataBEFormat,
+	token: string
+) => {
+	const { data } = await AxiosInstance.post("/api/order/update", payload, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
 
 	return data;
 };
