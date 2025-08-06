@@ -6,6 +6,7 @@ import {
 	Icon,
 	Input,
 	Text,
+	Tooltip,
 } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
 import { RiAddCircleLine } from "react-icons/ri";
@@ -26,9 +27,18 @@ export const TagsInputs = ({
 }: Props) => {
 	return (
 		<Box my="2rem">
-			<Text fontSize="1.7rem" fontWeight="600" color={"brand.black"}>
-				Tags (Optativo):
-			</Text>
+			<Tooltip
+				fontSize={"small"}
+				hasArrow
+				placement="top-start"
+				label={
+					"Etiquetas que pueden ser usadas para facilitar la búsqueda del producto"
+				}
+			>
+				<Text fontSize="1.7rem" fontWeight="600" color={"brand.black"}>
+					Tags (Optativo):
+				</Text>
+			</Tooltip>
 			{tags.map((tag, index) => {
 				return (
 					<HStack key={`create-product-tags-${index}`} mt={"1rem"}>
@@ -51,6 +61,7 @@ export const TagsInputs = ({
 				margin={"1rem auto"}
 				onClick={handleAddTagsInput}
 			>
+				<Text mr="0.5rem">Nuevo tag</Text>
 				<Icon as={RiAddCircleLine} fontSize="2rem" />
 			</Button>
 		</Box>

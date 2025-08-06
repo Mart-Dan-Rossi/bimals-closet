@@ -1,6 +1,6 @@
 import { SizeOptions } from "@/types/product";
 import { Brand, ProductType } from "@/utils/productCaracteristics";
-import { Box, Button, Flex, Icon } from "@chakra-ui/react";
+import { Box, Button, Flex, Icon, Text } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 import { RiAddCircleLine } from "react-icons/ri";
 import { ColorSizesAndQuantityInputsEditionContainer } from "./ColorSizesAndQuantityInputsEditionContainer";
@@ -17,7 +17,7 @@ interface Props {
 	handleDeleteSizeOptionsInputsLine: (index: number) => void;
 }
 
-export const ProductStockEdited = ({
+export const ProductStockEditer = ({
 	productType,
 	sizeOptions,
 	brand,
@@ -62,6 +62,7 @@ export const ProductStockEdited = ({
 				margin={"1rem auto"}
 				onClick={handleAddSizeOptionsInput}
 			>
+				<Text mr="0.5rem">Agregar Color/Talle</Text>
 				<Icon as={RiAddCircleLine} fontSize="2rem" />
 			</Button>
 		</Box>

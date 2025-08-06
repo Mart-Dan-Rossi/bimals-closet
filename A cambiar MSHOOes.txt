@@ -50,4 +50,4 @@ Flujo sugerido:
 
 (Test) Revisar seguridad!
 
--Al crear un nuevo producto mejorar la interface de las imágenes por color (Actualmente aparece el botón "Agregar URL" y no se entiende qué significa)
+°Al crear un nuevo producto mejorar la interface de las imágenes por color (Actualmente aparece el botón "Agregar URL" y no se entiende qué significa).

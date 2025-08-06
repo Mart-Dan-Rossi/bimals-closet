@@ -31,7 +31,7 @@ import { DescriptionInput } from "./DescriptionInput";
 import { ImagesInputsContainer } from "./ImagesInputsContainer";
 import { NameInput } from "./NameInput";
 import { PriceInput } from "./PriceInput";
-import { ProductStockEdited } from "./ProductStockEditer";
+import { ProductStockEditer } from "./ProductStockEditer";
 import ProductTypeSelector from "./ProductTypeSelector";
 import { SlugInput } from "./SlugInput";
 import { TagsInputs } from "./TagsInputs";
@@ -421,7 +421,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 
 						<BrandSelector brand={brand} setBrand={setBrand} />
 
-						<ProductStockEdited
+						<ProductStockEditer
 							productType={productType}
 							sizeOptions={sizeOptions}
 							brand={brand}

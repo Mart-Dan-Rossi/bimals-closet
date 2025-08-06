@@ -1,4 +1,4 @@
-import { Box, Input, Text } from "@chakra-ui/react";
+import { Box, Input, Text, Tooltip } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
 import { inputStyles } from "./ProductEditionModal";
 
@@ -19,9 +19,18 @@ export const SlugInput = ({
 }: Props) => {
 	return (
 		<Box my="2rem">
-			<Text fontSize="1.7rem" fontWeight="600" color={"brand.black"}>
-				Slug:
-			</Text>
+			<Tooltip
+				fontSize={"small"}
+				hasArrow
+				placement="top-start"
+				label={
+					"Es la URL que va a tener el producto (Ej: 'adidas-pepito23'). ¡No se puede repetir, es única por producto!"
+				}
+			>
+				<Text fontSize="1.7rem" fontWeight="600" color={"brand.black"}>
+					Slug:
+				</Text>
+			</Tooltip>
 			<Input
 				id={"productSlug"}
 				value={slug || ""}

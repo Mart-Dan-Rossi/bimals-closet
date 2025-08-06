@@ -1,4 +1,5 @@
 import { ImageData } from "@/types/product";
+import { capitalize } from "@/utils/functions";
 import { colorOptionDataArray } from "@/utils/productCaracteristics";
 import {
 	Box,
@@ -14,10 +15,9 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { AiOutlineCaretDown } from "react-icons/ai";
 import { RiAddCircleLine } from "react-icons/ri";
 import { inputStyles } from "./ProductEditionModal";
-import { capitalize } from "@/utils/functions";
-import { AiOutlineCaretDown } from "react-icons/ai";
 interface Props {
 	images: ImageData;
 	handleSetImageIndex: (
@@ -92,6 +92,11 @@ export const ImagesInputsContainer = ({
 				>
 					{selectedColor}
 				</Text>
+				{images[selectedColor].length === 0 && (
+					<Text>
+						Agrega las URL de las imágenes (Sin &quot;/&quot; al comienzo)
+					</Text>
+				)}
 				{images[selectedColor].map((_, index) => (
 					<HStack key={`image-${selectedColor}-${index}`} mb="0.5rem">
 						<Input
