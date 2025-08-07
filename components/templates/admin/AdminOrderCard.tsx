@@ -1,34 +1,59 @@
+import { useGlobalContext } from "@/context/GlobalContext";
 import { useAdminUpdateBEOrder } from "@/hooks/orders/useBEOrders";
+import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { OrderDataBEFormat } from "@/types/order";
 import { getDefaultImage } from "@/utils/functions";
 import {
 	Box,
 	Flex,
 	HStack,
+	Icon,
 	Spinner,
 	Switch,
 	Text,
 	useBoolean,
+	useDisclosure,
 	useToast,
 	VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
-import AdminOrderCardUserData from "./AdminOrderCardUserData";
-import ProductDataDisplay from "./ProductDataDisplay";
 import Image from "next/image";
-import { useGlobalContext } from "@/context/GlobalContext";
-import { useHydratedStoreState } from "@/hooks/state/hydrated";
+import { Dispatch, SetStateAction } from "react";
+import { RiDeleteBinLine } from "react-icons/ri";
+import AdminOrderCardUserData from "./AdminOrderCardUserData";
+import { ConfirmDeleteOrderModal } from "./ConfirmDeleteOrderModal";
+import { DeletedOrderData } from "./DeletedOrderData";
+import ProductDataDisplay from "./ProductDataDisplay";
 
 interface Props {
 	orderData: OrderDataBEFormat;
+	onOpenShowDeletedOrderModal: () => void;
+	setDeletedOrderData: Dispatch<SetStateAction<OrderDataBEFormat | undefined>>;
+	isShowDeletedOrderModalOpen: boolean;
+	onCloseShowDeletedOrderModal: () => void;
+	deletedOrderData: OrderDataBEFormat | undefined;
 	hideAdminOrderCardUserData?: boolean;
 }
 
-const AdminOrderCard = ({ orderData, hideAdminOrderCardUserData }: Props) => {
+const AdminOrderCard = ({
+	orderData,
+	onOpenShowDeletedOrderModal,
+	setDeletedOrderData,
+	isShowDeletedOrderModalOpen,
+	onCloseShowDeletedOrderModal,
+	deletedOrderData,
+	hideAdminOrderCardUserData,
+}: Props) => {
 	const token = useHydratedStoreState("token");
 
 	const { MPUserName, MPmail, products, user, isDelivered } = orderData;
 	const { finalProductsData } = useGlobalContext();
+
+	const {
+		isOpen: isConfirmDeleteOrderModalOpen,
+		onOpen: onOpenConfirmDeleteOrderModal,
+		onClose: onCloseConfirmDeleteOrderModal,
+	} = useDisclosure();
 
 	const { mutateAsync: addMutateAsynceEditBEOrder, isLoading } =
 		useAdminUpdateBEOrder();
@@ -139,6 +164,13 @@ const AdminOrderCard = ({ orderData, hideAdminOrderCardUserData }: Props) => {
 								/>
 							)}
 						</HStack>
+						<Icon
+							onClick={onOpenConfirmDeleteOrderModal}
+							as={RiDeleteBinLine}
+							fontSize="2rem"
+							cursor="pointer"
+							color={"brand.red100"}
+						/>
 					</Flex>
 				</Flex>
 			</Flex>
@@ -192,6 +224,19 @@ const AdminOrderCard = ({ orderData, hideAdminOrderCardUserData }: Props) => {
 						})}
 				</Flex>
 			</Box>
+			<ConfirmDeleteOrderModal
+				isOpen={isConfirmDeleteOrderModalOpen}
+				onClose={onCloseConfirmDeleteOrderModal}
+				orderData={orderData}
+				onOpenShowDeletedOrderModal={onOpenShowDeletedOrderModal}
+				setDeletedOrderData={setDeletedOrderData}
+			/>
+
+			<DeletedOrderData
+				isOpen={isShowDeletedOrderModalOpen}
+				onClose={onCloseShowDeletedOrderModal}
+				orderData={deletedOrderData}
+			/>
 		</Flex>
 	);
 };

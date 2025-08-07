@@ -93,10 +93,18 @@ export const deleteProduct = async (payload: Product, token: string) => {
 	return data;
 };
 
-export const cancelReservation = async (payload: CancelReservationData) => {
+export const cancelReservation = async (
+	payload: CancelReservationData,
+	token: string
+) => {
 	const { data } = await AxiosInstance.post(
 		"/api/products/cancelReservation",
-		payload
+		payload,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		}
 	);
 
 	return data;

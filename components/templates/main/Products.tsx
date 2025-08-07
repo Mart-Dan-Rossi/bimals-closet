@@ -2,7 +2,7 @@ import { BoxCardLoader } from "@/components/animations/CustomLoader";
 import FilterButtons from "@/components/ui/FilterButtons";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { Product } from "@/types/product";
-import { applyFilters } from "@/utils/functions";
+import { applyFilters, removeProductsWithNoStock } from "@/utils/functions";
 import { SiteMainSections } from "@/utils/helpers";
 import {
 	Box,
@@ -46,7 +46,7 @@ export const Products = ({ hideFilter, section }: Props) => {
 	}, [finalProductsData, filter, section]);
 
 	const sortedProducts = useMemo(() => {
-		return [...filteredProductsData]
+		return removeProductsWithNoStock([...filteredProductsData])
 			.sort((a, b) => {
 				if (hideFilter && a.createdAt && b.createdAt) {
 					return (

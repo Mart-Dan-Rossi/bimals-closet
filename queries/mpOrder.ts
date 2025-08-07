@@ -6,15 +6,11 @@ export const createMPOrder = async (
 	token: string
 ) => {
 	try {
-		const { data } = await AxiosInstance.post(
-			"/api/order/create-order",
-			payload,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			}
-		);
+		const { data } = await AxiosInstance.post("/api/order/create", payload, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		return data;
 	} catch (err) {
 		console.log("Error:", err);

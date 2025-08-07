@@ -151,7 +151,7 @@ export const useCancelReservation = () => {
 			payload: CancelReservationData;
 			token: string;
 		}) => {
-			return cancelReservation(variables.payload);
+			return cancelReservation(variables.payload, variables.token);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries();

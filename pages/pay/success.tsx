@@ -1,5 +1,6 @@
 import SocialMedia from "@/components/ui/SocialMedia";
 import { useGlobalContext } from "@/context/GlobalContext";
+import { useCartState } from "@/hooks/state/storage";
 import { Footer } from "@/layouts/Footer";
 import { BasketBall } from "@/public/assets/images/BasketBall";
 import { QueryData } from "@/types/Query";
@@ -9,6 +10,7 @@ import { useEffect } from "react";
 
 const PaySuccess = () => {
 	const router = useRouter();
+	const { emptyCart } = useCartState((state) => state);
 
 	const { setQueryData } = useGlobalContext();
 
@@ -16,6 +18,7 @@ const PaySuccess = () => {
 
 	useEffect(() => {
 		setQueryData(router.query as QueryData);
+		emptyCart();
 	}, [payment_id]);
 
 	return (

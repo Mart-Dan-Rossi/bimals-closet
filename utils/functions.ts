@@ -13,6 +13,23 @@ export function capitalize(string: string) {
 	return `${trimmed[0].toUpperCase()}${trimmed.slice(1)}`;
 }
 
+export function removeProductsWithNoStock(products: Product[]): Product[] {
+	return products
+		.map((product) => {
+			const filteredSizeOptions = product.sizeOptions.filter((option) => {
+				return option.quantity > 0;
+			});
+
+			return {
+				...product,
+				sizeOptions: filteredSizeOptions,
+			};
+		})
+		.filter((product) => {
+			return product.sizeOptions.length > 0;
+		});
+}
+
 export function applyFilters(
 	products: Product[] | undefined,
 	filter?: ProductsFilter,

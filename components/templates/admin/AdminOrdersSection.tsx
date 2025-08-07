@@ -7,6 +7,7 @@ import {
 	TabPanel,
 	Text,
 	useBoolean,
+	useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import AdminOrderCard from "./AdminOrderCard";
@@ -19,6 +20,16 @@ const AdminOrdersSection = () => {
 
 	const [finalOrders, setFinalOrders] = useState<
 		OrderDataBEFormat[] | undefined
+	>();
+
+	const {
+		isOpen: isShowDeletedOrderModalOpen,
+		onOpen: onOpenShowDeletedOrderModal,
+		onClose: onCloseShowDeletedOrderModal,
+	} = useDisclosure();
+
+	const [deletedOrderData, setDeletedOrderData] = useState<
+		OrderDataBEFormat | undefined
 	>();
 
 	useEffect(() => {
@@ -46,7 +57,14 @@ const AdminOrdersSection = () => {
 						<Box
 							key={`admin-order-card-${orderData.products[0].id}-${orderData.user}-${index}`}
 						>
-							<AdminOrderCard orderData={orderData} />
+							<AdminOrderCard
+								orderData={orderData}
+								onOpenShowDeletedOrderModal={onOpenShowDeletedOrderModal}
+								setDeletedOrderData={setDeletedOrderData}
+								isShowDeletedOrderModalOpen={isShowDeletedOrderModalOpen}
+								onCloseShowDeletedOrderModal={onCloseShowDeletedOrderModal}
+								deletedOrderData={deletedOrderData}
+							/>
 						</Box>
 					);
 				})}

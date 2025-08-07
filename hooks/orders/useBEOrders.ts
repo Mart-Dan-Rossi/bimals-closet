@@ -1,4 +1,5 @@
 import {
+	adminDeleteBEOrder,
 	adminUpdateBEOrder,
 	// createBEOrder,
 	getAllBEOrders,
@@ -45,5 +46,23 @@ export const useGetAllBEOrders = () => {
 		queryKey: ["getAllBEOrders"],
 		queryFn: () => getAllBEOrders(),
 		retry: 2,
+	});
+};
+
+export const useAdminDeleteBEOrder = () => {
+	const queryClient = useQueryClient();
+	const toast = useShowToast();
+	return useMutation({
+		mutationFn: (variables: { payload: OrderDataBEFormat; token: string }) => {
+			return adminDeleteBEOrder(variables.payload, variables.token);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries();
+			toast({
+				status: "success",
+				title: "Órden eliminada exitosamente.",
+			});
+		},
+		onError,
 	});
 };

@@ -25,3 +25,16 @@ export const getAllBEOrders = async (): Promise<OrderDataBEFormat[]> => {
 
 	return data.data.orders;
 };
+
+export const adminDeleteBEOrder = async (
+	payload: OrderDataBEFormat,
+	token: string
+) => {
+	const { data } = await AxiosInstance.post("/api/order/delete", payload, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+	return data;
+};

@@ -150,7 +150,6 @@ const CartFooter = ({
 
 			return { successfulReserves: results, failedReserves: [] };
 		} catch (error) {
-			console.error("Error reservando productos: ", error);
 			let errorMessage = "Ocurrió un error desconocido";
 
 			if (
@@ -200,7 +199,7 @@ const CartFooter = ({
 		});
 
 		await handleReserveProducts(productsDataToReserve).then(async (res) => {
-			if ((res?.failedReserves.length !== 0, !token)) {
+			if (res?.failedReserves.length !== 0 || !token) {
 				purchaseRequestLoaded();
 			} else {
 				const createMPOrderRes = await addMutateAsyncCreateOrder({
