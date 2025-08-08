@@ -4,7 +4,6 @@ import { useDeleteProduct } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product } from "@/types/product";
 import { applyFilters } from "@/utils/functions";
-import { SiteMainSections } from "@/utils/helpers";
 import { Box, Button, Flex, TabPanel, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
