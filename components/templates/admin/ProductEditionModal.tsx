@@ -9,6 +9,7 @@ import { ImageData, Product, SizeOptions } from "@/types/product";
 import { getDefaultImage } from "@/utils/functions";
 import {
 	Brand,
+	clothOptionsArray,
 	ColorOptions,
 	ProductType,
 } from "@/utils/productCaracteristics";
@@ -207,17 +208,20 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 				slug,
 				images,
 				price,
-				sizeOptions: sizeOptions.filter(
-					(sizeOption) =>
+				sizeOptions: sizeOptions.filter((sizeOption) => {
+					return (
 						sizeOption.quantity > 0 &&
 						sizeOption.usSize &&
-						((productType === "calzado" && Number(sizeOption.usSize) > 0) ||
+						((productType === "calzado" &&
+							Number(sizeOption.usSize) > 0 &&
+							(brand !== "other" ||
+								(sizeOption.arg && sizeOption.cm) ||
+								sizeOption.eu)) ||
 							(productType === "indumentaria" &&
-								typeof sizeOption.usSize !== "number")) &&
-						(brand !== "other" ||
-							(sizeOption.arg && sizeOption.cm) ||
-							sizeOption.eu)
-				),
+								typeof sizeOption.usSize === "string" &&
+								clothOptionsArray.includes(sizeOption.usSize)))
+					);
+				}),
 				brand: brand.toLocaleLowerCase() as Brand,
 				desc,
 				tags: tags ? tags.filter((tag) => tag !== "") : undefined,
@@ -449,6 +453,7 @@ export const ProductEditionModal = ({ editingProduct, item }: Props) => {
 							isValidImagesData={isValidImagesData}
 							handleDeleteImageInput={handleDeleteImageInput}
 							handleAddImageInput={handleAddImageInput}
+							sizeOptions={sizeOptions}
 						/>
 						<PriceInput
 							price={price}

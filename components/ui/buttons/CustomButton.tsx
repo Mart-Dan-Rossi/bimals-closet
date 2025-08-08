@@ -41,12 +41,12 @@ export const CustomButton = ({
 				onClick={
 					isSubmitButton && isValidData
 						? () => {
-								console.log("click");
+								console.log("click1");
 						  }
 						: !isSubmitButton
 						? onClickFunction
 						: () => {
-								console.log("click");
+								console.log("click2");
 						  }
 				}
 				cursor="pointer"

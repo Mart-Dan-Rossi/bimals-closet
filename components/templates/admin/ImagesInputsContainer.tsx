@@ -1,6 +1,9 @@
-import { ImageData } from "@/types/product";
+import { ImageData, SizeOptions } from "@/types/product";
 import { capitalize } from "@/utils/functions";
-import { colorOptionDataArray } from "@/utils/productCaracteristics";
+import {
+	colorOptionDataArray,
+	ColorOptions,
+} from "@/utils/productCaracteristics";
 import {
 	Box,
 	Button,
@@ -12,9 +15,10 @@ import {
 	MenuButton,
 	MenuItem,
 	MenuList,
+	Tag,
 	Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineCaretDown } from "react-icons/ai";
 import { RiAddCircleLine } from "react-icons/ri";
 import { inputStyles } from "./ProductEditionModal";
@@ -29,6 +33,7 @@ interface Props {
 	isValidImagesData: boolean;
 	handleDeleteImageInput: (color: keyof ImageData, index: number) => void;
 	handleAddImageInput: (color: keyof ImageData) => void;
+	sizeOptions: SizeOptions;
 }
 
 export const ImagesInputsContainer = ({
@@ -38,10 +43,56 @@ export const ImagesInputsContainer = ({
 	isValidImagesData,
 	handleDeleteImageInput,
 	handleAddImageInput,
+	sizeOptions,
 }: Props) => {
 	const [selectedColor, setSelectedColor] = useState<keyof ImageData>(
 		"negro" as keyof ImageData
 	);
+
+	const handleChangeColor = (name: string) => {
+		setSelectedColor(name as keyof ImageData);
+	};
+
+	const [existingProductsColors, setExistingProductsColors] = useState<
+		ColorOptions[]
+	>([]);
+
+	const [colorsWithNoImage, setColorsWithNoImage] = useState<ColorOptions[]>(
+		[]
+	);
+
+	useEffect(() => {
+		const allColors: ColorOptions[] = [];
+
+		sizeOptions.forEach((so) => {
+			if (!allColors.includes(so.color)) {
+				allColors.push(so.color);
+			}
+		});
+
+		const finalColorsWithNoImage: ColorOptions[] = [];
+
+		allColors.forEach((color) => {
+			const existingImages = images[color].filter((image) => {
+				return image.length;
+			});
+
+			if (existingImages.length === 0) {
+				finalColorsWithNoImage.push(color);
+			}
+		});
+
+		setExistingProductsColors(allColors);
+		setColorsWithNoImage(finalColorsWithNoImage);
+	}, [sizeOptions, images]);
+
+	function properWarningText() {
+		return `${colorsWithNoImage.length === 1 ? "El" : "Los"} siguiente${
+			colorsWithNoImage.length > 1 ? "s" : ""
+		} color${colorsWithNoImage.length > 1 ? "es" : ""} aún no tiene${
+			colorsWithNoImage.length > 1 ? "n" : ""
+		} imágen${colorsWithNoImage.length > 1 ? "es" : ""}:`;
+	}
 
 	return (
 		<Box my="2rem" p="1rem" borderRadius="10px" border="1px solid black">
@@ -50,36 +101,68 @@ export const ImagesInputsContainer = ({
 			</Text>
 
 			<Menu>
-				<MenuButton as={Button} rightIcon={<AiOutlineCaretDown />}>
-					{capitalize(selectedColor)}
-				</MenuButton>
-				<MenuList>
-					{colorOptionDataArray.map((colorData, index) => (
-						<MenuItem
-							key={`product-edition-color-${index}`}
-							onClick={() =>
-								setSelectedColor(colorData.name as keyof ImageData)
-							}
-							bg={
-								selectedColor?.toLocaleLowerCase() ===
-								colorData.name.toLocaleLowerCase()
-									? "lightGrey"
-									: ""
-							}
-							_hover={{ backgroundColor: "lightGrey" }}
-						>
-							<Flex align="center" gap={2}>
-								<Box
-									w="16px"
-									h="16px"
-									borderRadius="full"
-									bg={colorData.hash}
-									border={"1px solid #ccc"}
-								/>
-								{capitalize(colorData.name)}
+				<Flex alignItems="center" gap="1rem">
+					<MenuButton as={Button} rightIcon={<AiOutlineCaretDown />}>
+						{capitalize(selectedColor)}
+					</MenuButton>
+					{colorsWithNoImage.length > 0 && (
+						<Flex flexDirection="column">
+							<Text color="red" fontSize="small">
+								{properWarningText()}
+							</Text>
+							<Flex>
+								{colorsWithNoImage.map((color, index) => {
+									return (
+										<Flex key={`product-edition-${color}-${index}-tag`}>
+											<Tag
+												cursor="pointer"
+												onClick={() => handleChangeColor(color)}
+												mr="1rem"
+												colorScheme="blue"
+												userSelect="none"
+											>
+												{capitalize(color)}
+											</Tag>
+										</Flex>
+									);
+								})}
 							</Flex>
-						</MenuItem>
-					))}
+						</Flex>
+					)}
+				</Flex>
+				<MenuList>
+					{existingProductsColors.map((color, index) => {
+						const colorData = colorOptionDataArray.find((co) => {
+							return co.name === color;
+						});
+
+						const colorHash = colorData?.hash;
+
+						return (
+							<MenuItem
+								key={`product-edition-color-${index}`}
+								onClick={() => handleChangeColor(color)}
+								bg={
+									selectedColor?.toLocaleLowerCase() ===
+									color.toLocaleLowerCase()
+										? "lightGrey"
+										: ""
+								}
+								_hover={{ backgroundColor: "lightGrey" }}
+							>
+								<Flex align="center" gap={2}>
+									<Box
+										w="16px"
+										h="16px"
+										borderRadius="full"
+										bg={colorHash}
+										border={"1px solid #ccc"}
+									/>
+									{capitalize(color)}
+								</Flex>
+							</MenuItem>
+						);
+					})}
 				</MenuList>
 			</Menu>
 
@@ -97,20 +180,22 @@ export const ImagesInputsContainer = ({
 						Agrega las URL de las imágenes (Sin &quot;/&quot; al comienzo)
 					</Text>
 				)}
-				{images[selectedColor].map((_, index) => (
-					<HStack key={`image-${selectedColor}-${index}`} mb="0.5rem">
-						<Input
-							value={images[selectedColor][index] || ""}
-							placeholder="URL imágen"
-							type="text"
-							onChange={(e) => handleSetImageIndex(selectedColor, index, e)}
-							{...inputStyles}
-						/>
-						<CloseButton
-							onClick={() => handleDeleteImageInput(selectedColor, index)}
-						/>
-					</HStack>
-				))}
+				{images[selectedColor].map((_, index) => {
+					return (
+						<HStack key={`image-${selectedColor}-${index}`} mb="0.5rem">
+							<Input
+								value={images[selectedColor][index] || ""}
+								placeholder="URL imágen"
+								type="text"
+								onChange={(e) => handleSetImageIndex(selectedColor, index, e)}
+								{...inputStyles}
+							/>
+							<CloseButton
+								onClick={() => handleDeleteImageInput(selectedColor, index)}
+							/>
+						</HStack>
+					);
+				})}
 				<Button
 					mt="1rem"
 					leftIcon={<RiAddCircleLine />}

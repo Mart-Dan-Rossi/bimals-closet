@@ -29,10 +29,6 @@ const AdminProductsSection = () => {
 	const [isDeleteProduct, setIsDeleteProduct] = useState(false);
 	const [editingProduct, setEditingProduct] = useState(false);
 
-	const [sectionFilter, setSectionFilter] = useState<
-		SiteMainSections | undefined
-	>("todo");
-
 	const [filteredProductsData, setFilteredProductsData] = useState<
 		Product[] | undefined
 	>(finalProductsData);
@@ -42,10 +38,8 @@ const AdminProductsSection = () => {
 	const router = useRouter();
 
 	useEffect(() => {
-		setFilteredProductsData(
-			applyFilters(finalProductsData, filter, sectionFilter)
-		);
-	}, [finalProductsData, filter, sectionFilter]);
+		setFilteredProductsData(applyFilters(finalProductsData, filter));
+	}, [finalProductsData, filter]);
 
 	useEffect(() => {
 		const base64Url = token && token.split(".")[1];
@@ -76,8 +70,6 @@ const AdminProductsSection = () => {
 			<Box marginBottom={"2rem"}>
 				<FilterButtons
 					filteredProductsData={filteredProductsData}
-					sectionFilter={sectionFilter}
-					setSectionFilter={setSectionFilter}
 					section="todo"
 				/>
 			</Box>

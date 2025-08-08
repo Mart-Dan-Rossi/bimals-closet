@@ -24,9 +24,6 @@ export const Products = ({ hideFilter, section }: Props) => {
 	const { filter, finalProductsData, isLoadingProductData } =
 		useGlobalContext();
 
-	const [sectionFilter, setSectionFilter] = useState<
-		SiteMainSections | undefined
-	>(section);
 	const [filteredProductsData, setFilteredProductsData] = useState<Product[]>(
 		[]
 	);
@@ -88,8 +85,6 @@ export const Products = ({ hideFilter, section }: Props) => {
 						<FilterButtons
 							filteredProductsData={filteredProductsData}
 							section={section}
-							sectionFilter={sectionFilter}
-							setSectionFilter={setSectionFilter}
 						/>
 					</Box>
 				) : (

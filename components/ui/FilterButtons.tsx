@@ -13,7 +13,7 @@ import {
 	MenuList,
 	Text,
 } from "@chakra-ui/react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BsFilterLeft } from "react-icons/bs";
 import { GoChevronDown } from "react-icons/go";
 import TinyCloseButton from "./buttons/TinyCloseButton";
@@ -24,11 +24,9 @@ import { FilterTagsDisplayer } from "./modals/FilterTagsDisplayer";
 interface Props {
 	filteredProductsData: Product[] | undefined;
 	section?: SiteMainSections | undefined;
-	sectionFilter?: SiteMainSections | undefined;
-	setSectionFilter?: Dispatch<SetStateAction<SiteMainSections | undefined>>;
 }
 
-const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
+const FilterButtons = ({ section }: Props) => {
 	const { finalProductsData, filter, setFilter, setSelectedTags } =
 		useGlobalContext();
 	const [allTags, setAllTags] = useState<string[]>([]);
@@ -55,7 +53,7 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 	function getAllSizes() {
 		return finalProductsData
 			?.filter((product) => {
-				return product.productType === sectionFilter;
+				return product.productType === section;
 			})
 			?.map((product) => {
 				return product.sizeOptions.map((sizeOption) => {
@@ -74,7 +72,7 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 	return (
 		<Flex gap={"2rem"} alignItems={"flex-end"}>
 			<BsFilterLeft color="black" />
-			{(section === "todo" || section === "sale") && setSectionFilter && (
+			{(section === "todo" || section === "sale") && (
 				<Menu>
 					<MenuButton as={Button} rightIcon={<GoChevronDown />}>
 						Tipo de producto
@@ -82,21 +80,30 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 					<MenuList>
 						<MenuItem
 							onClick={() => {
-								setSectionFilter("calzado");
+								setFilter((prev) => ({
+									...(prev ?? {}),
+									productType: "calzado",
+								}));
 							}}
 						>
 							Calzado
 						</MenuItem>
 						<MenuItem
 							onClick={() => {
-								setSectionFilter("indumentaria");
+								setFilter((prev) => ({
+									...(prev ?? {}),
+									productType: "indumentaria",
+								}));
 							}}
 						>
 							Indumentaria
 						</MenuItem>
 						<MenuItem
 							onClick={() => {
-								setSectionFilter("todo");
+								setFilter((prev) => ({
+									...(prev ?? {}),
+									productType: "todo",
+								}));
 							}}
 						>
 							Todo
@@ -153,7 +160,7 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 					)}
 				</Flex>
 			</Flex>
-			{sectionFilter === "calzado" || sectionFilter === "indumentaria" ? (
+			{section === "calzado" || section === "indumentaria" ? (
 				<Flex>
 					<Menu>
 						<MenuButton as={Button} rightIcon={<GoChevronDown />}>
@@ -163,7 +170,7 @@ const FilterButtons = ({ section, sectionFilter, setSectionFilter }: Props) => {
 							<Flex flexDirection={"column"} gap={1} width={"100%"}>
 								<Flex justify={"start"} gap={2} align={"end"} m={"0 1rem"}>
 									<Text fontWeight={"600"}>
-										Talles {`${sectionFilter === "calzado" ? "(US)" : ""}`}
+										Talles {`${section === "calzado" ? "(US)" : ""}`}
 									</Text>
 								</Flex>
 								<Box margin={"0 2rem"}>

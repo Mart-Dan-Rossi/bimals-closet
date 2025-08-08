@@ -11,4 +11,5 @@ export interface ProductsFilter {
 	};
 	tags?: string[];
 	brand?: string;
+	productType?: string;
 }

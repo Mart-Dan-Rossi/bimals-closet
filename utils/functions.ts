@@ -37,7 +37,7 @@ export function applyFilters(
 ): Product[] {
 	if (!products) return [];
 
-	const { sizeOptions, tags, brand } = filter || {};
+	const { sizeOptions, tags, brand, productType } = filter || {};
 	const { usSize, color, usSizeSelection } = sizeOptions || {};
 
 	const hasUsSizeFilter =
@@ -45,6 +45,7 @@ export function applyFilters(
 	const hasColorFilter = !!color;
 	const hasTagsFilter = tags && tags.length > 0;
 	const hasBrandFilter = brand && brand !== "";
+	const hasProductTypeFilter = productType && productType !== "";
 
 	return products.filter((product) => {
 		const passSizeFilter = (() => {
@@ -95,6 +96,12 @@ export function applyFilters(
 			return product.brand === brand;
 		})();
 
+		const passProductTypeFilter = (() => {
+			if (!hasProductTypeFilter) return true;
+
+			return product.productType === productType || productType === "todo";
+		})();
+
 		const allLowerCaseTags = product.tags?.map((tag) => tag.toLowerCase());
 
 		const isInRightSection = section
@@ -108,7 +115,8 @@ export function applyFilters(
 			passColorFilter &&
 			passTagFilter &&
 			isInRightSection &&
-			passBrandFilter
+			passBrandFilter &&
+			passProductTypeFilter
 		);
 	});
 }

@@ -31,8 +31,7 @@ export const ConfirmDeleteOrderModal = ({
 	onOpenShowDeletedOrderModal,
 	setDeletedOrderData,
 }: Props) => {
-	const { mutateAsync: addMutateAsynceDeleteBEOrder, isLoading } =
-		useAdminDeleteBEOrder();
+	const { mutateAsync: addMutateAsynceDeleteBEOrder } = useAdminDeleteBEOrder();
 
 	const toast = useToast();
 
