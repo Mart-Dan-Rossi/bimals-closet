@@ -18,7 +18,6 @@ import {
 	Product,
 	ReserveProductData,
 } from "@/types/product";
-import { onError } from "@/utils/error";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useShowToast } from "../toast/useShowToast";
 
@@ -53,7 +52,13 @@ export const useCreateProduct = () => {
 				title: "Producto creado exitosamente.",
 			});
 		},
-		onError,
+		onError: (error) => {
+			toast({
+				status: "error",
+				title: "Error al crear producto.",
+				description: JSON.stringify(error),
+			});
+		},
 	});
 };
 
@@ -71,12 +76,20 @@ export const useUpdateProduct = () => {
 				title: "Producto modificado exitosamente.",
 			});
 		},
-		onError,
+		onError: (error) => {
+			toast({
+				status: "error",
+				title: "Error al modificar producto.",
+				description: JSON.stringify(error),
+			});
+		},
 	});
 };
 
 export const useReserveMultipleProducts = () => {
 	const queryClient = useQueryClient();
+	const toast = useShowToast();
+
 	return useMutation({
 		mutationFn: (variables: {
 			payload: ReserveProductData[];
@@ -87,7 +100,13 @@ export const useReserveMultipleProducts = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries();
 		},
-		onError,
+		onError: (error) => {
+			toast({
+				status: "error",
+				title: "Error al reservar productos.",
+				description: JSON.stringify(error),
+			});
+		},
 	});
 };
 
@@ -140,12 +159,20 @@ export const useDeleteProduct = () => {
 				title: "Producto borrado exitosamente.",
 			});
 		},
-		onError,
+		onError: (error) => {
+			toast({
+				status: "error",
+				title: "Error al eliminar producto.",
+				description: JSON.stringify(error),
+			});
+		},
 	});
 };
 
 export const useCancelReservation = () => {
 	const queryClient = useQueryClient();
+	const toast = useShowToast();
+
 	return useMutation({
 		mutationFn: (variables: {
 			payload: CancelReservationData;
@@ -156,12 +183,20 @@ export const useCancelReservation = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries();
 		},
-		onError,
+		onError: (error) => {
+			toast({
+				status: "error",
+				title: "Error al cancelar reserva.",
+				description: JSON.stringify(error),
+			});
+		},
 	});
 };
 
 export const useAdminCancelReservation = () => {
 	const queryClient = useQueryClient();
+	const toast = useShowToast();
+
 	return useMutation({
 		mutationFn: (variables: {
 			payload: AdminCancelReservationData;
@@ -172,12 +207,20 @@ export const useAdminCancelReservation = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries();
 		},
-		onError,
+		onError: (error) => {
+			toast({
+				status: "error",
+				title: "Error al cancelar reserva.",
+				description: JSON.stringify(error),
+			});
+		},
 	});
 };
 
 export const useManualPurchaseHanlding = () => {
 	const queryClient = useQueryClient();
+	const toast = useShowToast();
+
 	return useMutation({
 		mutationFn: (variables: {
 			payload: ManualOrderDataFormat;
@@ -188,6 +231,12 @@ export const useManualPurchaseHanlding = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries();
 		},
-		onError,
+		onError: (error) => {
+			toast({
+				status: "error",
+				title: "Error al gestionar la venta.",
+				description: JSON.stringify(error),
+			});
+		},
 	});
 };

@@ -7,7 +7,6 @@ import {
 	verifyEmailToken,
 } from "@/queries/auth";
 import { IFormLoginInput, IFormRegisterInput, UserData } from "@/types/auth";
-import { onError } from "@/utils/error";
 import { useRouter } from "next/router";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useShowToast } from "../toast/useShowToast";
@@ -36,7 +35,13 @@ export const useLoginUser = () => {
 				title: "Logueado exitosamente",
 			});
 		},
-		onError,
+		onError: ({ response }) => {
+			toast({
+				status: "error",
+				title: "Error al loguear",
+				description: response.data.message,
+			});
+		},
 	});
 };
 
@@ -53,7 +58,13 @@ export const useRegisterUser = () => {
 				title: "Te has registrado con éxito",
 			});
 		},
-		onError,
+		onError: ({ response }) => {
+			toast({
+				status: "error",
+				title: "Error al registrar usuario",
+				description: response.data.message,
+			});
+		},
 	});
 };
 
@@ -71,7 +82,13 @@ export const useForgotPassword = () => {
 					"Un email de cambio de contraseña ha sido enviado exitosamente. Por favor, revisa tu bandeja de entrada para más instrucciones",
 			});
 		},
-		onError,
+		onError: ({ response }) => {
+			toast({
+				status: "error",
+				title: "Error al verificar el pasword",
+				description: response.data.message,
+			});
+		},
 	});
 };
 
@@ -88,7 +105,13 @@ export const useEditProfile = () => {
 				title: "Contraseña cambiada exitosamente!",
 			});
 		},
-		onError,
+		onError: ({ response }) => {
+			toast({
+				status: "error",
+				title: "Error al editar el perfil",
+				description: response.data.message,
+			});
+		},
 	});
 };
 
@@ -103,7 +126,8 @@ export const useVerifyEmailToken = (verificationToken: string) => {
 		onError: ({ response }) => {
 			toast({
 				status: "error",
-				title: response.data.message,
+				title: "Error al verificar el email",
+				description: response.data.message,
 			});
 		},
 	});

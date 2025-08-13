@@ -4,12 +4,20 @@ import { useDeleteProduct } from "@/hooks/products/useProduct";
 import { useHydratedStoreState } from "@/hooks/state/hydrated";
 import { Product } from "@/types/product";
 import { applyFilters } from "@/utils/functions";
-import { Box, Button, Flex, TabPanel, useDisclosure } from "@chakra-ui/react";
+import {
+	Box,
+	Button,
+	Flex,
+	TabPanel,
+	useDisclosure,
+	useToast,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AdminProductCard } from "./AdminProductCard";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { ProductEditionModal } from "./ProductEditionModal";
+import axios from "axios";
 
 const AdminProductsSection = () => {
 	const { finalProductsData, filter, onOpenAddNewProduct } = useGlobalContext();
@@ -33,6 +41,7 @@ const AdminProductsSection = () => {
 	>(finalProductsData);
 
 	const { mutateAsync: removeMutateAsync } = useDeleteProduct();
+	const toast = useToast();
 
 	const router = useRouter();
 
@@ -54,8 +63,19 @@ const AdminProductsSection = () => {
 	}, [token]);
 
 	function handleDeleteProduct() {
-		if (productToInteractWith && token) {
-			removeMutateAsync({ payload: productToInteractWith, token });
+		try {
+			if (productToInteractWith && token) {
+				removeMutateAsync({ payload: productToInteractWith, token });
+			}
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				toast({
+					status: "error",
+					title:
+						error?.response?.data?.error.message ||
+						"Ha ocurrido un error! Intenta nuevamente más tarde",
+				});
+			}
 		}
 	}
 

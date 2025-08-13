@@ -6,11 +6,13 @@ import {
 import { Box, Button, Text, Tooltip, VStack, Wrap } from "@chakra-ui/react";
 
 interface Props {
+	slug: string | undefined;
 	sizeOptions: SizeOptions;
 	brand?: Brand;
 }
 
 export const DisplayColorSizesAndQuantityInputsContainer = ({
+	slug,
 	sizeOptions,
 	brand,
 }: Props) => {
@@ -34,7 +36,9 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 				([color, sizes], index1) => {
 					return (
 						<VStack
-							key={`groupedSizeOption-${color}-${index1}`}
+							key={`${slug}-groupedSizeOption-${color}-${index1}-${JSON.stringify(
+								sizes
+							)}`}
 							alignItems={"left"}
 							m={"0 2rem 2rem 0	"}
 							p={"1rem 1rem 0 1rem"}
@@ -47,10 +51,12 @@ export const DisplayColorSizesAndQuantityInputsContainer = ({
 								Color {color}:
 							</Text>
 							<VStack ml={"2rem"}>
-								{sizes.map((sizeOption) => {
+								{sizes.map((sizeOption, index2) => {
 									return (
 										<Box
-											key={`groupedSizeOption-${color}-sizeOption${sizeOption.usSize}`}
+											key={`${slug}-groupedSizeOption-${color}-${index1}-${index2}-${JSON.stringify(
+												sizes
+											)}`}
 											mb={"1rem"}
 											minWidth={"90%"}
 											bg={"brand.footerBG"}

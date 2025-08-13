@@ -5,7 +5,6 @@ import {
 	getAllBEOrders,
 } from "@/queries/beOrder";
 import { OrderDataBEFormat } from "@/types/order";
-import { onError } from "@/utils/error";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useShowToast } from "../toast/useShowToast";
 
@@ -37,7 +36,13 @@ export const useAdminUpdateBEOrder = () => {
 				title: "Órden modificada exitosamente.",
 			});
 		},
-		onError,
+		onError: ({ response }) => {
+			toast({
+				status: "error",
+				title: "Error al actualizar la orden",
+				description: response.data.message,
+			});
+		},
 	});
 };
 
@@ -63,6 +68,12 @@ export const useAdminDeleteBEOrder = () => {
 				title: "Órden eliminada exitosamente.",
 			});
 		},
-		onError,
+		onError: ({ response }) => {
+			toast({
+				status: "error",
+				title: "Error al eliminar la orden",
+				description: response.data.message,
+			});
+		},
 	});
 };

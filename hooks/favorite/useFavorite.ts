@@ -1,8 +1,7 @@
-import { onError } from "@/utils/error";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useShowToast } from "../toast/useShowToast";
 import { addFavorite, myFavorites, removeFavorite } from "@/queries/favorite";
 import { Product } from "@/types/product";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useShowToast } from "../toast/useShowToast";
 
 export const useAddFavorite = () => {
 	const queryClient = useQueryClient();
@@ -21,7 +20,13 @@ export const useAddFavorite = () => {
 				title: "Producto agregado a favoritos exitosamente.",
 			});
 		},
-		onError,
+		onError: ({ response }) => {
+			toast({
+				status: "error",
+				title: "Error al agregar a favoritos",
+				description: response.data.message,
+			});
+		},
 	});
 };
 
@@ -41,7 +46,13 @@ export const useRemoveFavorite = () => {
 				title: "Se ha quitado el producto de favoritos.",
 			});
 		},
-		onError,
+		onError: ({ response }) => {
+			toast({
+				status: "error",
+				title: "Error al eliminar de favoritos",
+				description: response.data.message,
+			});
+		},
 	});
 };
 

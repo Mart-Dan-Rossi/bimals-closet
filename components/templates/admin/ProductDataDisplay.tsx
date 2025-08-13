@@ -100,6 +100,7 @@ const ProductDataDisplay = ({
 			)}
 
 			<DisplayColorSizesAndQuantityInputsContainer
+				slug={slug}
 				sizeOptions={sizeOptions}
 				brand={brand}
 			/>
